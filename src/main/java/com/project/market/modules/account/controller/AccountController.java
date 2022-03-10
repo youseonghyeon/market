@@ -9,13 +9,18 @@ import com.project.market.modules.account.validator.SignupFormValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Slf4j
@@ -30,7 +35,8 @@ public class AccountController {
     private final SignupFormValidator signupFormValidator;
 
     @InitBinder("signupForm")
-    public void validateSignupForm(WebDataBinder webDataBinder) {
+    public void initBinder(WebDataBinder webDataBinder) {
+        // 회원가입 폼 검증
         webDataBinder.addValidators(signupFormValidator);
     }
 
@@ -38,6 +44,16 @@ public class AccountController {
     @GetMapping("/login")
     public String loginForm() {
         return "account/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+
+        return "redirect:/";
     }
 
     @GetMapping("/sign-up")
@@ -58,8 +74,8 @@ public class AccountController {
 
 
     @GetMapping("/profile")
-    public String profileForm(@CurrentAccount Account account) {
-
+    public String profileForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
         return "account/profile";
     }
 }

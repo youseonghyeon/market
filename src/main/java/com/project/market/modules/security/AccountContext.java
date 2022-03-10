@@ -1,4 +1,4 @@
-package com.project.market.modules.account.util;
+package com.project.market.modules.security;
 
 import com.project.market.modules.account.entity.Account;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public class AccountContext extends User {
 
-    private Account account;
+    private final Account account;
 
     public AccountContext(Account account, List<GrantedAuthority> roles) {
         super(account.getLoginId(), account.getPassword(), roles);
