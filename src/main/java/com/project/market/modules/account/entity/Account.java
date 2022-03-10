@@ -1,5 +1,6 @@
 package com.project.market.modules.account.entity;
 
+import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.product.entity.Product;
 import lombok.*;
 
@@ -11,22 +12,24 @@ import java.util.Set;
 
 @Entity
 @Getter
-@EqualsAndHashCode(of = "id")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Account {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String username;
 
     @Column(unique = true)
     private String loginId;
 
     @Column(unique = true)
+    private String phone;
+
     private String email;
 
     @Column(unique = true)
@@ -50,5 +53,6 @@ public class Account {
     @OneToMany(mappedBy = "seller")
     private List<Product> enrolledProduct;
 
-    
+
+
 }
