@@ -1,17 +1,21 @@
 package com.project.market.modules.product.entity;
 
+import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.delivery.entity.Delivery;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@EqualsAndHashCode(of = "id")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Product {
 
     @Id @GeneratedValue
@@ -25,8 +29,28 @@ public class Product {
 
     private int stock;
 
+    @ManyToOne(fetch = LAZY)
+    private Account seller;
+
+    @ManyToOne(fetch = LAZY)
+    private Account buyer;
+
+    @OneToOne(fetch = LAZY)
+    private Delivery delivery;
+
     private String coverPhoto;
 
     private String photo;
+
+    private LocalDateTime enrolledDateTime;
+
+    private LocalDateTime paymentDateTime;
+
+    private boolean reserved;
+
+    private boolean expired;
+
+    @ManyToMany
+    private List<Tag> tags;
 
 }
