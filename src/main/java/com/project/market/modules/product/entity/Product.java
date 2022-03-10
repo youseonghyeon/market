@@ -30,10 +30,15 @@ public class Product {
     private int stock;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "account")
     private Account seller;
 
+    private LocalDateTime enrolledDateTime;
+
     @ManyToOne(fetch = LAZY)
-    private Account buyer;
+    private Account purchasedBy;
+
+    private LocalDateTime purchasedDateTime;
 
     @OneToOne(fetch = LAZY)
     private Delivery delivery;
@@ -41,10 +46,6 @@ public class Product {
     private String coverPhoto;
 
     private String photo;
-
-    private LocalDateTime enrolledDateTime;
-
-    private LocalDateTime paymentDateTime;
 
     private boolean reserved;
 

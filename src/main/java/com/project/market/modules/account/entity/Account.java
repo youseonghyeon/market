@@ -1,10 +1,12 @@
 package com.project.market.modules.account.entity;
 
+import com.project.market.modules.product.entity.Product;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,4 +47,8 @@ public class Account {
     @ManyToMany
     private Set<Zone> zones = new HashSet<>();
 
+    @OneToMany(mappedBy = "seller")
+    private List<Product> enrolledProduct;
+
+    
 }

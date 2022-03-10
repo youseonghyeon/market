@@ -2,9 +2,10 @@ package com.project.market.modules.delivery.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
+
+import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -16,6 +17,35 @@ public class Delivery {
 
     @Id @GeneratedValue
     private Long id;
+
+    private int fee;
+
+    private String originAddress;
+
+    private String destinationAddress;
+
+    private LocalDate ExpectedArrivalFrom;
+
+    private LocalDate ExpectedArrivalUntil;
+
+    @Enumerated(STRING)
+    private DeliveryMethod deliveryMethod;
+
+    @Enumerated(STRING)
+    private DeliveryStatus deliveryStatus;
+
+    private boolean itemShipped;
+
+    private String sippingCompany;
+
+    private String sippingCode;
+
+    private String trackingNumber;
+
+    private String trackingUrl;
+
+
+
 
 
 }
