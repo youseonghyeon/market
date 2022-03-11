@@ -41,22 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-
-                .deleteCookies("JSESSIONID");
+                .logoutSuccessUrl("/");
 
         http.rememberMe()
                 .rememberMeParameter("remember");
-//                .userDetailsService();
 
 
     }
-
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();
-//
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

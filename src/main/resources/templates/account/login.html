@@ -3,7 +3,7 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div>
+<div class="container">
     <form th:action="@{/perform_login}" class="form-signin" method="post">
         <div class="form-group">
             <input type="text" class="form-control" name="loginId" placeholder="아이디" required="required"
@@ -12,9 +12,14 @@
         <div class="form-group">
             <input type="password" class="form-control" name="password" placeholder="비밀번호" required="required">
         </div>
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            <p>아이디 또는 비밀번호를 잘못 입력했습니다.</p>
+            <p>입력하신 내용을 다시 확인해주세요.</p>
+        </div>
         <label><input type="checkbox" name="remember">아이디를 기억합니다.</label>
         <button type="submit" class="btn btn-lg btn-primary btn-block">로그인</button>
     </form>
+    <a th:href="@{/find-password}">비밀번호 찾기</a>
     <div th:if="${param.error}">
         <span>param.error is true</span>
     </div>
