@@ -3,6 +3,51 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
+<div class="container" th:object="${account}">
+    <div class="mt-3"></div>
+    <div>
+        <h3>프로필</h3>
+        <div>
+            <span>이름: </span>
+            <span th:text="*{username}"></span>
+        </div>
+        <div>
+            <span>별명: </span>
+            <span th:text="*{nickname}"></span>
+        </div>
 
+        <div class="mt-3"></div>
+        <h3>연락처 및 알림</h3>
+        <div>
+            <span>전화번호: </span>
+            <span th:text="*{phone}"></span>
+        </div>
+        <div>
+            <span>이메일: </span>
+            <span th:text="*{email}"></span>
+        </div>
+        <a class="btn btn-primary" th:href="@{/profile/edit}">수정하기</a>
+    </div>
+
+    <div>
+        <div class="mt-3"></div>
+        <h3>배송지 관리</h3>
+        <div>
+            <span>배송지 관리</span>
+            <button class="btn btn-primary">배송지 등록</button>
+        </div>
+    </div>
+
+    <div>
+        <div class="mt-3"></div>
+        <h3>관심 지역</h3>
+        <div>
+            <span>관심지역</span>
+            <button class="btn btn-primary">관심지역 등록</button>
+        </div>
+    </div>
+
+
+</div>
 </body>
 </html>

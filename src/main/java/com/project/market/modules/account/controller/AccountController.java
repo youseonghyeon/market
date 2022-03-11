@@ -78,4 +78,10 @@ public class AccountController {
         model.addAttribute(account);
         return "account/profile";
     }
+
+    @GetMapping("/profile/edit")
+    public String profileEditForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute(account);
+        return "settings/account";
+    }
 }
