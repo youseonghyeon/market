@@ -8,6 +8,8 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class SignupForm {
 
+    // 문자하나 숫자하나 정규식 ->  ^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$
+
     @NotEmpty(message = "필수 정보입니다.")
     @Length(min = 5, max = 15, message = "5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.")
     private String loginId;
