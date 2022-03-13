@@ -89,7 +89,7 @@ public class AccountController {
     }
 
     @PostMapping("/profile/edit")
-    public String profileEdit(@CurrentAccount Account account, ProfileForm profileForm,
+    public String profileEdit(@CurrentAccount Account account, @Valid ProfileForm profileForm,
                               Errors errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             return "settings/profile";

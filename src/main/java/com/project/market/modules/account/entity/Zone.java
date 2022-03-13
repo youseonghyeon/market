@@ -10,18 +10,11 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class Zone {
 
     @Id @GeneratedValue
     private Long id;
 
     private String city;
-
-    private String gu;
-
-    private String dong;
 
 }
