@@ -1,7 +1,8 @@
-package com.project.market.modules.product.entity;
+package com.project.market.modules.item.entity;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
+import com.project.market.modules.order.entity.Orders;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,9 +17,10 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Product {
+public class Item {
 
     @Id @GeneratedValue
+    @Column(name = "item_id")
     private Long id;
 
     private String name;
@@ -27,18 +29,11 @@ public class Product {
 
     private float rating;
 
-    private int quantity;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "account")
     private Account enrolledBy;
 
     private LocalDateTime enrolledDateTime;
-
-    @ManyToOne(fetch = LAZY)
-    private Account purchasedBy;
-
-    private LocalDateTime purchasedDateTime;
 
     @OneToOne(fetch = LAZY)
     private Delivery delivery;
@@ -53,5 +48,8 @@ public class Product {
 
     @ManyToMany
     private List<Tag> tags;
+
+    @OneToOne(mappedBy = "item")
+    private Orders orders;
 
 }

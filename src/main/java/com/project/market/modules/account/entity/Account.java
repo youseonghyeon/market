@@ -1,7 +1,8 @@
 package com.project.market.modules.account.entity;
 
 import com.project.market.modules.account.form.ProfileForm;
-import com.project.market.modules.product.entity.Product;
+import com.project.market.modules.order.entity.Orders;
+import com.project.market.modules.item.entity.Item;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Account {
 
     @Id
     @GeneratedValue
+    @Column(name = "account_id")
     private Long id;
 
     private String username;
@@ -51,7 +53,10 @@ public class Account {
     private Set<Zone> zones = new HashSet<>();
 
     @OneToMany(mappedBy = "enrolledBy")
-    private List<Product> enrolledProduct;
+    private List<Item> enrolledItem;
+
+    @OneToMany(mappedBy = "account")
+    private List<Orders> orders;
 
 
     public void modifyProfile(ProfileForm profileForm) {

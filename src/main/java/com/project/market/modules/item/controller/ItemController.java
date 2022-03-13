@@ -1,10 +1,10 @@
-package com.project.market.modules.product.controller;
+package com.project.market.modules.item.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.product.dao.ProductService;
-import com.project.market.modules.product.entity.Product;
-import com.project.market.modules.product.form.ProductForm;
+import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.form.ItemForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,33 +22,38 @@ import java.security.InvalidParameterException;
 @Controller
 @RequestMapping("/products")
 @RequiredArgsConstructor
-public class ProductController {
+public class ItemController {
 
-    private final ProductService productService;
+    private final ItemService itemService;
 
     @GetMapping("/enroll")
     public String productEnrollForm(Model model) {
-        model.addAttribute(new ProductForm());
+        model.addAttribute(new ItemForm());
         return "products/enroll";
     }
 
     @PostMapping("/enroll")
-    public String productEnroll(@CurrentAccount Account account, @Valid ProductForm productForm,
+    public String productEnroll(@CurrentAccount Account account, @Valid ItemForm itemForm,
                                 Errors errors) {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
-        Product product = productService.createNewProduct(account, productForm);
+        Item item = itemService.createNewItem(account, itemForm);
 
-        return "redirect:/products/" + product.getId();
+        return "redirect:/products/deal/" + item.getId();
     }
 
-    @GetMapping("/{productId}")
-    public String productForm(@PathVariable("productId") Product product, Model model) {
-        if (product == null) {
+    @GetMapping("/deal/{itemId}")
+    public String productForm(@PathVariable("itemId") Item item, Model model) {
+        if (item == null) {
             throw new InvalidParameterException("존재하지 않는 상품입니다.");
         }
-        model.addAttribute(product);
+        model.addAttribute(item);
         return "products/product";
+    }
+
+    @GetMapping("/order/list")
+    public String orderList(@CurrentAccount Account account, Model model) {
+        return null;
     }
 }

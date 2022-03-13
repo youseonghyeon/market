@@ -16,6 +16,7 @@ import static javax.persistence.EnumType.STRING;
 public class Delivery {
 
     @Id @GeneratedValue
+    @Column(name = "delivery_id")
     private Long id;
 
     private int fee;

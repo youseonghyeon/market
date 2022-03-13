@@ -1,4 +1,4 @@
-package com.project.market.modules.product.entity;
+package com.project.market.modules.item.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
