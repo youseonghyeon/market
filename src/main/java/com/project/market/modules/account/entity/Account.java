@@ -1,5 +1,6 @@
 package com.project.market.modules.account.entity;
 
+import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.product.entity.Product;
 import lombok.*;
@@ -54,5 +55,12 @@ public class Account {
     private List<Product> enrolledProduct;
 
 
+    public void modifyProfile(ProfileForm profileForm) {
+        this.nickname = profileForm.getNickname();
+        this.profileImage = profileForm.getProfileImage();
+        this.email = profileForm.getEmail();
+        this.phone = profileForm.getPhone();
+
+    }
 
 }

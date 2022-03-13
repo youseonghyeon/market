@@ -2,6 +2,7 @@ package com.project.market.modules.account.dao;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.AccountType;
+import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,10 @@ public class AccountService {
                 .build();
 
         accountRepository.save(account);
+    }
 
+    public void editProfile(Account account, ProfileForm profileForm) {
+        account.modifyProfile(profileForm);
+        accountRepository.save(account);
     }
 }

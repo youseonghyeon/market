@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,13 +85,17 @@ public class AccountController {
     public String profileEditForm(@CurrentAccount Account account, Model model) {
         ProfileForm profileForm = modelMapper.map(account, ProfileForm.class);
         model.addAttribute(profileForm);
-        return "settings/account";
+        return "settings/profile";
     }
 
     @PostMapping("/profile/edit")
-    public String profileEdit(@CurrentAccount Account account, @Valid ProfileForm profileForm,
-                              Errors errors, Model model) {
-        // TODO 프로필 수정 관리 (및 settings/account에 attribute 변경했으므로 html 수정[account -> profileForm])
-        return null;
+    public String profileEdit(@CurrentAccount Account account, ProfileForm profileForm,
+                              Errors errors, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            return "settings/profile";
+        }
+        accountService.editProfile(account, profileForm);
+        attributes.addFlashAttribute("message", "수정 완료!");
+        return "redirect:/profile";
     }
 }
