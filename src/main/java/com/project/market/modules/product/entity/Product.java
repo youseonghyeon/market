@@ -27,11 +27,11 @@ public class Product {
 
     private float rating;
 
-    private int stock;
+    private int quantity;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "account")
-    private Account seller;
+    private Account enrolledBy;
 
     private LocalDateTime enrolledDateTime;
 

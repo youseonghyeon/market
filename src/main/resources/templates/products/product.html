@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div>
+    <div class="container" th:object="${product}">
+        <div>
+            <span>상품 번호 :</span>
+            <span th:text="*{id}"></span>
+        </div>
+        <div>
+            <span>상품 이름 :</span>
+            <span th:text="*{name}"></span>
+        </div>
+        <div>
+            <span>가격 :</span>
+            <span th:text="*{price}"></span>
+        </div>
+        <div>
+            <span>재고 수량 :</span>
+            <span th:text="*{quantity}"></span>
+        </div>
+        <div>
+            <span>등록 일자 :</span>
+            <span th:text="*{enrolledDateTime}"></span>
+        </div>
+        <div>
+            <span>상품 이미지(미리보기) :</span>
+            <span th:text="*{coverPhoto}"></span>
+        </div>
+        <div>
+            <span>상품 이미지(상세) :</span>
+            <span th:text="*{photo}"></span>
+        </div>
+        <div>
+            <span>태그(추가 예정)</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
