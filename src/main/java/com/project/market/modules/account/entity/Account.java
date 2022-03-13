@@ -55,7 +55,7 @@ public class Account {
     @OneToMany(mappedBy = "enrolledBy")
     private List<Item> enrolledItem;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "customer")
     private List<Orders> orders;
 
 

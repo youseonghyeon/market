@@ -3,13 +3,19 @@ package com.project.market.modules.order.entity;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.entity.Item;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Orders {
 
     @Id @GeneratedValue
@@ -25,14 +31,14 @@ public class Orders {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private Item item;
+    private Item orderedItem;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id")
-    private Delivery delivery;
+    private Delivery orderDelivery;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
-    private Account account;
+    private Account customer;
 
 }

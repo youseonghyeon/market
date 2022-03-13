@@ -49,7 +49,4 @@ public class Item {
     @ManyToMany
     private List<Tag> tags;
 
-    @OneToOne(mappedBy = "item")
-    private Orders orders;
-
 }
