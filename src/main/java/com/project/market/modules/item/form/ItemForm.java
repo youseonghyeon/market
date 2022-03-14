@@ -18,6 +18,8 @@ public class ItemForm {
 
     private String photo;
 
+    private String originAddress;
+
     // private List<Tag> tags;
 
 }

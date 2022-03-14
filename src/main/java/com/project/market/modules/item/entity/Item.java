@@ -42,9 +42,13 @@ public class Item {
 
     private String photo;
 
+    private String originAddress;
+
     private boolean reserved;
 
     private boolean expired;
+
+    private int shippingFee;
 
     @ManyToMany
     private List<Tag> tags;

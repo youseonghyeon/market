@@ -25,9 +25,9 @@ public class Delivery {
 
     private String destinationAddress;
 
-    private LocalDate ExpectedArrivalFrom;
+    private LocalDate expectedArrivalFrom;
 
-    private LocalDate ExpectedArrivalUntil;
+    private LocalDate expectedArrivalUntil;
 
     @Enumerated(STRING)
     private DeliveryMethod deliveryMethod;
@@ -35,17 +35,18 @@ public class Delivery {
     @Enumerated(STRING)
     private DeliveryStatus deliveryStatus;
 
-    private boolean itemShipped;
+    private String shippingCompany;
 
-    private String sippingCompany;
-
-    private String sippingCode;
+    private String shippingCode;
 
     private String trackingNumber;
 
     private String trackingUrl;
 
 
+    public boolean isShipped() {
+        return this.deliveryStatus.equals(DeliveryStatus.COMPLETE);
+    }
 
 
 

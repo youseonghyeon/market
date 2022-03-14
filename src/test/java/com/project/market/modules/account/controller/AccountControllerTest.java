@@ -153,7 +153,7 @@ class AccountControllerTest {
         mockMvc.perform(get("/profile/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("profileForm"))
-                .andExpect(view().name("settings/account"));
+                .andExpect(view().name("settings/profile"));
     }
 
     private void joinAccount(String loginId, String password) {

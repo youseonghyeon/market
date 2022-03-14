@@ -52,8 +52,5 @@ public class ItemController {
         return "products/product";
     }
 
-    @GetMapping("/order/list")
-    public String orderList(@CurrentAccount Account account, Model model) {
-        return null;
-    }
+
 }

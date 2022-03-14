@@ -1,7 +1,9 @@
 package com.project.market;
 
+import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Zone;
+import com.project.market.modules.account.form.SignupForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +15,7 @@ import javax.annotation.PostConstruct;
 public class App {
 
     private final ZoneRepository zoneRepository;
+    private final AccountService accountService;
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -22,6 +25,7 @@ public class App {
     @PostConstruct
     public void init() {
         initZones();
+        initUser();
     }
 
     public void initZones() {
@@ -33,5 +37,15 @@ public class App {
                 zoneRepository.save(zone);
             }
         }
+    }
+
+    public void initUser() {
+        SignupForm signupForm = new SignupForm();
+        signupForm.setLoginId("user1");
+        signupForm.setPassword("qwerqwer");
+        signupForm.setUsername("유성현");
+        signupForm.setPhone("01023778747");
+        signupForm.setEmail("dolla_@naver.com");
+        accountService.saveNewAccount(signupForm);
     }
 }

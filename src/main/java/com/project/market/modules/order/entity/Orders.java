@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Orders {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "order_id")
     private Long id;
 
@@ -28,6 +29,12 @@ public class Orders {
     private OrderStatus orderStatus;
 
     private String paymentMethod;
+
+    private String shippingRequests;
+
+    private int shippingFee;
+
+    private LocalDateTime arrivalDateTime;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
@@ -41,4 +48,7 @@ public class Orders {
     @JoinColumn(name = "account_id")
     private Account customer;
 
+    public boolean checkOwnership(Account account) {
+        return this.customer.equals(account);
+    }
 }
