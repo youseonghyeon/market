@@ -11,8 +11,7 @@ public class ItemForm {
     @NotEmpty
     private String name;
 
-    @NotBlank
-    private int price;
+    private Integer price;
 
     private String coverPhoto;
 

@@ -4,5 +4,44 @@
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <h3>주문하기</h3>
+<div class="container" th:object="${orderForm}">
+    <form th:action="@{/purchase}" th:method="post">
+        <!--        <div>-->
+        <!--            상품명-->
+        <!--            <span th:text="${item.getName()}">빅맥</span>-->
+        <!--            <input type="text" th:field="*{itemId}" th:value="${item.getId()}">-->
+        <!--        </div>-->
+        <div>
+            상품 번호
+            <input type="number" th:field="*{itemId}">
+        </div>
+        <div>
+            배송 요청사항
+            <input type="text" th:field="*{shippingRequests}">
+        </div>
+        <div>
+            결제 방식
+            <input type="text" th:field="*{paymentMethod}">
+        </div>
+        <div>
+            주소
+            <input type="text" th:field="*{destinationAddress}">
+        </div>
+        <div>
+            배송 방법
+            <select class="form-control" th:field="*{deliveryMethod}">
+                <option th:each="deliveryMethod : ${T(com.project.market.modules.delivery.entity.DeliveryMethod).values()}"
+                        th:value="${deliveryMethod.name()}"
+                        th:text="${deliveryMethod.name()}">
+                    val
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">결제하기</button>
+
+    </form>
+
+</div>
 </body>
 </html>

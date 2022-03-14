@@ -3,7 +3,7 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div>
+<div class="container">
     <div class="container" th:object="${item}">
         <div>
             <span>상품 번호 :</span>
@@ -32,6 +32,7 @@
         <div>
             <span>태그(추가 예정)</span>
         </div>
+        <a th:href="@{/purchase(itemId=*{id})}">구매하기</a>
     </div>
 </div>
 </body>

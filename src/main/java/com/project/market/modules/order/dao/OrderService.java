@@ -3,6 +3,7 @@ package com.project.market.modules.order.dao;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.dao.DeliveryRepository;
 import com.project.market.modules.delivery.entity.Delivery;
+import com.project.market.modules.delivery.entity.DeliveryMethod;
 import com.project.market.modules.delivery.entity.DeliveryStatus;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
@@ -10,6 +11,7 @@ import com.project.market.modules.order.entity.OrderStatus;
 import com.project.market.modules.order.entity.Orders;
 import com.project.market.modules.order.form.OrderForm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +33,8 @@ public class OrderService {
 
     public Orders processPurchase(Account account, OrderForm orderForm) {
         //TODO 결제되었는지 확인
+        log.info("itemId={}", orderForm.getItemId());
+
 
         Item item = itemRepository.findById(orderForm.getItemId()).orElseThrow();
 

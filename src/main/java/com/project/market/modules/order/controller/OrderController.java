@@ -2,6 +2,7 @@ package com.project.market.modules.order.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.dao.OrderRepository;
 import com.project.market.modules.order.dao.OrderService;
 import com.project.market.modules.order.entity.Orders;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,16 +33,21 @@ public class OrderController {
         return "error/missing-path-variable-exception";
     }
 
-    @PostMapping("/purchase")
-    public String processPurchase(@CurrentAccount Account account, @Valid OrderForm orderForm, Errors errors, Model model) {
-        Orders orders = orderService.processPurchase(account, orderForm);
-        return "redirect:/order/" + orders.getId();
+    @GetMapping("/purchase")
+    public String purchaseForm(Model model, @RequestParam("itemId") Item item) {
+        model.addAttribute(new OrderForm());
+        model.addAttribute(item);
+        return "order/order";
     }
 
-    @GetMapping("/purchase")
-    public String purchaseForm(Model model) {
-        model.addAttribute(new OrderForm());
-        return "order/order";
+    @PostMapping("/purchase")
+    public String processPurchase(@CurrentAccount Account account, OrderForm orderForm, Errors errors, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            return "order/order";
+        }
+        Orders orders = orderService.processPurchase(account, orderForm);
+        attributes.addFlashAttribute("message", "주문이 완료 되었습니다.");
+        return "redirect:/order/" + orders.getId();
     }
 
     @GetMapping("/order/list")
@@ -48,12 +55,9 @@ public class OrderController {
                             @RequestParam(name = "orderType", required = false) String orderType,
                             Model model) {
         List<Orders> orders;
-        if (orderType != null && orderType.equals("ALL")) {
-            orders = orderService.findOrders(account);
-        } else if (orderType != null && orderType.equals("DELIVERY")) {
-            orders = orderService.findOrders(account, "DELIVERY");
+        if (orderType != null) {
+            orders = orderService.findOrders(account, orderType);
         } else {
-            // 기능은 ALL과 동일하지만 기능 추가를 위해 남겨둠
             orders = orderService.findOrders(account);
         }
         model.addAttribute("orderList", orders);

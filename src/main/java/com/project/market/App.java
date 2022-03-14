@@ -1,5 +1,6 @@
 package com.project.market;
 
+import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Zone;
@@ -15,6 +16,7 @@ import javax.annotation.PostConstruct;
 public class App {
 
     private final ZoneRepository zoneRepository;
+    private final AccountRepository accountRepository;
     private final AccountService accountService;
 
     public static void main(String[] args) {
@@ -40,12 +42,15 @@ public class App {
     }
 
     public void initUser() {
-        SignupForm signupForm = new SignupForm();
-        signupForm.setLoginId("user1");
-        signupForm.setPassword("qwerqwer");
-        signupForm.setUsername("유성현");
-        signupForm.setPhone("01023778747");
-        signupForm.setEmail("dolla_@naver.com");
-        accountService.saveNewAccount(signupForm);
+        if (!accountRepository.existsByLoginId("user1")) {
+            SignupForm signupForm = new SignupForm();
+            signupForm.setLoginId("user1");
+            signupForm.setPassword("qwerqwer");
+            signupForm.setUsername("유성현");
+            signupForm.setPhone("01023778747");
+            signupForm.setEmail("dolla_@naver.com");
+            accountService.saveNewAccount(signupForm);
+
+        }
     }
 }
