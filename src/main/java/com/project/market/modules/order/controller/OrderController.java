@@ -41,27 +41,14 @@ public class OrderController {
     }
 
     @PostMapping("/purchase")
-    public String processPurchase(@CurrentAccount Account account, OrderForm orderForm, Errors errors, RedirectAttributes attributes) {
+    public String processPurchase(@CurrentAccount Account account, @Valid OrderForm orderForm,
+                                  Errors errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             return "order/order";
         }
         Orders orders = orderService.processPurchase(account, orderForm);
         attributes.addFlashAttribute("message", "주문이 완료 되었습니다.");
         return "redirect:/order/" + orders.getId();
-    }
-
-    @GetMapping("/order/list")
-    public String orderList(@CurrentAccount Account account,
-                            @RequestParam(name = "orderType", required = false) String orderType,
-                            Model model) {
-        List<Orders> orders;
-        if (orderType != null) {
-            orders = orderService.findOrders(account, orderType);
-        } else {
-            orders = orderService.findOrders(account);
-        }
-        model.addAttribute("orderList", orders);
-        return "order/list";
     }
 
     @GetMapping("/order/{orderId}")
@@ -74,4 +61,19 @@ public class OrderController {
         model.addAttribute("order", orders);
         return "order/detail";
     }
+
+    @GetMapping("/order/list")
+    public String orderList(@CurrentAccount Account account,
+                            @RequestParam(name = "orderType", required = false) String orderType,
+                            Model model) {
+        List<Orders> orderList;
+        if (orderType != null) {
+            orderList = orderService.findOrders(account, orderType);
+        } else {
+            orderList = orderService.findOrders(account);
+        }
+        model.addAttribute("orderList", orderList);
+        return "order/list";
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.project.market.modules.delivery.entity;
 
+import com.project.market.modules.account.entity.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +19,8 @@ public class Delivery {
     @Id @GeneratedValue
     @Column(name = "delivery_id")
     private Long id;
+
+    private Long accountId;
 
     private int fee;
 
@@ -49,5 +52,7 @@ public class Delivery {
     }
 
 
-
+    public boolean checkOwnership(Account account) {
+        return this.accountId.equals(account.getId());
+    }
 }

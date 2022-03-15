@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@NamedEntityGraph(name = "Orders.withItem", attributeNodes = {
+        @NamedAttributeNode("orderedItem")})
 @Entity
 @Getter
 @Builder
@@ -22,7 +24,7 @@ public class Orders {
     @GeneratedValue
     @Column(name = "order_id")
     private Long id;
-
+    
     private LocalDateTime orderDateTime;
 
     @Enumerated(EnumType.STRING)

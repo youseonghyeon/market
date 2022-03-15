@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div>
+    <h3>배송 상세 조회</h3>
+    <div th:object="${delivery}">
+        <div>요금 :<span th:text="*{fee}"></span></div>
+        <div>출발 주소 :<span th:text="*{originAddress}"></span></div>
+        <div>도착 주소 :<span th:text="*{destinationAddress}"></span></div>
+        <div>예상 도착 시간 :<span th:text="*{expectedArrivalFrom}"></span> ~ <span th:text="*{expectedArrivalUntil}"></span></div>
+        <div>배송 방법 :<span th:text="*{deliveryMethod}"></span></div>
+        <div>배송 상태 :<span th:text="*{deliveryStatus}"></span></div>
+        <div>택배사 :<span th:text="*{shippingCompany}"></span></div>
+        <div>배송 코드 :<span th:text="*{shippingCode}"></span></div>
+        <div>추적 번호 :<span th:text="*{trackingNumber}"></span></div>
+    </div>
+
+</div>
+</body>
+</html>
