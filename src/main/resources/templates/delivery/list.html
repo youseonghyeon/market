@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div class="container">
+    <h3>배송 목록</h3>
+    <div>
+        <div th:each="delivery : ${deliveryList}">
+            <div>배송 번호 : <span th:text="${delivery.getId()}">00</span>번</div>
+            <div>출발지 : <span th:text="${delivery.getOriginAddress()}">시작주소</span></div>
+            <div>목적지 : <span th:text="${delivery.getDestinationAddress()}">도착주소</span></div>
+            <button class="btn btn-primary">연결하기</button>
+            <button class="btn btn-primary">배송 완료</button>
+            <button class="btn btn-primary">배송 취소</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

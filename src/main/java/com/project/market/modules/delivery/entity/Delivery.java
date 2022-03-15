@@ -54,4 +54,15 @@ public class Delivery {
     public boolean isOwner(Account account) {
         return this.accountId.equals(account.getId());
     }
+
+    public void shippingComplete() {
+        this.deliveryStatus = DeliveryStatus.COMPLETE;
+    }
+
+    public void shippingCancel() {
+        if (this.deliveryStatus.equals(DeliveryStatus.COMPLETE)) {
+            throw new IllegalStateException("취소 불가능");
+        }
+        this.deliveryStatus = DeliveryStatus.CANCEL;
+    }
 }

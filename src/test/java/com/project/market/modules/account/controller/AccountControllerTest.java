@@ -4,7 +4,7 @@ import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.AccountType;
+import com.project.market.modules.account.entity.Role;
 import com.project.market.modules.account.form.SignupForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -116,7 +116,7 @@ class AccountControllerTest {
         assertEquals(account.getEmail(), "email@mail.com");
         assertTrue(passwordEncoder.matches("pass0099", account.getPassword()));
         assertNotNull(account.getJoinedAt());
-        assertEquals(account.getAccountType(), AccountType.USER);
+        assertEquals(account.getRole(), "ROLE_USER");
     }
 
     @Test

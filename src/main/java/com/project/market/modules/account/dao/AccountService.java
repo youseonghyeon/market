@@ -1,7 +1,7 @@
 package com.project.market.modules.account.dao;
 
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.AccountType;
+import com.project.market.modules.account.entity.Role;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
@@ -30,7 +30,7 @@ public class AccountService {
                 .nickname(signupForm.getLoginId())
                 .password(encode)
                 .joinedAt(LocalDateTime.now())
-                .accountType(AccountType.USER)
+                .role("ROLE_USER")
                 .build();
 
         accountRepository.save(account);

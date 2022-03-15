@@ -43,8 +43,7 @@ public class Account {
 
     private String bio;
 
-    @Enumerated(EnumType.STRING)
-    private AccountType accountType;
+    private String role;
 
     @Lob
     private String profileImage;
