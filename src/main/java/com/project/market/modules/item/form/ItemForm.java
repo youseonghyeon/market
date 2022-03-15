@@ -22,7 +22,6 @@ public class ItemForm {
     @NotEmpty
     private String photo;
 
-    @NotEmpty
     private String originAddress;
 
     // private List<Tag> tags;
