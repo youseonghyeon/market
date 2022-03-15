@@ -51,8 +51,7 @@ public class Delivery {
         return this.deliveryStatus.equals(DeliveryStatus.COMPLETE);
     }
 
-
-    public boolean checkOwnership(Account account) {
+    public boolean isOwner(Account account) {
         return this.accountId.equals(account.getId());
     }
 }

@@ -16,11 +16,10 @@ public class DeliveryController {
 
     private final DeliveryRepository deliveryRepository;
 
-
     @GetMapping("/shiptrack/{deliveryId}")
     public String shiptrackForm(@CurrentAccount Account account, @PathVariable("deliveryId") Delivery delivery,
                                 Model model) throws IllegalAccessException {
-        if (!delivery.checkOwnership(account)) {
+        if (!delivery.isOwner(account)) {
             throw new IllegalAccessException("잘못된 접근");
         }
         model.addAttribute(delivery);

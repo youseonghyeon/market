@@ -28,24 +28,10 @@ public class OrderService {
     private final DeliveryRepository deliveryRepository;
     private final DeliveryService deliveryService;
 
-    public Orders processPurchase(Account account, OrderForm orderForm) {
-        //TODO 결제되었는지 확인
-        Item item = itemRepository.findById(orderForm.getItemId()).orElseThrow();
+    public Orders processPurchase(Account account, OrderForm orderForm, Item item) {
+        //TODO 결제 로직
         Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
         return createOrders(account, orderForm, delivery, item);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Orders> findOrders(Account account) {
-        return findOrders(account, null);
-    }
-    @Transactional(readOnly = true)
-    public List<Orders> findOrders(Account account, String orderType) {
-        if (orderType != null && orderType.equals("DELIVERY")) {
-            return orderRepository.findByCustomerAndOrderStatusIs(account, OrderStatus.DELIVERY);
-        } else {
-            return orderRepository.findByCustomer(account);
-        }
     }
 
     private Orders createOrders(Account account, OrderForm orderForm, Delivery delivery, Item item) {
@@ -59,7 +45,23 @@ public class OrderService {
                 .customer(account)
                 .shippingFee(item.getShippingFee())
                 .build();
-        return orderRepository.save(orders);
+        orderRepository.save(orders);
+        item.sold();
+        return orders;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Orders> findOrders(Account account) {
+        return findOrders(account, null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Orders> findOrders(Account account, String orderType) {
+        if (orderType != null && orderType.equals("DELIVERY")) {
+            return orderRepository.findByCustomerAndOrderStatusIs(account, OrderStatus.DELIVERY);
+        } else {
+            return orderRepository.findByCustomer(account);
+        }
     }
 
 }

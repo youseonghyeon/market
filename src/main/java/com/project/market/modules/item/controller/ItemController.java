@@ -2,6 +2,7 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -25,6 +27,7 @@ import java.security.InvalidParameterException;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
 
     @GetMapping("/enroll")
     public String productEnrollForm(Model model) {
@@ -52,5 +55,10 @@ public class ItemController {
         return "products/product";
     }
 
-
+    @GetMapping("/list")
+    public String productList(Model model) {
+        List<Item> itemList = itemRepository.findAllByExpiredIsFalse();
+        model.addAttribute(itemList);
+        return "products/list";
+    }
 }

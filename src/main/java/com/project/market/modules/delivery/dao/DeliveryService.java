@@ -26,6 +26,7 @@ public class DeliveryService {
                 .originAddress(item.getOriginAddress())
                 .destinationAddress(orderForm.getDestinationAddress())
                 .expectedArrivalFrom(LocalDate.now().plus(2, ChronoUnit.DAYS))
+                // TODO 예상 도착일자 공휴일 처리를 해주어야 함
                 .expectedArrivalUntil(LocalDate.now().plus(4, ChronoUnit.DAYS))
                 .deliveryMethod(orderForm.getDeliveryMethod())
                 .deliveryStatus(DeliveryStatus.READY)

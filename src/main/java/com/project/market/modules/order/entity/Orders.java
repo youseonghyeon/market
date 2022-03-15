@@ -24,7 +24,7 @@ public class Orders {
     @GeneratedValue
     @Column(name = "order_id")
     private Long id;
-    
+
     private LocalDateTime orderDateTime;
 
     @Enumerated(EnumType.STRING)
@@ -50,7 +50,7 @@ public class Orders {
     @JoinColumn(name = "account_id")
     private Account customer;
 
-    public boolean checkOwnership(Account account) {
+    public boolean isOwner(Account account) {
         return this.customer.equals(account);
     }
 }

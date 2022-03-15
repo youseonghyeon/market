@@ -53,4 +53,12 @@ public class Item {
     @ManyToMany
     private List<Tag> tags;
 
+
+    public void sold() {
+        this.expired = true;
+    }
+
+    public boolean canPurchase() {
+        return !this.expired;
+    }
 }

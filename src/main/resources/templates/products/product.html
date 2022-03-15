@@ -32,7 +32,12 @@
         <div>
             <span>태그(추가 예정)</span>
         </div>
-        <a th:href="@{/purchase(itemId=*{id})}">구매하기</a>
+        <div th:if="*{canPurchase()}">
+            <a th:href="@{/purchase(itemId=*{id})}" class="btn btn-primary">구매하기</a>
+        </div>
+        <div th:if="*{!canPurchase()}">
+            <div href="#" class="btn btn-dark" disabled>판매완료</div>
+        </div>
     </div>
 </div>
 </body>

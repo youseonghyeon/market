@@ -2,6 +2,7 @@ package com.project.market.modules.order.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.dao.OrderRepository;
 import com.project.market.modules.order.dao.OrderService;
@@ -26,6 +27,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderRepository orderRepository;
+    private final ItemRepository itemRepository;
 
     @ExceptionHandler(MissingPathVariableException.class)
     public String exceptionHandler(Model model) {
@@ -35,7 +37,10 @@ public class OrderController {
 
     @GetMapping("/purchase")
     public String purchaseForm(Model model, @RequestParam("itemId") Item item) {
-        model.addAttribute(new OrderForm());
+        OrderForm orderForm = new OrderForm();
+        orderForm.setItemId(item.getId());
+
+        model.addAttribute(orderForm);
         model.addAttribute(item);
         return "order/order";
     }
@@ -46,7 +51,11 @@ public class OrderController {
         if (errors.hasErrors()) {
             return "order/order";
         }
-        Orders orders = orderService.processPurchase(account, orderForm);
+        Item item = itemRepository.findById(orderForm.getItemId()).orElseThrow();
+        if (!item.canPurchase()) {
+            throw new IllegalStateException("판매할 수 없는 상품입니다.");
+        }
+        Orders orders = orderService.processPurchase(account, orderForm, item);
         attributes.addFlashAttribute("message", "주문이 완료 되었습니다.");
         return "redirect:/order/" + orders.getId();
     }
@@ -54,8 +63,7 @@ public class OrderController {
     @GetMapping("/order/{orderId}")
     public String orderDetail(@CurrentAccount Account account, @PathVariable("orderId") Orders orders,
                               Model model) throws IllegalAccessException {
-        if (!orders.checkOwnership(account)) {
-            log.info("권한 x");
+        if (!orders.isOwner(account)) {
             throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
         }
         model.addAttribute("order", orders);
