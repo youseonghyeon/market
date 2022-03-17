@@ -146,16 +146,6 @@ class AccountControllerTest {
                 .andExpect(view().name("account/profile"));
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("프로필 수정 폼")
-    void profileEditForm() throws Exception {
-        mockMvc.perform(get("/profile/edit"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("profileForm"))
-                .andExpect(view().name("account/settings/profile"));
-    }
-
     private void joinAccount(String loginId, String password) {
         SignupForm signupForm = new SignupForm();
         signupForm.setLoginId(loginId);

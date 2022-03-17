@@ -55,7 +55,7 @@ public class SettingController {
     @GetMapping("/password")
     public String passwordModifyForm(Model model) {
         model.addAttribute(new PasswordForm());
-        return "/account/settings/password";
+        return "account/settings/password";
     }
 
     @PostMapping("/password")
