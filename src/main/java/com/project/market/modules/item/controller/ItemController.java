@@ -22,20 +22,19 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
     private final ItemRepository itemRepository;
 
-    @GetMapping("/enroll")
+    @GetMapping("/products/enroll")
     public String productEnrollForm(Model model) {
         model.addAttribute(new ItemForm());
         return "products/enroll";
     }
 
-    @PostMapping("/enroll")
+    @PostMapping("/products/enroll")
     public String productEnroll(@CurrentAccount Account account, @Valid ItemForm itemForm,
                                 Errors errors) {
         if (errors.hasErrors()) {
@@ -43,7 +42,7 @@ public class ItemController {
         }
         Item item = itemService.createNewItem(account, itemForm);
 
-        return "redirect:/products/deal/" + item.getId();
+        return "redirect:/deal/" + item.getId();
     }
 
     @GetMapping("/deal/{itemId}")
@@ -55,7 +54,7 @@ public class ItemController {
         return "products/product";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/products/list")
     public String productList(Model model) {
         List<Item> itemList = itemRepository.findAllByExpiredIsFalse();
         model.addAttribute(itemList);

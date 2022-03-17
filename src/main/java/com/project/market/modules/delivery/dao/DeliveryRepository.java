@@ -6,4 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
+
 }

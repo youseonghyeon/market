@@ -66,4 +66,7 @@ public class Account {
 
     }
 
+    public void modifyPassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

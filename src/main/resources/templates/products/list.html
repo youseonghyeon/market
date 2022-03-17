@@ -6,7 +6,7 @@
 <div class="container">
     <h3>상품 목록</h3>
     <div th:each="item : ${itemList}">
-        <a th:href="@{/products/deal/{itemId}(itemId = ${item.getId()})}">
+        <a th:href="@{/deal/{itemId}(itemId = ${item.getId()})}">
             <div>
                 상품명 :
                 <span th:text="${item.getName()}"></span>

@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/login", "/sign-up", "/login*", "/products/deal/**", "/products/list").permitAll()
+                .antMatchers("/", "/login", "/sign-up", "/login*", "/deal/**", "/products/list").permitAll()
                 .antMatchers("/products/**").hasRole("USER")
                 .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -62,8 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MANAGER > ROLE_USER");
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_COURIER");
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MANAGER > ROLE_COURIER > ROLE_USER");
         return roleHierarchy;
     }
 

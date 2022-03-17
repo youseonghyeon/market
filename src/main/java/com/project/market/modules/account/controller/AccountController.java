@@ -38,10 +38,8 @@ public class AccountController {
 
     @InitBinder("signupForm")
     public void initBinder(WebDataBinder webDataBinder) {
-        // 회원가입 폼 검증
         webDataBinder.addValidators(signupFormValidator);
     }
-
 
     @GetMapping("/login")
     public String loginForm() {
@@ -50,11 +48,7 @@ public class AccountController {
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-
+        accountService.logout(request, response);
         return "redirect:/";
     }
 
@@ -67,13 +61,12 @@ public class AccountController {
     @PostMapping("/sign-up")
     public String signup(@Valid SignupForm signupForm, Errors errors, Model model) {
         if (errors.hasErrors()) {
-            model.addAttribute(signupForm);
             return "account/sign-up";
         }
+        // sginupForm validator 실행
         accountService.saveNewAccount(signupForm);
         return "redirect:/";
     }
-
 
     @GetMapping("/profile")
     public String profileForm(@CurrentAccount Account account, Model model) {
@@ -81,21 +74,5 @@ public class AccountController {
         return "account/profile";
     }
 
-    @GetMapping("/profile/edit")
-    public String profileEditForm(@CurrentAccount Account account, Model model) {
-        ProfileForm profileForm = modelMapper.map(account, ProfileForm.class);
-        model.addAttribute(profileForm);
-        return "settings/profile";
-    }
 
-    @PostMapping("/profile/edit")
-    public String profileEdit(@CurrentAccount Account account, @Valid ProfileForm profileForm,
-                              Errors errors, RedirectAttributes attributes) {
-        if (errors.hasErrors()) {
-            return "settings/profile";
-        }
-        accountService.editProfile(account, profileForm);
-        attributes.addFlashAttribute("message", "수정 완료!");
-        return "redirect:/profile";
-    }
 }
