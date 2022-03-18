@@ -84,7 +84,7 @@ class AccountServiceTest {
         ProfileForm profileForm = new ProfileForm();
         profileForm.setProfileImage("newImg");
         profileForm.setEmail("newMail@test.com");
-        profileForm.setPhone("010-1298-1298");
+        profileForm.setPhone("01012981298");
         profileForm.setNickname("newNick");
         //when
         accountService.editProfile(account, profileForm);

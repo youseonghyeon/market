@@ -6,13 +6,19 @@
 <div class="container">
     <h3>주문 목록</h3>
     <div>
-        <div th:each="order : ${orderList}">
+        <div class="border border-dark row container" th:each="order : ${orderList}">
             <div>상품 번호 : <span th:text="${order.getId()}">00</span>번</div>
+
             <div>주문 상태 : <span th:text="${order.orderStatus}">배송중</span></div>
+
             <div>결제 방식 : <span th:text="${order.paymentMethod}">배송중</span></div>
+
             <div>배송 요청사항 : <span th:text="${order.shippingRequests}">배송중</span></div>
+
             <div>배송비 : <span th:text="${order.shippingFee}">배송중</span></div>
+
             <a class="btn btn-primary" th:href="@{/order/{orderId}(orderId = ${order.getId()})}">주문 상세보기</a>
+
             <a class="btn btn-primary" th:href="@{/shiptrack/{deliveryId}(deliveryId = ${order.getOrderDelivery().getId()})}">배송 상태</a>
         </div>
     </div>

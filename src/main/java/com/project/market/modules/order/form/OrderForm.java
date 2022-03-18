@@ -14,7 +14,6 @@ public class OrderForm {
 
     private String shippingRequests;
 
-    //TODO 가능하면 String 에서 Enum 으로 교체
     @NotEmpty
     private String paymentMethod;
 

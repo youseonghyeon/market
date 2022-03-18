@@ -4,57 +4,58 @@
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container" th:object="${account}">
-    <div class="mt-3"></div>
     <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
         <span th:text="${message}">완료</span>
-<!--        <button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
-<!--            <span aria-hidden="true">&times;</span>-->
-<!--        </button>-->
+        <!--        <button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+        <!--            <span aria-hidden="true">&times;</span>-->
+        <!--        </button>-->
     </div>
-    <div>
-        <h3>프로필</h3>
-        <div>
-            <span>이름: </span>
-            <span th:text="*{username}"></span>
-        </div>
-        <div>
-            <span>별명: </span>
-            <span th:text="*{nickname}"></span>
-        </div>
+    <div class="row mt-3">
+        <div class="col-8 border border-dark pt-4 pb-4">
+            <h3>프로필</h3>
+            <div>
+                <span>이름: </span>
+                <span th:text="*{username}"></span>
+            </div>
+            <div>
+                <span>별명: </span>
+                <span th:text="*{nickname}"></span>
+            </div>
 
-        <div class="mt-3"></div>
-        <h3>연락처 및 알림</h3>
-        <div>
-            <span>전화번호: </span>
-            <span th:text="*{phone}"></span>
-        </div>
-        <div>
-            <span>이메일: </span>
-            <span th:text="*{email}"></span>
-        </div>
-        <a class="btn btn-primary" th:href="@{/profile/edit}">수정하기</a>
-    </div>
+            <h3>연락처 및 알림</h3>
+            <div>
+                <span>전화번호: </span>
+                <span th:text="*{phone}"></span>
+            </div>
+            <div>
+                <span>이메일: </span>
+                <span th:text="*{email}"></span>
+            </div>
 
-    <div>
-        <div class="mt-3"></div>
-        <h3>배송지 관리</h3>
-        <div>
-            <span>배송지 관리</span>
-            <button class="btn btn-primary">배송지 등록</button>
-        </div>
-    </div>
+            <button class="btn btn-primary" th:onclick="|location.href='@{/profile/edit}'|">프로필 수정하기</button>
+            <br/>
+            <button class="btn btn-danger" th:onclick="|location.href='@{/password}'|">비밀번호 변경</button>
 
-    <div>
-        <div class="mt-3"></div>
-        <h3>관심 지역</h3>
-        <div>
-            <span>관심지역</span>
-            <button class="btn btn-primary">관심지역 등록</button>
         </div>
-    </div>
+        <div class="col-4 border border-dark pt-4 pb-4">
+            <div>
+                <div class="mt-3"></div>
+                <h3>배송지 관리</h3>
+                <div>
+                    <span>배송지 관리</span>
+                    <button class="btn btn-primary">배송지 등록</button>
+                </div>
+            </div>
 
-    <div>
-        <a th:href="@{/password}" class="btn btn-danger">비밀번호 변경</a>
+            <div>
+                <div class="mt-3"></div>
+                <h3>관심 지역</h3>
+                <div>
+                    <span>관심지역</span>
+                    <button class="btn btn-primary">관심지역 등록</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 

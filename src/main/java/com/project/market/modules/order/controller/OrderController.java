@@ -2,6 +2,7 @@ package com.project.market.modules.order.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.delivery.entity.DeliveryMethod;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.dao.OrderRepository;
@@ -36,20 +37,23 @@ public class OrderController {
     }
 
     @GetMapping("/purchase")
-    public String purchaseForm(Model model, @RequestParam("itemId") Item item) {
+    public String purchaseForm(Model model, @RequestParam("itemId") Item item,
+                               @RequestParam("delivery") String deliveryMethod) {
         OrderForm orderForm = new OrderForm();
         orderForm.setItemId(item.getId());
+        orderForm.setDeliveryMethod(DeliveryMethod.valueOf(deliveryMethod));
+
 
         model.addAttribute(orderForm);
         model.addAttribute(item);
-        return "order/order";
+        return "order/purchase";
     }
 
     @PostMapping("/purchase")
     public String processPurchase(@CurrentAccount Account account, @Valid OrderForm orderForm,
                                   Errors errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            return "order/order";
+            return "order/purchase";
         }
         Item item = itemRepository.findById(orderForm.getItemId()).orElseThrow();
         if (!item.canPurchase()) {

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<script>
+    function openPopup() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+                // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+                // http://postcode.map.daum.net/guide
+            }
+        }).open();
+    }
+
+</script>
+<div class="container" th:object="${orderForm}">
+
+    <h3 class="col-12 mt-5">주문 결제</h3>
+    <form th:action="@{/purchase}" th:method="post">
+        <div class="row justify-content-md-center mt-3">
+            <div class="col-8">
+                <div class="row container pt-4 pb-4 border-dark border">
+                    <div>배송지</div>
+                    <div class="input-group ">
+                        <input class="form-control col-5" type="text" th:field="*{destinationAddress}">
+                        <div class="col-4"></div>
+                        <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">배송지
+                            변경
+                        </button>
+                    </div>
+
+
+                    <div>배송 요청사항</div>
+                    <div class="input-group ">
+                        <input class="form-control col-5" type="text" th:field="*{shippingRequests}">
+                    </div>
+                </div>
+
+                <div class="row container border-dark border pt-4 mt-4 pb-4">
+                    결제 방식
+                    <input type="text" class="form-control" th:field="*{paymentMethod}">
+                </div>
+            </div>
+
+            <div class="col-4 border-dark border">
+                <input type="hidden" th:field="*{itemId}">
+                <div class="fw-bold" style="font-size: 22px;">주문상품</div>
+                <div class="row container">
+                    <div class="border border-dark" style="width: 100px; height: 100px; margin-right: 10px;">상품 이미지
+                    </div>
+                    <!--                    상품 이름-->
+                    <span style="font-size: 20px;" th:text="${item.getName()}"></span>
+                </div>
+
+                <div class="">
+                    <div class="row">
+                        <span class="col-8">상품금액</span>
+                        <span class="col-4" th:text="${item.getPrice()}">000</span>
+                    </div>
+                    <div class="row">
+                        <span class="col-8">배송비</span>
+                        <span class="col-4" th:text="${item.getShippingFee()}">000</span>
+                    </div>
+                    <div class="row">
+                        <span class="col-8">총 결제금액</span>
+                        <span class="col-4" th:text="${item.getPrice()} + ${item.getShippingFee()}">000</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">결제하기</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</body>
+</html>

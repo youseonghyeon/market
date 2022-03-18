@@ -32,8 +32,19 @@
         <div>
             <span>태그(추가 예정)</span>
         </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">배송 방법</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option th:each="deliveryMethod : ${T(com.project.market.modules.delivery.entity.DeliveryMethod).values()}"
+                        th:value="${deliveryMethod.name()}"
+                        th:text="${deliveryMethod.name()}">
+                    val
+                </option>
+            </select>
+        </div>
         <div th:if="*{canPurchase()}">
-            <a th:href="@{/purchase(itemId=*{id})}" class="btn btn-primary">구매하기</a>
+<!--            TODO 아래 delivery를 위에있는 select에 맞춰주어야 함-->
+            <a th:href="@{/purchase(itemId=*{id}, delivery='POST')}" class="btn btn-primary">구매하기</a>
         </div>
         <div th:if="*{!canPurchase()}">
             <div href="#" class="btn btn-dark" disabled>판매완료</div>
