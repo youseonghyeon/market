@@ -10,4 +10,6 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findAllByExpiredIsFalse();
+
+    Item findByName(String itemName);
 }

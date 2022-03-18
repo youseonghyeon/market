@@ -13,19 +13,19 @@ import java.time.LocalDateTime;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    public static Integer DEFAULT_SHIPPING_FEE = 2500;
 
     public Item createNewItem(Account account, ItemForm itemForm) {
-        int defaultShippingFee = 2500; // 사용자가 착불을 선택할 수 있게 변경해야 함
 
         Item item = Item.builder()
                 .name(itemForm.getName())
                 .price(itemForm.getPrice())
                 .coverPhoto(itemForm.getCoverPhoto())
                 .photo(itemForm.getPhoto())
+                .originAddress(itemForm.getOriginAddress())
                 .enrolledDateTime(LocalDateTime.now())
-                .originAddress("test-originAddress")
                 .enrolledBy(account)
-                .shippingFee(defaultShippingFee)
+                .shippingFee(DEFAULT_SHIPPING_FEE)
                 .build();
 
         return itemRepository.save(item);

@@ -8,10 +8,7 @@ import com.project.market.modules.delivery.dto.CompleteDto;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.delivery.entity.DeliveryMethod;
 import com.project.market.modules.delivery.entity.DeliveryStatus;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,6 +70,7 @@ class DeliveryControllerTest {
 
     @Test
     @WithAccount("testUser")
+    @DisplayName("배송 리스트 폼")
     void deliveryHome() throws Exception {
         mockMvc.perform(get("/delivery/list"))
                 .andExpect(status().isOk())
@@ -82,6 +80,7 @@ class DeliveryControllerTest {
 
     @Test
     @WithAccount("testUser")
+    @DisplayName("배송 완료")
     void completeDelivery() throws Exception {
         CompleteDto completeDto = new CompleteDto();
         completeDto.setDeliveryId(TEST_DELIVERY_ID);
@@ -98,6 +97,7 @@ class DeliveryControllerTest {
 
     @Test
     @WithAccount("testUser")
+    @DisplayName("배송 취소")
     void cancelDeliverySuccess() throws Exception {
         CompleteDto completeDto = new CompleteDto();
         completeDto.setDeliveryId(TEST_DELIVERY_ID);
