@@ -25,7 +25,7 @@ public class AdminController {
         List<Account> accounts = accountRepository.findAll();
         // TODO 페이징 적용
 
-        model.addAttribute("accounts", accounts);
+        model.addAttribute("accountList", accounts);
         return "admin/management";
     }
 

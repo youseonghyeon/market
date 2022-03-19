@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NamedEntityGraph(name = "Orders.withItem", attributeNodes = {
-        @NamedAttributeNode("orderedItem")})
+@NamedEntityGraph(name = "withItemAndDelivery", attributeNodes = {
+        @NamedAttributeNode("orderedItem"),
+        @NamedAttributeNode("orderDelivery")})
 @Entity
 @Getter
 @Builder

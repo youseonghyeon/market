@@ -7,16 +7,28 @@
     <h2>상품등록 폼</h2>
     <div th:object="${itemForm}">
         <form th:action="@{/products/enroll}" method="post">
-            <p class="mt-3">상품 이름</p>
-            <input type="text" class="form-control" th:field="*{name}" placeholder="상품등록">
-            <p class="mt-3">상품 가격</p>
-            <input type="text" class="form-control" th:field="*{price}" placeholder="가격">
-            <p class="mt-3">미리보기 이미지</p>
+
+
+            <div class="mt-3">상품 이름</div>
+            <input type="text" class="form-control" th:field="*{name}" placeholder="상품 이름">
+
+
+            <div class="mt-3">상품 가격</div>
+            <input type="number" class="form-control" th:field="*{price}" placeholder="가격">
+
+
+            <div class="mt-3">미리보기 이미지</div>
             <input type="text" class="form-control" th:field="*{coverPhoto}" placeholder="배경 이미지">
-            <p class="mt-3">상세 이미지</p>
+
+
+            <div class="mt-3">상세 이미지</div>
             <input type="text" class="form-control" th:field="*{photo}" placeholder="상세 이미지">
 
-            <button type="submit" class="btn btn-primary">등록</button>
+
+            <div class="mt-3">상품 설명</div>
+            <input type="text" class="form-control" placeholder="상세 이미지">
+
+            <button type="submit" class="btn btn-primary mt-3">등록</button>
         </form>
     </div>
 </div>

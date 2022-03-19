@@ -3,6 +3,24 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
+<script>
+    function completeDelivery() {
+        console.log("start")
+        let completeDto = {
+            "deliveryId": 12
+        }
+        $.ajax({
+            url: "/delivery/complete",
+            data: JSON.stringify(completeDto),
+            type: 'POST',
+            contentType: 'application/json',
+            // TODO CSRF 토큰 설정을 해주면 됌
+            // header: {
+            //     'X-CSRFToken':
+            // }
+        })
+    }
+</script>
 <div class="container">
     <h3>배송 목록</h3>
     <div>
@@ -11,10 +29,12 @@
             <div>출발지 : <span th:text="${delivery.getOriginAddress()}">시작주소</span></div>
             <div>목적지 : <span th:text="${delivery.getDestinationAddress()}">도착주소</span></div>
             <button class="btn btn-primary">연결하기</button>
-            <button class="btn btn-primary">배송 완료</button>
+            <!--                        <button th:onclick="|completeDelivery(${delivery.getId()})|" class="btn btn-primary">배송 완료</button>-->
+            <button onclick="completeDelivery()" class="btn btn-primary">배송 완료</button>
             <button class="btn btn-primary">배송 취소</button>
         </div>
     </div>
 </div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 </body>
 </html>

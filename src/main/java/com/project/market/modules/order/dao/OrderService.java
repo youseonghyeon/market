@@ -58,9 +58,9 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<Orders> findOrders(Account account, String orderType) {
         if (orderType != null && orderType.equals("DELIVERY")) {
-            return orderRepository.findByCustomerAndOrderStatusIs(account, OrderStatus.DELIVERY);
+            return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateTimeDesc(account, OrderStatus.DELIVERY);
         } else {
-            return orderRepository.findByCustomer(account);
+            return orderRepository.findByCustomerOrderByOrderDateTimeDesc(account);
         }
     }
 

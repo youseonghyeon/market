@@ -37,4 +37,8 @@ public class DeliveryService {
                 .build();
         return deliveryRepository.save(delivery);
     }
+
+    public void competeDelivery(Delivery delivery) {
+        delivery.completeDelivery();
+    }
 }

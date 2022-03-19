@@ -55,7 +55,7 @@ public class Delivery {
         return this.accountId.equals(account.getId());
     }
 
-    public void shippingComplete() {
+    public void completeDelivery() {
         this.deliveryStatus = DeliveryStatus.COMPLETE;
     }
 
