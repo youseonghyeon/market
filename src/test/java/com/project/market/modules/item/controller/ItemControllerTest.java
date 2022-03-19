@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,7 +50,7 @@ class ItemControllerTest {
         itemForm.setCoverPhoto("test.jpg");
         itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
-        itemService.createNewItem(account, itemForm);
+        itemService.createNewItem(account, itemForm, new ArrayList<>());
     }
 
     @AfterEach

@@ -4,14 +4,17 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
+import com.project.market.modules.item.form.TagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -26,6 +29,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ItemRepository itemRepository;
+    private final TagService tagService;
 
     @GetMapping("/products/enroll")
     public String productEnrollForm(Model model) {
@@ -34,12 +38,14 @@ public class ItemController {
     }
 
     @PostMapping("/products/enroll")
-    public String productEnroll(@CurrentAccount Account account, @Valid ItemForm itemForm,
-                                Errors errors) {
+    public String productEnroll(@CurrentAccount Account account,
+                                @ModelAttribute @Valid ItemForm itemForm,
+                                @ModelAttribute TagForm tagForm, Errors errors) {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
-        Item item = itemService.createNewItem(account, itemForm);
+        tagService.createOrCountingTags(tagForm.getTags());
+        Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
 
         return "redirect:/deal/" + item.getId();
     }
