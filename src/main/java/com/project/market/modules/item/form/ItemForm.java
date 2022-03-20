@@ -10,6 +10,8 @@ import javax.validation.constraints.Positive;
 @Data
 public class ItemForm {
 
+    private Long id;
+
     @NotEmpty
     private String name;
 
@@ -23,6 +25,8 @@ public class ItemForm {
     private String photo;
 
     private String originAddress;
+
+    private String description;
 
     // private List<Tag> tags;
 

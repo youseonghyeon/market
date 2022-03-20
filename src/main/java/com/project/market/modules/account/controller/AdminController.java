@@ -39,4 +39,9 @@ public class AdminController {
         return null;
     }
 
+    @GetMapping("/delivery/manage")
+    public String deliveryManagement(Model model) {
+        return "admin/delivery-manage";
+    }
+
 }

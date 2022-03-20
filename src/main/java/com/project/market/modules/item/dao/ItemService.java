@@ -5,6 +5,7 @@ import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
+    private final ModelMapper modelMapper;
     public static Integer DEFAULT_SHIPPING_FEE = 2500;
 
     public Item createNewItem(Account account, ItemForm itemForm, List<String> tags) {
@@ -29,6 +31,7 @@ public class ItemService {
                 .coverPhoto(itemForm.getCoverPhoto())
                 .photo(itemForm.getPhoto())
                 .originAddress(itemForm.getOriginAddress())
+                .description(itemForm.getDescription())
                 .enrolledDateTime(LocalDateTime.now())
                 .enrolledBy(account)
                 .shippingFee(DEFAULT_SHIPPING_FEE)
@@ -43,5 +46,10 @@ public class ItemService {
         }
 
         return itemRepository.save(item);
+    }
+
+    public void modifyItem(ItemForm itemForm) {
+        Item item = itemRepository.findById(itemForm.getId()).orElseThrow();
+        item.editItem(itemForm);
     }
 }

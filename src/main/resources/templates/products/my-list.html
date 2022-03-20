@@ -4,9 +4,7 @@
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container">
-    <h3>상품 목록</h3>
-
-
+    <h3>내가 등록한 상품 목록</h3>
     <div class="border-dark border" th:each="item : ${itemList}">
         <a th:href="@{/deal/{itemId}(itemId = ${item.getId()})}">
             <div>
@@ -17,11 +15,17 @@
                 가격 :
                 <span th:text="${item.getPrice()}"></span>
             </div>
+            <div>
+                등록일자 :
+                <span th:text="${#temporals.format(item.getEnrolledDateTime(), 'yyyy년 M월 d일 h시 m분')}"></span>
+            </div>
         </a>
+
+        <div>
+<!--            <a th:href="@{/my-products/edit/{itemId}(itemId = ${item.getId()})}"></a>-->
+            <button th:onclick="|location.href='@{/my-products/edit/{itemId}(itemId = ${item.getId()})}'|">수정하기</button>
+        </div>
     </div>
-
-
-
 </div>
 </body>
 </html>

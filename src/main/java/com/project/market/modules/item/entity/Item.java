@@ -2,7 +2,7 @@ package com.project.market.modules.item.entity;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.order.entity.Orders;
+import com.project.market.modules.item.form.ItemForm;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,13 +19,16 @@ import static javax.persistence.FetchType.LAZY;
 @EqualsAndHashCode(of = "id")
 public class Item {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "item_id")
     private Long id;
 
     private String name;
 
     private int price;
+
+    private String description;
 
     private float rating;
 
@@ -60,5 +63,14 @@ public class Item {
 
     public boolean canPurchase() {
         return !this.expired;
+    }
+
+    public void editItem(ItemForm itemForm) {
+        this.name = itemForm.getName();
+        this.price = itemForm.getPrice();
+        this.coverPhoto = itemForm.getCoverPhoto();
+        this.photo = itemForm.getPhoto();
+        this.description = itemForm.getDescription();
+        this.originAddress = itemForm.getOriginAddress();
     }
 }
