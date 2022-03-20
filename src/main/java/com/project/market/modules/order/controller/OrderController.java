@@ -30,11 +30,6 @@ public class OrderController {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
 
-    @ExceptionHandler(MissingPathVariableException.class)
-    public String exceptionHandler(Model model) {
-        model.addAttribute("error", "페이지에 접근할 수 없습니다.");
-        return "error/missing-path-variable-exception";
-    }
 
     @GetMapping("/purchase")
     public String purchaseForm(Model model, @RequestParam("itemId") Item item,
