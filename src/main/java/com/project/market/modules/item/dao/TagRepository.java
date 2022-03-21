@@ -16,4 +16,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     // white list에 사용될 메서드
     List<Tag> findTop100ByOrderByCountDesc();
     List<Tag> findTop20ByOrderByCountDesc();
+
+    boolean existsByTitle(String tag);
 }

@@ -1,9 +1,11 @@
 package com.project.market.modules.account.entity;
 
 import com.project.market.modules.account.form.ProfileForm;
+import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.item.entity.Item;
 import lombok.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +19,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@NamedEntityGraph(name = "Account.withTags", attributeNodes = {
+        @NamedAttributeNode("tags")})
 public class Account {
 
     @Id
@@ -56,6 +60,9 @@ public class Account {
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
+
+    @ManyToMany
+    private List<Tag> tags;
 
 
     public void modifyProfile(ProfileForm profileForm) {

@@ -1,6 +1,7 @@
 package com.project.market.modules.account.dao;
 
 import com.project.market.modules.account.entity.Account;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,4 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByRoleIs(String role);
 
     Account findByLoginId(String loginId);
+
+    @EntityGraph(value = "Account.withTags", type = EntityGraph.EntityGraphType.FETCH)
+    Account findAccountWithTagById(Long id);
 }

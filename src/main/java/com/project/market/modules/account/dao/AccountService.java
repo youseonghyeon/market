@@ -4,6 +4,8 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
+import com.project.market.modules.item.dao.TagService;
+import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,6 +27,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TagService tagService;
 
     public void saveNewAccount(SignupForm signupForm) {
         String encode = passwordEncoder.encode(signupForm.getPassword());
@@ -58,5 +63,17 @@ public class AccountService {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Tag> findTags(Account account) {
+        Account findAccount = accountRepository.findAccountWithTagById(account.getId());
+        return findAccount.getTags();
+    }
+
+    public void saveNewTag(Account account, String tagTitle) {
+        Tag tag = tagService.findOrCreateTag(tagTitle);
+        account.getTags().add(tag);
+        accountRepository.save(account);
     }
 }

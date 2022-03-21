@@ -35,4 +35,13 @@ public class TagService {
             tagRepository.saveAll(newTags);
         }
     }
+
+    public Tag findOrCreateTag(String title) {
+        Tag tag = tagRepository.findByTitle(title);
+        if (tag != null) {
+            return tag;
+        }
+        Tag newTag = new Tag(title, 1);
+        return tagRepository.save(newTag);
+    }
 }
