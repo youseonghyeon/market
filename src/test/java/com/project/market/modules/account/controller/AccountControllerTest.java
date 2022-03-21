@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -154,5 +156,16 @@ class AccountControllerTest {
         signupForm.setEmail("email@email.com");
         signupForm.setPhone("010-1212-3434");
         accountService.saveNewAccount(signupForm);
+    }
+
+    @Test
+    @WithAccount("testUser")
+    void test() {
+        List<Account> all1 = accountRepository.findAll();
+        List<Account> all2 = accountRepository.findAll();
+        List<Account> all3 = accountRepository.findAll();
+        for (Account account : all1) {
+            System.out.println("account = " + account);
+        }
     }
 }

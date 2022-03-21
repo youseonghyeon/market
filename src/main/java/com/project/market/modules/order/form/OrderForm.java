@@ -22,5 +22,8 @@ public class OrderForm {
 
     private DeliveryMethod deliveryMethod;
 
-
+    public OrderForm(Long itemId, DeliveryMethod deliveryMethod) {
+        this.itemId = itemId;
+        this.deliveryMethod = deliveryMethod;
+    }
 }

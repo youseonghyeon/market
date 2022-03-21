@@ -14,7 +14,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Item {
@@ -53,6 +53,8 @@ public class Item {
 
     private int shippingFee;
 
+    private Boolean deleted;
+
     @ManyToMany
     private List<Tag> tags;
 
@@ -61,8 +63,12 @@ public class Item {
         this.expired = true;
     }
 
-    public boolean canPurchase() {
-        return !this.expired;
+
+    public boolean canPurchase(Account currentAccount) {
+        if (expired) return false;
+        if (enrolledBy.equals(currentAccount)) return false;
+        if (deleted) return false;
+        return true;
     }
 
     public void editItem(ItemForm itemForm) {
@@ -73,4 +79,5 @@ public class Item {
         this.description = itemForm.getDescription();
         this.originAddress = itemForm.getOriginAddress();
     }
+
 }

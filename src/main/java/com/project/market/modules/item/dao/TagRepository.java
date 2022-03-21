@@ -12,4 +12,8 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     Tag findByTitle(String title);
 
     List<Tag> findAllByTitleIn(List<String> titles);
+
+    // white list에 사용될 메서드
+    List<Tag> findTop100ByOrderByCountDesc();
+    List<Tag> findTop20ByOrderByCountDesc();
 }

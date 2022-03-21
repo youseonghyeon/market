@@ -1,7 +1,7 @@
 package com.project.market.modules.account.entity;
 
 import com.project.market.modules.account.form.ProfileForm;
-import com.project.market.modules.order.entity.Orders;
+import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.item.entity.Item;
 import lombok.*;
 
@@ -55,7 +55,7 @@ public class Account {
     private List<Item> enrolledItem;
 
     @OneToMany(mappedBy = "customer")
-    private List<Orders> orders;
+    private List<Order> orders;
 
 
     public void modifyProfile(ProfileForm profileForm) {

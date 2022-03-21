@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @NamedEntityGraph(name = "withItemAndDelivery", attributeNodes = {
         @NamedAttributeNode("orderedItem"),
         @NamedAttributeNode("orderDelivery")})
-@Entity
+@Entity(name = "orders")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Orders {
+public class Order {
 
     @Id
     @GeneratedValue

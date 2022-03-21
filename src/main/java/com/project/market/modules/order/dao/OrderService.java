@@ -7,7 +7,7 @@ import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.entity.OrderStatus;
-import com.project.market.modules.order.entity.Orders;
+import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.OrderForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +28,15 @@ public class OrderService {
     private final DeliveryRepository deliveryRepository;
     private final DeliveryService deliveryService;
 
-    public Orders processPurchase(Account account, OrderForm orderForm, Item item) {
+    public Long processPurchase(Account account, OrderForm orderForm, Item item) {
         //TODO 결제 로직
         Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
-        return createOrders(account, orderForm, delivery, item);
+        Order order = createOrder(account, orderForm, delivery, item);
+        return order.getId();
     }
 
-    private Orders createOrders(Account account, OrderForm orderForm, Delivery delivery, Item item) {
-        Orders orders = Orders.builder()
+    private Order createOrder(Account account, OrderForm orderForm, Delivery delivery, Item item) {
+        Order order = Order.builder()
                 .orderDateTime(LocalDateTime.now())
                 .orderStatus(OrderStatus.PAYMENT)
                 .paymentMethod(orderForm.getPaymentMethod())
@@ -45,18 +46,18 @@ public class OrderService {
                 .customer(account)
                 .shippingFee(item.getShippingFee())
                 .build();
-        orderRepository.save(orders);
+        orderRepository.save(order);
         item.sold();
-        return orders;
+        return order;
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrders(Account account) {
+    public List<Order> findOrders(Account account) {
         return findOrders(account, null);
     }
 
     @Transactional(readOnly = true)
-    public List<Orders> findOrders(Account account, String orderType) {
+    public List<Order> findOrders(Account account, String orderType) {
         if (orderType != null && orderType.equals("DELIVERY")) {
             return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateTimeDesc(account, OrderStatus.DELIVERY);
         } else {

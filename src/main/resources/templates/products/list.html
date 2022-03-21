@@ -5,6 +5,13 @@
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container">
     <h3>상품 목록</h3>
+    <div>
+        <span>태그 목록</span>
+        <div th:each="tag : ${tagList}">
+            <button class="badge" th:onclick="|location.href='@{/products/list(tag=${tag.getTitle()})}'|"
+               th:text="${tag.getTitle()}">태그</button>
+        </div>
+    </div>
 
 
     <div class="border-dark border" th:each="item : ${itemList}">

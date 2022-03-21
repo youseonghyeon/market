@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface ItemRepository extends JpaRepository<Item, Long> {
-
-    List<Item> findAllByExpiredIsFalse();
+public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRepository {
 
     Item findByName(String itemName);
 
     List<Item> findAllByEnrolledByOrderByEnrolledDateTimeDesc(Account account);
+
+    boolean existsByName(String name);
 }
