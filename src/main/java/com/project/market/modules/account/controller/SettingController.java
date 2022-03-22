@@ -5,27 +5,26 @@ import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.PasswordForm;
 import com.project.market.modules.account.form.ProfileForm;
-import com.project.market.modules.account.form.SingleTagForm;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.account.validator.PasswordFormValidator;
 import com.project.market.modules.item.dao.TagRepository;
 import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Tag;
-import com.project.market.modules.item.form.TagForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor

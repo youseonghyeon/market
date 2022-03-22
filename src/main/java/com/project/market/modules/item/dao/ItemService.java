@@ -2,8 +2,6 @@ package com.project.market.modules.item.dao;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.entity.QItem;
-import com.project.market.modules.item.entity.QTag;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.project.market.modules.item.entity.QItem.item;
-import static com.project.market.modules.item.entity.QTag.tag;
 
 @Service
 @Transactional
@@ -57,11 +52,12 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-    public void modifyItem(ItemForm itemForm) {
-        Item item = itemRepository.findById(itemForm.getId()).orElseThrow();
+    public void modifyItem(Item item, ItemForm itemForm) {
         item.editItem(itemForm);
     }
 
-
-
+    @Transactional(readOnly = true)
+    public boolean isMyItem(Account account, Item item) {
+        return account.getEnrolledItem().contains(item);
+    }
 }

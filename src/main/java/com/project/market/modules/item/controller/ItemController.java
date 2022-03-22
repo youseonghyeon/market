@@ -1,5 +1,6 @@
 package com.project.market.modules.item.controller;
 
+import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
@@ -33,13 +34,13 @@ public class ItemController {
     private final TagService tagService;
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
+    private final AccountRepository accountRepository;
 
     @GetMapping("/products/enroll")
     public String productEnrollForm(Model model) {
-        model.addAttribute("itemForm", new ItemForm());
-        // 상위 100개 태그를 WhiteList로 사용
         List<Tag> tagList = tagRepository.findTop100ByOrderByCountDesc();
         model.addAttribute("whiteList", tagList);
+        model.addAttribute("itemForm", new ItemForm());
         return "products/enroll";
     }
 
@@ -59,9 +60,6 @@ public class ItemController {
     // 개별 상품 조회
     @GetMapping("/deal/{itemId}")
     public String productForm(@PathVariable("itemId") Item item, Model model) {
-        if (item == null) {
-            throw new InvalidParameterException("존재하지 않는 상품입니다.");
-        }
         model.addAttribute("item", item);
         return "products/product";
     }
@@ -71,7 +69,6 @@ public class ItemController {
     public String productList(@RequestParam(value = "tag", required = false) String tag,
                               @RequestParam(value = "order", required = false) String orderBy,
                               Model model) {
-
         List<Item> itemList = itemRepository.findItemList(tag, orderBy);
         List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
         model.addAttribute("itemList", itemList);
@@ -101,12 +98,16 @@ public class ItemController {
     @PostMapping("/products/modify")
     public String modifyProduct(@CurrentAccount Account account,
                                 @ModelAttribute ItemForm itemForm,
-                                Errors errors) {
+                                Errors errors) throws IllegalAccessException {
         if (errors.hasErrors()) {
             return "products/edit";
         }
-        // 해당 상품이 내 상품인지 확인하는 validator 추가
-        itemService.modifyItem(itemForm);
+        Item item = itemRepository.findById(itemForm.getId()).orElseThrow();
+        Account accountWithItem = accountRepository.findAccountWithEnrolledItemById(account.getId());
+        if (!itemService.isMyItem(accountWithItem, item)) {
+            throw new IllegalAccessException("접근 권한이 없습니다.");
+        }
+        itemService.modifyItem(item, itemForm);
         return "redirect:/deal/" + itemForm.getId();
     }
 }

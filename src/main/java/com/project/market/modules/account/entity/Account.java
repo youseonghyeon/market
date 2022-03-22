@@ -21,6 +21,8 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id")
 @NamedEntityGraph(name = "Account.withTags", attributeNodes = {
         @NamedAttributeNode("tags")})
+@NamedEntityGraph(name = "Account.withEnrolledItems", attributeNodes = {
+        @NamedAttributeNode("enrolledItem")})
 public class Account {
 
     @Id
