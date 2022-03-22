@@ -3,6 +3,8 @@ package com.project.market.modules.account.controller;
 import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.entity.Tag;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -98,4 +105,24 @@ class SettingControllerTest {
         assertTrue(passwordEncoder.matches("modifiedPass", findAccount.getPassword()));
         assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("태그 추가 폼")
+    void tagSettingForm() throws Exception {
+        mockMvc.perform(get("/profile/tag"))
+                .andExpect(status().isOk())
+//                .andExpect(model().attributeExists("tagList"))
+                .andExpect(model().attributeExists("whiteList"))
+                .andExpect(view().name("account/settings/tag"));
+    }
+
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("태그 추가")
+    void tagSetting() throws Exception {
+//        mockMvc.perform(post("/profile/tag"));
+    }
+
 }

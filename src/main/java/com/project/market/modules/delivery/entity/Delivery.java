@@ -11,7 +11,7 @@ import static javax.persistence.EnumType.STRING;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Delivery {

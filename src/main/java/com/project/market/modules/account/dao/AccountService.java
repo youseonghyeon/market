@@ -4,6 +4,7 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
+import com.project.market.modules.item.dao.TagRepository;
 import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final TagService tagService;
+    private final TagRepository tagRepository;
 
     public void saveNewAccount(SignupForm signupForm) {
         String encode = passwordEncoder.encode(signupForm.getPassword());
@@ -71,9 +73,8 @@ public class AccountService {
         return findAccount.getTags();
     }
 
-    public void saveNewTag(Account account, String tagTitle) {
-        Tag tag = tagService.findOrCreateTag(tagTitle);
-        account.getTags().add(tag);
-        accountRepository.save(account);
+    public void saveNewTag(Account account, Tag tag) {
+        Account findAccount = accountRepository.findAccountWithTagById(account.getId());
+        findAccount.getTags().add(tag);
     }
 }

@@ -20,8 +20,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -66,7 +64,7 @@ public class ItemController {
 
     // 상품 리스트 조회
     @GetMapping("/products/list")
-    public String productList(@RequestParam(value = "tag", required = false) String tag,
+    public String productListForm(@RequestParam(value = "tag", required = false) String tag,
                               @RequestParam(value = "order", required = false) String orderBy,
                               Model model) {
         List<Item> itemList = itemRepository.findItemList(tag, orderBy);
@@ -80,7 +78,7 @@ public class ItemController {
     @GetMapping("/my-products/list")
     public String myProductList(@CurrentAccount Account account, Model model) {
         List<Item> itemList = itemRepository.findAllByEnrolledByOrderByEnrolledDateTimeDesc(account);
-        model.addAttribute(itemList);
+        model.addAttribute("itemList", itemList);
         return "products/my-list";
     }
 
@@ -91,7 +89,7 @@ public class ItemController {
         if (!item.getEnrolledBy().getId().equals(account.getId())) {
             throw new IllegalStateException("본인이 등록한 상품이 아닙니다.");
         }
-        model.addAttribute(modelMapper.map(item, ItemForm.class));
+        model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
         return "products/edit";
     }
 

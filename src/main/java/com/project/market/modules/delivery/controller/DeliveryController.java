@@ -25,7 +25,7 @@ public class DeliveryController {
     @GetMapping("/list")
     public String deliveryHome(Model model) {
         List<Delivery> deliveryList = deliveryRepository.findAll();
-        model.addAttribute(deliveryList);
+        model.addAttribute("deliveryList", deliveryList);
         return "delivery/list";
     }
 
@@ -51,9 +51,4 @@ public class DeliveryController {
         delivery.shippingCancel();
         return "ok";
     }
-
-
-
-
-
 }

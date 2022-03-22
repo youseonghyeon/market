@@ -35,6 +35,8 @@ dependencies {
   implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
   implementation 'org.springframework.boot:spring-boot-configuration-processor'
   implementation 'org.modelmapper:modelmapper:3.0.0'
+  implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 
   implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
   implementation "com.querydsl:querydsl-apt:${queryDslVersion}"

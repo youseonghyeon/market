@@ -1,11 +1,10 @@
 package com.project.market.modules.account.entity;
 
 import com.project.market.modules.account.form.ProfileForm;
+import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.order.entity.Order;
-import com.project.market.modules.item.entity.Item;
 import lombok.*;
-import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +15,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @NamedEntityGraph(name = "Account.withTags", attributeNodes = {
@@ -68,14 +67,18 @@ public class Account {
 
 
     public void modifyProfile(ProfileForm profileForm) {
-        this.nickname = profileForm.getNickname();
-        this.profileImage = profileForm.getProfileImage();
-        this.email = profileForm.getEmail();
-        this.phone = profileForm.getPhone();
+        nickname = profileForm.getNickname();
+        profileImage = profileForm.getProfileImage();
+        email = profileForm.getEmail();
+        phone = profileForm.getPhone();
 
     }
 
     public void modifyPassword(String newPassword) {
-        this.password = newPassword;
+        password = newPassword;
+    }
+
+    public void modifyRole(String role) {
+        this.role = role;
     }
 }

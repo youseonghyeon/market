@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
+import java.util.Locale;
+
 public class WithAccountSecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
 
     @Autowired
@@ -38,6 +40,17 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         signupForm.setPhone("010-9900-9900");
 
         accountService.saveNewAccount(signupForm);
+        Account account = accountRepository.findByLoginId(loginId);
+        if (loginId.toLowerCase(Locale.ROOT).contains("admin")) {
+            account.modifyRole("ROLE_ADMIN");
+        } else if (loginId.toLowerCase(Locale.ROOT).contains("manager")) {
+            account.modifyRole("ROLE_MANAGER");
+        } else if (loginId.toLowerCase(Locale.ROOT).contains("courier")) {
+            account.modifyRole("ROLE_COURIER");
+        } else {
+            account.modifyRole("ROLE_USER");
+        }
+
         UserDetails principal = userDetailsService.loadUserByUsername(loginId);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
         SecurityContext context = SecurityContextHolder.createEmptyContext();

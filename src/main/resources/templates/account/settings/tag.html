@@ -9,10 +9,14 @@
     <div th:each="tag : ${tagList}">
         <span class="badge" th:text="${tag.getTitle()}">뱃지</span>
     </div>
-    <form th:action="@{/profile/tag}" method="post">
-        <input type="text" id="newTag" name="newTag">
+    <form th:action="@{/profile/tag}" th:method="post">
+        <input type="text" id="new-tag" name="new-tag">
         <button type="submit" value="저장">저장</button>
     </form>
+    화이트리스트
+    <div th:each="tag : ${whiteList}">
+        <span class="badge" th:text="${tag.getTitle()}">뱃지</span>
+    </div>
 </div>
 
 </body>

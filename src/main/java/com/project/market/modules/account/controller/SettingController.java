@@ -11,6 +11,7 @@ import com.project.market.modules.item.dao.TagRepository;
 import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class SettingController {
@@ -91,9 +94,10 @@ public class SettingController {
     }
 
     @PostMapping("/profile/tag")
-    public String tagSetting() {
-        // TODO 태그 추가 기능
-        return null;
+    public String tagSetting(@CurrentAccount Account account, @RequestParam("new-tag") String tag) {
+        Tag findTag = tagService.findOrCreateTag(tag);
+        accountService.saveNewTag(account, findTag);
+        return "redirect:/profile/tag";
     }
 
 }

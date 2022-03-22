@@ -157,15 +157,4 @@ class AccountControllerTest {
         signupForm.setPhone("010-1212-3434");
         accountService.saveNewAccount(signupForm);
     }
-
-    @Test
-    @WithAccount("testUser")
-    void test() {
-        List<Account> all1 = accountRepository.findAll();
-        List<Account> all2 = accountRepository.findAll();
-        List<Account> all3 = accountRepository.findAll();
-        for (Account account : all1) {
-            System.out.println("account = " + account);
-        }
-    }
 }

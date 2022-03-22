@@ -5,7 +5,6 @@ import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.entity.DeliveryMethod;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.order.dao.OrderRepository;
 import com.project.market.modules.order.dao.OrderService;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.OrderForm;
@@ -14,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -26,7 +28,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
 
 
@@ -40,14 +41,14 @@ public class OrderController {
             attributes.addFlashAttribute("errorMassage", "구매할 수 없는 상품입니다.");
             return "redirect:/deal/" + item.getId();
         }
-
-        model.addAttribute("orderForm", new OrderForm(item.getId(), DeliveryMethod.valueOf(deliveryMethod)));
+        OrderForm orderForm = new OrderForm(item.getId(), DeliveryMethod.valueOf(deliveryMethod));
+        model.addAttribute("orderForm", orderForm);
         model.addAttribute("item", item);
         return "order/purchase";
     }
 
     @PostMapping("/purchase")
-    public String processPurchase(@CurrentAccount Account account,
+    public String purchase(@CurrentAccount Account account,
                                   @Valid OrderForm orderForm,
                                   Errors errors,
                                   RedirectAttributes attributes) {
@@ -64,7 +65,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/{orderId}")
-    public String orderDetail(@CurrentAccount Account account,
+    public String orderDetailForm(@CurrentAccount Account account,
                               @PathVariable("orderId") Order order,
                               Model model) throws IllegalAccessException {
         if (!order.isOwner(account)) {
@@ -75,7 +76,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/list")
-    public String orderList(@CurrentAccount Account account,
+    public String orderListForm(@CurrentAccount Account account,
                             @RequestParam(name = "orderType", required = false) String orderType,
                             Model model) {
         List<Order> orderList;
