@@ -1,5 +1,7 @@
 package com.project.market.modules.account.dao;
 
+import com.project.market.infra.mail.TokenMailSender;
+import com.project.market.infra.mail.TokenMailSenderImpl;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
@@ -9,12 +11,6 @@ import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,10 +18,10 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,11 +33,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TagService tagService;
-    private final TagRepository tagRepository;
-    private final JavaMailSender mailSender;
-    @Value("${spring.mail.username}")
-    String sendFrom;
+    private final TokenMailSender tokenMailSender;
 
     public void saveNewAccount(SignupForm signupForm) {
         String encode = passwordEncoder.encode(signupForm.getPassword());
@@ -56,6 +48,9 @@ public class AccountService {
                 .password(encode)
                 .joinedAt(LocalDateTime.now())
                 .role("ROLE_USER")
+                .orders(new ArrayList<>())
+                .enrolledItem(new ArrayList<>())
+                .tags(new ArrayList<>())
                 .build();
 
         accountRepository.save(account);
@@ -94,38 +89,11 @@ public class AccountService {
         String token = createNewToken();
         account.savePasswordToken(token);
         accountRepository.save(account);
-
-        sendMail(account.getEmail(), token);
+        tokenMailSender.send(account.getEmail(), token);
     }
 
     private String createNewToken() {
         return UUID.randomUUID().toString();
-    }
-
-    @Async
-    public void sendMail(String sendTo, String confirmToken) {
-        String mailTitle = "비밀번호 찾기 메일";
-        String mailContent = "http://localhost:8080/help/confirm?token=" + confirmToken;
-
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            @Override
-            public void prepare(MimeMessage mimeMessage) throws Exception {
-                final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-                message.setTo(sendTo);
-                message.setFrom(sendFrom);
-                message.setSubject(mailTitle);
-                message.setText(mailContent, false);
-
-//                ClassPathResource resource = new ClassPathResource("img 주소/img 이름.png");
-//                message.addInline("img", resource.getFile());
-            }
-        };
-        try {
-            mailSender.send(preparator);
-        } catch (MailException e) {
-            log.error("메일 전송 실패");
-        }
     }
 
     public void expirePasswordToken(Account account) {

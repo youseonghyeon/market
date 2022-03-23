@@ -139,6 +139,7 @@ public class SettingController {
     public String modifyPassword(@CookieValue(value = "temp_email") Cookie cookie,
                                  @RequestParam("new-password") String password,
                                  HttpServletResponse response) {
+        // TODO 검증 로직이 부족하므로 검증을 더 해야함
         Account account = accountRepository.findByEmail(cookie.getValue());
         if (account == null) {
             // 에러처리 해주어야 함
@@ -151,6 +152,5 @@ public class SettingController {
         response.addCookie(cookie);
         return "redirect:/login";
     }
-
 
 }

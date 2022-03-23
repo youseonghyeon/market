@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,16 +57,16 @@ public class Account {
     private String passwordConfirmToken;
 
     @ManyToMany
-    private Set<Zone> zones = new HashSet<>();
+    private List<Zone> zones = new ArrayList<>();
 
     @OneToMany(mappedBy = "enrolledBy")
-    private List<Item> enrolledItem;
+    private List<Item> enrolledItem = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     @ManyToMany
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
 
     public void modifyProfile(ProfileForm profileForm) {
@@ -91,4 +92,5 @@ public class Account {
     public void expirePasswordToken() {
         passwordConfirmToken = null;
     }
+
 }

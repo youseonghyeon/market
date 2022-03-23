@@ -4,7 +4,6 @@ import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.Role;
 import com.project.market.modules.account.form.SignupForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
