@@ -53,6 +53,8 @@ public class Account {
     @Lob
     private String profileImage;
 
+    private String passwordConfirmToken;
+
     @ManyToMany
     private Set<Zone> zones = new HashSet<>();
 
@@ -80,5 +82,13 @@ public class Account {
 
     public void modifyRole(String role) {
         this.role = role;
+    }
+
+    public void savePasswordToken(String token) {
+        passwordConfirmToken = token;
+    }
+
+    public void expirePasswordToken() {
+        passwordConfirmToken = null;
     }
 }
