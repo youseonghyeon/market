@@ -7,12 +7,14 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Profile("test")
 @Component
-public class TokenMailSenderTest implements TokenMailSender{
+public class TokenMailSenderTest implements TokenMailSender {
 
     @Override
     public void send(String sendTo, String token) {
 
+        log.info("------------------------------------");
         log.info("sendTo={}", sendTo);
         log.info("token={}", token);
+        log.info("------------------------------------");
     }
 }

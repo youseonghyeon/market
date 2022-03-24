@@ -8,6 +8,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +58,8 @@ public class Account {
 
     private String passwordConfirmToken;
 
+    private LocalDateTime passwordConfirmTokenCreateDate;
+
     @ManyToMany
     private List<Zone> zones = new ArrayList<>();
 
@@ -87,10 +91,16 @@ public class Account {
 
     public void savePasswordToken(String token) {
         passwordConfirmToken = token;
+        if (token != null) {
+            // token 폐기시 null 사용
+            passwordConfirmTokenCreateDate = LocalDateTime.now();
+
+        }
     }
 
-    public void expirePasswordToken() {
-        passwordConfirmToken = null;
+    public boolean isExpiredPasswordToken() {
+        return passwordConfirmTokenCreateDate.isBefore(LocalDateTime.now().minusMinutes(10));
     }
+
 
 }

@@ -9,11 +9,13 @@
         <span class="col-2">이름</span>
         <span class="col-2">권한</span>
         <span class="col-2">가입일</span>
+        <span>권한 변경</span>
     </div>
     <div class="row" th:each="account : ${accountList}">
         <span class="col-2" th:text="${account.getUsername()}">홍길동</span>
         <span class="col-2" th:text="${account.getRole()}">ROLE_USER</span>
         <span class="col-2" th:text="${#temporals.format(account.getJoinedAt(), 'yyyy년 M월 d일')}"></span>
+        <a th:href="@{/admin/manage/{accountId}(accountId = ${account.getId()})}">권한 변경</a>
     </div>
 </div>
 </body>

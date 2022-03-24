@@ -113,10 +113,15 @@ public class SettingController {
             attributes.addAttribute("errorMsg", "error");
             return "account/help/find-password";
         }
-        accountService.sendTokenMail(account);
-        Cookie cookie = new Cookie("temp_email", email);
-        cookie.setMaxAge(300);
-        response.addCookie(cookie);
+        String token = accountService.saveNewToken(account);
+        accountService.sendTokenMail(account, token);
+        Cookie emailCookie = new Cookie("temp_email", email);
+        Cookie tokenCookie = new Cookie("temp_token", token);
+        emailCookie.setMaxAge(300);
+        tokenCookie.setMaxAge(300);
+        response.addCookie(emailCookie);
+        response.addCookie(tokenCookie);
+
         return "redirect:/help/send-token";
     }
 
@@ -131,26 +136,35 @@ public class SettingController {
         if (account == null) {
             return "account/help/fail";
         }
-        accountService.expirePasswordToken(account);
+        if (account.isExpiredPasswordToken()) {
+            return "account/help/fail";
+        }
         return "account/help/modify-password";
     }
 
     @PostMapping("/help/modify/password")
-    public String modifyPassword(@CookieValue(value = "temp_email") Cookie cookie,
+    public String modifyPassword(@CookieValue(value = "temp_email") Cookie emailCookie,
+                                 @CookieValue(value = "temp_token") Cookie tokenCookie,
                                  @RequestParam("new-password") String password,
                                  HttpServletResponse response) {
-        // TODO 검증 로직이 부족하므로 검증을 더 해야함
-        Account account = accountRepository.findByEmail(cookie.getValue());
-        if (account == null) {
-            // 에러처리 해주어야 함
+        Account account = accountRepository.findByEmail(emailCookie.getValue());
+        if (account == null || !isValidPasswordToken(account, tokenCookie.getValue())) {
             return "account/help/fail";
         }
-        accountService.modifyPassword(account, password);
 
-        cookie.setValue(null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        accountService.modifyPassword(account, password);
+        accountService.destroyPasswordToken(account);
+        emailCookie.setValue(null);
+        tokenCookie.setValue(null);
+        emailCookie.setMaxAge(0);
+        tokenCookie.setMaxAge(0);
+        response.addCookie(emailCookie);
+        response.addCookie(tokenCookie);
         return "redirect:/login";
+    }
+
+    private boolean isValidPasswordToken(Account account, String token) {
+        return account.getPasswordConfirmToken().equals(token) && !account.isExpiredPasswordToken();
     }
 
 }

@@ -33,9 +33,9 @@
             </div>
 
             <div class=" col-2 border border-dark ">
-                <a class="btn" th:href="@{/order/{orderId}(orderId = ${order.getId()})}">주문 상세보기</a>
+                <a class="btn btn-primary" th:href="@{/order/{orderId}(orderId = ${order.getId()})}">주문 상세보기</a>
 
-                <a class="btn"
+                <a class="btn btn-primary"
                    th:href="@{/shiptrack/{deliveryId}(deliveryId = ${order.getOrderDelivery().getId()})}">배송
                     상태</a>
             </div>

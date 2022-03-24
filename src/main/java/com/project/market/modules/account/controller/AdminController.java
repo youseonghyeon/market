@@ -4,14 +4,17 @@ import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -27,6 +30,14 @@ public class AdminController {
 
         model.addAttribute("accountList", accounts);
         return "admin/management";
+    }
+
+    @GetMapping("/manage/{accountId}")
+    public String editRoleForm(@PathVariable("accountId") Account account, Model model) {
+        model.addAttribute(account);
+        log.info("account.getId()={}", account.getId());
+        return "admin/edit-management";
+
     }
 
     @GetMapping("/role")

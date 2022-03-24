@@ -85,10 +85,14 @@ public class AccountService {
         findAccount.getTags().add(tag);
     }
 
-    public void sendTokenMail(Account account) {
+    public String saveNewToken(Account account) {
         String token = createNewToken();
         account.savePasswordToken(token);
         accountRepository.save(account);
+        return token;
+    }
+
+    public void sendTokenMail(Account account, String token) {
         tokenMailSender.send(account.getEmail(), token);
     }
 
@@ -96,7 +100,7 @@ public class AccountService {
         return UUID.randomUUID().toString();
     }
 
-    public void expirePasswordToken(Account account) {
-        account.expirePasswordToken();
+    public void destroyPasswordToken(Account account) {
+        account.savePasswordToken(null);
     }
 }

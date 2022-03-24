@@ -21,10 +21,13 @@ public class TokenMailSenderImpl implements TokenMailSender  {
 
     @Value("${spring.mail.username}")
     String sendFrom;
+//    @Value("${host}")
+//    String host;
 
     @Override
     public void send(String sendTo, String token) {
-        String mailTitle = "비밀번호 찾기 메일";
+        String mailTitle = "비밀번호 찾기 메일 테스트";
+        // String mailContent = host + "/help/confirm?token=" + token;
         String mailContent = "http://localhost:8080/help/confirm?token=" + token;
 
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
