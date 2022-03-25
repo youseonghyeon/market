@@ -2,7 +2,9 @@ package com.project.market.modules.account.controller;
 
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.PasswordForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.util.CurrentAccount;
@@ -37,6 +39,7 @@ public class SettingController {
     private final TagService tagService;
     private final AccountRepository accountRepository;
     private final PasswordFormValidator passwordFormValidator;
+    private final ZoneRepository zoneRepository;
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) {
@@ -167,4 +170,26 @@ public class SettingController {
         return account.getPasswordConfirmToken().equals(token) && !account.isExpiredPasswordToken();
     }
 
+    @GetMapping("/profile/zone")
+    public String zoneSettingForm(@CurrentAccount Account account, Model model) {
+        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
+        List<Zone> whiteList = zoneRepository.findAll();
+        model.addAttribute("zoneList", findAccount.getZones());
+        model.addAttribute("whiteList", whiteList);
+        return "account/settings/zone";
+    }
+
+    @PostMapping("/profile/zone")
+    public String zoneSetting(@CurrentAccount Account account, @RequestParam("new-zone") String city) {
+//        if (errors.hasErrors()) {
+//            return "account/settings/zone";
+//        }
+        // TODO text입력이 아닌 리스트에서 고르는걸로 바꿀것
+        Zone zone = zoneRepository.findByCity(city);
+        if (zone == null) {
+            return "account/settings/zone";
+        }
+        accountService.saveNewZone(account,zone);
+        return "redirect:/profile/zone";
+    }
 }

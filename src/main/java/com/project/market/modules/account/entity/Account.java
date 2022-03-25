@@ -8,12 +8,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -25,6 +21,8 @@ import java.util.Set;
         @NamedAttributeNode("tags")})
 @NamedEntityGraph(name = "Account.withEnrolledItems", attributeNodes = {
         @NamedAttributeNode("enrolledItem")})
+@NamedEntityGraph(name = "Account.withZones", attributeNodes = {
+        @NamedAttributeNode("zones")})
 public class Account {
 
     @Id

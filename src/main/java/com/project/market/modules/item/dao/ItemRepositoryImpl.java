@@ -27,6 +27,8 @@ public class ItemRepositoryImpl implements CustomItemRepository {
         return queryFactory.selectFrom(item)
                 .leftJoin(item.tags, tag)
                 .where(builder)
+                .where(item.expired.isFalse())
+                .where(item.deleted.isFalse())
                 .orderBy(itemSort(orderCriteria))
                 .fetch();
     }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div class="container">
+    <h3>관심지역 추가하기</h3>
+    <div>등록된 태그</div>
+    <div th:each="zone : ${zoneList}">
+        <span class="badge" th:text="${zone.getCity()}">뱃지</span>
+    </div>
+    <form th:action="@{/profile/zone}" th:method="post">
+        <input type="text" name="new-zone">
+        <button type="submit" value="저장">저장</button>
+    </form>
+
+    화이트리스트
+    <div th:each="white : ${whiteList}">
+        <div th:text="${white.getCity()}">지역</div>
+    </div>
+
+</div>
+
+</body>
+</html>

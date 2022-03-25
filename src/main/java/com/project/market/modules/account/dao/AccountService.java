@@ -1,13 +1,11 @@
 package com.project.market.modules.account.dao;
 
 import com.project.market.infra.mail.TokenMailSender;
-import com.project.market.infra.mail.TokenMailSenderImpl;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
-import com.project.market.modules.item.dao.TagRepository;
-import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -51,6 +50,7 @@ public class AccountService {
                 .orders(new ArrayList<>())
                 .enrolledItem(new ArrayList<>())
                 .tags(new ArrayList<>())
+                .zones(new ArrayList<>())
                 .build();
 
         accountRepository.save(account);
@@ -76,13 +76,20 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public List<Tag> findTags(Account account) {
-        Account findAccount = accountRepository.findAccountWithTagById(account.getId());
+        Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
         return findAccount.getTags();
     }
 
     public void saveNewTag(Account account, Tag tag) {
-        Account findAccount = accountRepository.findAccountWithTagById(account.getId());
+        Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
+        // TODO ##ERROR## 의도하지 않은 delete쿼리문이 나감 && 중복제거 해야함
         findAccount.getTags().add(tag);
+    }
+
+    public void saveNewZone(Account account, Zone zone) {
+        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
+        // TODO ##ERROR## 의도하지 않은 delete쿼리문이 나감 && 중복제거 해야함
+        findAccount.getZones().add(zone);
     }
 
     public String saveNewToken(Account account) {
@@ -103,4 +110,5 @@ public class AccountService {
     public void destroyPasswordToken(Account account) {
         account.savePasswordToken(null);
     }
+
 }

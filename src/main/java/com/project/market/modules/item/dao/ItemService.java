@@ -37,9 +37,9 @@ public class ItemService {
                 .enrolledDateTime(LocalDateTime.now())
                 .enrolledBy(account)
                 .shippingFee(DEFAULT_SHIPPING_FEE)
-                .tags(new ArrayList<>())
-                .expired(false)
                 .deleted(false)
+                .expired(false)
+                .tags(new ArrayList<>())
                 .build();
 
         if (!tags.isEmpty()) {

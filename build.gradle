@@ -41,8 +41,6 @@ dependencies {
   implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
   implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-  implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter")
-
 
   compileOnly 'org.projectlombok:lombok'
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -68,7 +66,7 @@ querydsl {
 sourceSets {
   main.java.srcDir querydslDir
 }
-compileQuerydsl{
+compileQuerydsl {
   options.annotationProcessorPath = configurations.querydsl
 }
 configurations {
@@ -77,3 +75,4 @@ configurations {
   }
   querydsl.extendsFrom compileClasspath
 }
+

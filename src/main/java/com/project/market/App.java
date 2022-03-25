@@ -75,6 +75,8 @@ public class App {
                         .enrolledDateTime(LocalDateTime.now())
                         .enrolledBy(account)
                         .shippingFee(2500)
+                        .deleted(false)
+                        .expired(false)
                         .tags(new ArrayList<>())
                         .build();
                 itemRepository.save(item);

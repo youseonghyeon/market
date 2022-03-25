@@ -8,4 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ZoneRepository extends JpaRepository<Zone, Long> {
 
     boolean existsByCity(String city);
+
+    Zone findByCity(String city);
 }

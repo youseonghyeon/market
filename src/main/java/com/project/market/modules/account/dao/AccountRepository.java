@@ -18,8 +18,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByLoginId(String loginId);
 
-    @EntityGraph(value = "Account.withTags", type = EntityGraph.EntityGraphType.FETCH)
-    Account findAccountWithTagById(Long id);
+    //    @EntityGraph(value = "Account.withTags", type = EntityGraph.EntityGraphType.FETCH)
+    @EntityGraph(attributePaths = {"tags"})
+    Account findAccountWithTagsById(Long id);
+
+    @EntityGraph(value = "Account.withZones", type = EntityGraph.EntityGraphType.FETCH)
+    Account findAccountWithZonesById(Long id);
 
     @EntityGraph(value = "Account.withEnrolledItems", type = EntityGraph.EntityGraphType.FETCH)
     Account findAccountWithEnrolledItemById(Long id);
