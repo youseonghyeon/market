@@ -54,9 +54,9 @@ public class Account {
     @Lob
     private String profileImage;
 
-    private String passwordConfirmToken;
+    private String passwordToken;
 
-    private LocalDateTime passwordConfirmTokenCreateDate;
+    private LocalDateTime passwordTokenCreateDate;
 
     @ManyToMany
     private List<Zone> zones = new ArrayList<>();
@@ -88,16 +88,19 @@ public class Account {
     }
 
     public void savePasswordToken(String token) {
-        passwordConfirmToken = token;
-        if (token != null) {
-            // token 폐기시 null 사용
-            passwordConfirmTokenCreateDate = LocalDateTime.now();
-
+        passwordToken = token;
+        if (token == null) {
+            // 토큰 폐기
+            passwordTokenCreateDate = LocalDateTime.now().minusDays(3);
+        } else {
+            // 토큰 생성
+            passwordTokenCreateDate = LocalDateTime.now();
         }
     }
 
-    public boolean isExpiredPasswordToken() {
-        return passwordConfirmTokenCreateDate.isBefore(LocalDateTime.now().minusMinutes(10));
+    public boolean isValidPasswordToken(String token) {
+        return passwordToken.equals(token) &&
+                passwordTokenCreateDate.isAfter(LocalDateTime.now().minusSeconds(600));
     }
 
 

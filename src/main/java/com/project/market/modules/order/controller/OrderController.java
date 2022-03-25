@@ -32,11 +32,8 @@ public class OrderController {
 
 
     @GetMapping("/purchase")
-    public String purchaseForm(@CurrentAccount Account account,
-                               @RequestParam("itemId") Item item,
-                               @RequestParam("delivery") String deliveryMethod,
-                               Model model,
-                               RedirectAttributes attributes) {
+    public String purchaseForm(@CurrentAccount Account account, @RequestParam("itemId") Item item,
+                               @RequestParam("delivery") String deliveryMethod, Model model, RedirectAttributes attributes) {
         if (!item.canPurchase(account)) {
             attributes.addFlashAttribute("errorMassage", "구매할 수 없는 상품입니다.");
             return "redirect:/deal/" + item.getId();
@@ -48,10 +45,8 @@ public class OrderController {
     }
 
     @PostMapping("/purchase")
-    public String purchase(@CurrentAccount Account account,
-                                  @Valid OrderForm orderForm,
-                                  Errors errors,
-                                  RedirectAttributes attributes) {
+    public String purchase(@CurrentAccount Account account, @Valid OrderForm orderForm, Errors errors,
+                           RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             return "order/purchase";
         }
@@ -65,9 +60,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/{orderId}")
-    public String orderDetailForm(@CurrentAccount Account account,
-                              @PathVariable("orderId") Order order,
-                              Model model) throws IllegalAccessException {
+    public String orderDetailForm(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) throws IllegalAccessException {
         if (!order.isOwner(account)) {
             throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
         }
@@ -76,9 +69,7 @@ public class OrderController {
     }
 
     @GetMapping("/order/list")
-    public String orderListForm(@CurrentAccount Account account,
-                            @RequestParam(name = "orderType", required = false) String orderType,
-                            Model model) {
+    public String orderListForm(@CurrentAccount Account account, @RequestParam(name = "orderType", required = false) String orderType, Model model) {
         List<Order> orderList;
         if (orderType != null) {
             orderList = orderService.findOrders(account, orderType);

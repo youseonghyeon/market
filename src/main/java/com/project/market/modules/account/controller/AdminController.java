@@ -27,7 +27,6 @@ public class AdminController {
         // TODO 인가 관리 .hasRole("admin" or "manager")
         List<Account> accounts = accountRepository.findAll();
         // TODO 페이징 적용
-
         model.addAttribute("accountList", accounts);
         return "admin/management";
     }
@@ -35,9 +34,7 @@ public class AdminController {
     @GetMapping("/manage/{accountId}")
     public String editRoleForm(@PathVariable("accountId") Account account, Model model) {
         model.addAttribute(account);
-        log.info("account.getId()={}", account.getId());
         return "admin/edit-management";
-
     }
 
     @GetMapping("/role")

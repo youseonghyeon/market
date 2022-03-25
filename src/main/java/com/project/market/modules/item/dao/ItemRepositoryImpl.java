@@ -24,6 +24,7 @@ public class ItemRepositoryImpl implements CustomItemRepository {
         if (StringUtils.hasText(tagName)) {
             builder.and(tag.title.eq(tagName));
         }
+
         return queryFactory.selectFrom(item)
                 .leftJoin(item.tags, tag)
                 .where(builder)

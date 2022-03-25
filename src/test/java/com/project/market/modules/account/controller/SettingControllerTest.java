@@ -3,12 +3,9 @@ package com.project.market.modules.account.controller;
 import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.TagRepository;
 import com.project.market.modules.item.entity.Tag;
-import com.project.market.modules.security.AccountContext;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -140,70 +130,6 @@ class SettingControllerTest {
                 .andExpect(redirectedUrl("/profile/tag"));
         List<String> tags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
         assertTrue(tags.contains("홈런볼"));
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("비밀번호 찾기 폼")
-    void findPasswordForm() throws Exception {
-        mockMvc.perform(get("/help/find-password"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("account/help/find-password"));
-
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("토큰 메일 전송")
-    void sendTokenMail() throws Exception {
-        mockMvc.perform(post("/help/find-password")
-                        .param("email", "email@email.com")
-                        .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/help/send-token"))
-                .andExpect(cookie().value("temp_email", "email@email.com"));
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("메일 전송 성공 폼")
-    void completeForm() throws Exception {
-        mockMvc.perform(get("/help/send-token"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("account/help/success"));
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("메일에서 입력했을 때 비밀번호 변경 폼")
-    void tokenCertification() throws Exception {
-        Account account = accountRepository.findByLoginId("testUser");
-        String uuid = UUID.randomUUID().toString();
-        account.savePasswordToken(uuid);
-
-        mockMvc.perform(get("/help/confirm")
-                        .param("token", uuid))
-                .andExpect(status().isOk())
-                .andExpect(view().name("account/help/modify-password"));
-
-        Account findAccount = accountRepository.findByLoginId("testUser");
-        assertNull(findAccount.getPasswordConfirmToken());
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("비밀번호 변경")
-    void modifyPassword() throws Exception {
-
-        mockMvc.perform(post("/help/modify/password")
-                        .cookie(new Cookie("temp_email", "email@email.com"))
-                        .param("new-password", "newpassword")
-                        .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
-
-        Account account = accountRepository.findByLoginId("testUser");
-        assertTrue(passwordEncoder.matches("newpassword", account.getPassword()));
     }
 
 }

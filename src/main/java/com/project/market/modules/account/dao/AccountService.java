@@ -1,6 +1,5 @@
 package com.project.market.modules.account.dao;
 
-import com.project.market.infra.mail.TokenMailSender;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.ProfileForm;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,7 +30,6 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenMailSender tokenMailSender;
 
     public void saveNewAccount(SignupForm signupForm) {
         String encode = passwordEncoder.encode(signupForm.getPassword());
@@ -92,18 +89,14 @@ public class AccountService {
         findAccount.getZones().add(zone);
     }
 
-    public String saveNewToken(Account account) {
-        String token = createNewToken();
+    public String createPasswordToken(Account account) {
+        String token = createNewPasswordToken();
         account.savePasswordToken(token);
         accountRepository.save(account);
         return token;
     }
 
-    public void sendTokenMail(Account account, String token) {
-        tokenMailSender.send(account.getEmail(), token);
-    }
-
-    private String createNewToken() {
+    private String createNewPasswordToken() {
         return UUID.randomUUID().toString();
     }
 

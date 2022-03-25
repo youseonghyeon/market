@@ -19,7 +19,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByLoginId(String loginId);
 
     //    @EntityGraph(value = "Account.withTags", type = EntityGraph.EntityGraphType.FETCH)
-    @EntityGraph(attributePaths = {"tags"})
+    @EntityGraph(attributePaths = {"tags"}, type = EntityGraph.EntityGraphType.FETCH)
     Account findAccountWithTagsById(Long id);
 
     @EntityGraph(value = "Account.withZones", type = EntityGraph.EntityGraphType.FETCH)
@@ -28,7 +28,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @EntityGraph(value = "Account.withEnrolledItems", type = EntityGraph.EntityGraphType.FETCH)
     Account findAccountWithEnrolledItemById(Long id);
 
-    Account findByPasswordConfirmToken(String token);
+    Account findByPasswordToken(String token);
 
     Account findByEmail(String email);
 }
