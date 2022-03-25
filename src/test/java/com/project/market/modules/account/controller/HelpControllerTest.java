@@ -2,6 +2,7 @@ package com.project.market.modules.account.controller;
 
 import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.dao.TagRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -32,6 +33,8 @@ class HelpControllerTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
+    AccountService accountService;
+    @Autowired
     AccountRepository accountRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -51,12 +54,11 @@ class HelpControllerTest {
         mockMvc.perform(get("/help/find-password"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/help/find-password"));
-
     }
 
     @Test
     @WithAccount("testUser")
-    @DisplayName("토큰 메일 전송")
+    @DisplayName("토큰 메일 전송 성공")
     void sendTokenMail() throws Exception {
         mockMvc.perform(post("/help/find-password")
                         .param("email", "email@email.com")
@@ -64,6 +66,18 @@ class HelpControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/help/send-token"))
                 .andExpect(cookie().value("temp_email", "email@email.com"));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("토큰 메일 전송 실패(유효하지 않은 이메일)")
+    void sendTokenMailFail() throws Exception {
+        mockMvc.perform(post("/help/find-password")
+                        .param("email", "ooo@ooo.ooo")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("message"))
+                .andExpect(view().name("account/help/find-password"));
     }
 
     @Test
@@ -77,56 +91,31 @@ class HelpControllerTest {
 
     @Test
     @WithAccount("testUser")
-    @DisplayName("메일에서 입력했을 때 비밀번호 변경 폼")
+    @DisplayName("토큰 인증")
     void tokenCertification() throws Exception {
         Account account = accountRepository.findByLoginId("testUser");
-        String uuid = UUID.randomUUID().toString();
-        account.savePasswordToken(uuid);
+        String token = accountService.createPasswordToken(account);
 
         mockMvc.perform(get("/help/confirm")
-                        .param("token", uuid))
+                        .param("token", token))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/help/modify-password"));
-
     }
 
     @Test
     @WithAccount("testUser")
     @DisplayName("비밀번호 변경")
     void modifyPassword() throws Exception {
-        // 재 작성
-//        Account account = accountRepository.findByLoginId("testUser");
-//
-//        mockMvc.perform(post("/help/modify/password")
-//                        .cookie(new Cookie("temp_email", "email@email.com"))
-//                        .cookie(new Cookie("temp_token", ))
-//                        .param("new-password", "newpassword")
-//                        .with(csrf()))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl("/login"));
-//
-//        Account account = accountRepository.findByLoginId("testUser");
-//        assertTrue(passwordEncoder.matches("newpassword", account.getPassword()));
+        Account account = accountRepository.findByLoginId("testUser");
+        String token = accountService.createPasswordToken(account);
+        mockMvc.perform(post("/help/modify/password")
+                        .cookie(new Cookie("temp_email", account.getEmail()))
+                        .cookie(new Cookie("temp_token", token))
+                        .param("new-password", "newpassword")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+        assertNull(account.getPasswordToken());
     }
 
-
-//    @Test
-//    void findPasswordForm() {
-//    }
-//
-//    @Test
-//    void sendMail() {
-//    }
-//
-//    @Test
-//    void completeForm() {
-//    }
-//
-//    @Test
-//    void tokenCertification() {
-//    }
-//
-//    @Test
-//    void modifyPassword() {
-//    }
 }

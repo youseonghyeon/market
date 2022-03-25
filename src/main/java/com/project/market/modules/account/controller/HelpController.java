@@ -7,6 +7,7 @@ import com.project.market.modules.account.entity.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +32,10 @@ public class HelpController {
     }
 
     @PostMapping("/help/find-password")
-    public String sendMail(@RequestParam("email") String email, HttpServletResponse response, RedirectAttributes attributes) {
+    public String sendMail(@RequestParam("email") String email, HttpServletResponse response, Model model) {
         Account account = accountRepository.findByEmail(email);
         if (account == null) {
-            attributes.addAttribute("errorMsg", "error");
+            model.addAttribute("message", "error");
             return "account/help/find-password";
         }
         String token = accountService.createPasswordToken(account);

@@ -17,4 +17,5 @@ public class Zone {
 
     private String city;
 
+
 }

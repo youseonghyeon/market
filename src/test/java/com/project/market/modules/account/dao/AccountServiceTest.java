@@ -2,8 +2,11 @@ package com.project.market.modules.account.dao;
 
 import com.project.market.WithAccount;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
+import com.project.market.modules.item.dao.TagRepository;
+import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.security.AccountContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -21,8 +24,11 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -35,23 +41,11 @@ class AccountServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private ZoneRepository zoneRepository;
+    @Autowired
     private EntityManager em;
-
-//    @BeforeEach
-//    void beforeEach() {
-//        Account account = Account.builder()
-//                .username("testUserName")
-//                .loginId("testLoginId")
-//                .phone("010-5050-6060")
-//                .email("test99@mail.com")
-//                .nickname("testNickName")
-//                .password(passwordEncoder.encode("testpass"))
-//                .joinedAt(LocalDateTime.now())
-//                .bio("남")
-//                .role("ROLE_USER")
-//                .build();
-//        accountRepository.save(account);
-//    }
 
     @AfterEach
     void afterEach() {
@@ -72,7 +66,13 @@ class AccountServiceTest {
         accountService.saveNewAccount(signupForm);
         //then
         Account account = accountRepository.findByLoginId("user0908");
-        Assertions.assertNotNull(account);
+        assertNotNull(account);
+        assertEquals(account.getLoginId(), "user0908");
+        assertTrue(passwordEncoder.matches("pass0908", account.getPassword()));
+        assertEquals(account.getPhone(), "01012980998");
+        assertEquals(account.getEmail(), "e9mail@mail.com");
+        assertEquals(account.getNickname(), "user0908");
+        assertEquals(account.getRole(), "ROLE_USER");
     }
 
     @Test
@@ -82,37 +82,162 @@ class AccountServiceTest {
         //given
         Account account = getCurrentAccount();
         ProfileForm profileForm = new ProfileForm();
-        profileForm.setProfileImage("newImg");
-        profileForm.setEmail("newMail@test.com");
-        profileForm.setPhone("01012981298");
         profileForm.setNickname("newNick");
+        profileForm.setPhone("01012981298");
+        profileForm.setEmail("newMail@test.com");
+        profileForm.setProfileImage("newImg");
         //when
         accountService.editProfile(account, profileForm);
         //then
-        Account findAccount = getCurrentAccount();
+        Account findAccount = accountRepository.findByLoginId("testUser");
+        assertNotNull(findAccount);
         assertEquals(findAccount.getNickname(), "newNick");
         assertEquals(findAccount.getPhone(), "01012981298");
         assertEquals(findAccount.getEmail(), "newMail@test.com");
         assertEquals(findAccount.getProfileImage(), "newImg");
     }
 
-    // mockito 사용할지 미정
-//    @Test
-//    @WithAccount("testUser")
-//    @DisplayName("비밀번호 변경")
-//    void modifyPassword() {
-//        //given
-//        Account account = getCurrentAccount();
-//        String newPassword = "1q2w3e4r";
-//        //when
-//        accountService.modifyPassword(account, newPassword);
-//        //then
-//        Account findAccount = getCurrentAccount();
-//        assertTrue(passwordEncoder.matches("1q2w3e4r", findAccount.getPassword()));
-//    }
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("비밀번호 변경")
+    void modifyPassword() {
+        //given
+        Account account = getCurrentAccount();
+        String newPW = "asdf813y4he";
+        //when
+        accountService.modifyPassword(account, newPW);
+        //then
+        Account findAccount = accountRepository.findByLoginId("testUser");
+        assertTrue(passwordEncoder.matches(newPW, findAccount.getPassword()));
+    }
 
-    Account getCurrentAccount() {
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("로그아웃")
+    void logout() {
+        // TODO 작성해야 함
+        /**
+         * void logout(HttpServletRequest request, HttpServletResponse response);
+         */
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("태그 추가")
+    void saveNewTag() {
+        //given
+        Account account = accountRepository.findByLoginId("testUser");
+        Tag tag = new Tag("태그추가1", 1);
+        tagRepository.save(tag);
+        //when
+        accountService.saveNewTag(account, tag);
+        //then
+        Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
+        assertTrue(findAccount.getTags().contains(tag));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("태그 조회")
+    void findTags() {
+        //given
+        Account account = accountRepository.findByLoginId("testUser");
+        Tag tag1 = new Tag("태그조회1", 1);
+        Tag tag2 = new Tag("태그조회2", 1);
+        Tag tag3 = new Tag("태그조회3", 1);
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
+        tagRepository.save(tag3);
+        accountService.saveNewTag(account, tag1);
+        accountService.saveNewTag(account, tag2);
+        accountService.saveNewTag(account, tag3);
+        //when
+        List<Tag> tags = accountService.findTags(account);
+        //then
+        List<Tag> collection = new ArrayList<>();
+        collection.add(tag1);
+        collection.add(tag2);
+        collection.add(tag3);
+        assertEquals(tags.size(), 3);
+        assertTrue(tags.containsAll(collection));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("지역 추가")
+    void saveNewZone() {
+        //given
+        Account account = accountRepository.findByLoginId("testUser");
+        List<Zone> all = zoneRepository.findAll();
+        Zone zone = all.get(0);
+        //when
+        accountService.saveNewZone(account, zone);
+        //then
+        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
+        assertTrue(findAccount.getZones().contains(zone));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("지역 조회")
+    void findZone() {
+        //given
+        Account account = accountRepository.findByLoginId("testUser");
+        List<Zone> all = zoneRepository.findAll();
+        accountService.saveNewZone(account, all.get(0));
+        accountService.saveNewZone(account, all.get(1));
+        accountService.saveNewZone(account, all.get(2));
+        //when
+        List<Zone> zones = accountService.findZones(account);
+        //then
+        List<Zone> collection = new ArrayList<>();
+        collection.add(all.get(0));
+        collection.add(all.get(1));
+        collection.add(all.get(2));
+        assertEquals(zones.size(), 3);
+        assertTrue(zones.containsAll(collection));
+    }
+
+    @Test
+    @DisplayName("비밀번호 토큰 생성")
+    void createPasswordToken() {
+        //given
+        회원가입("tokenUser", "tokenpass");
+        Account account = accountRepository.findByLoginId("tokenUser");
+        //when
+        String token = accountService.createPasswordToken(account);
+        //then
+        assertEquals(account.getPasswordToken(), token);
+        assertTrue(account.isValidPasswordToken(token));
+    }
+
+    private void 회원가입(String loginId, String password) {
+        SignupForm signupForm = new SignupForm();
+        signupForm.setLoginId(loginId);
+        signupForm.setPassword(password);
+        signupForm.setUsername("유성현");
+        signupForm.setEmail("email@email.com");
+        signupForm.setPhone("010-1212-3434");
+        accountService.saveNewAccount(signupForm);
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("토큰 폐기")
+    void destroyPasswordToken() {
+        //given
+        Account account = accountRepository.findByLoginId("testUser");
+        String token = accountService.createPasswordToken(account);
+        //when
+        accountService.destroyPasswordToken(account);
+        //then
+        assertNull(account.getPasswordToken());
+        assertFalse(account.isValidPasswordToken(token));
+    }
+
+    private Account getCurrentAccount() {
         AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return accountRepository.findById(accountContext.getAccount().getId()).orElseThrow();
     }
+
 }

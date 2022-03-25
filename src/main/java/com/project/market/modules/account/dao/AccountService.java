@@ -77,6 +77,12 @@ public class AccountService {
         return findAccount.getTags();
     }
 
+    @Transactional(readOnly = true)
+    public List<Zone> findZones(Account account) {
+        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
+        return findAccount.getZones();
+    }
+
     public void saveNewTag(Account account, Tag tag) {
         Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
         // TODO ##ERROR## 의도하지 않은 delete쿼리문이 나감 && 중복제거 해야함

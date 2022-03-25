@@ -99,7 +99,8 @@ public class Account {
     }
 
     public boolean isValidPasswordToken(String token) {
-        return passwordToken.equals(token) &&
+        return passwordToken != null &&
+                passwordToken.equals(token) &&
                 passwordTokenCreateDate.isAfter(LocalDateTime.now().minusSeconds(600));
     }
 
