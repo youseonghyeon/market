@@ -16,7 +16,8 @@ import static javax.persistence.EnumType.STRING;
 @EqualsAndHashCode(of = "id")
 public class Delivery {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "delivery_id")
     private Long id;
 
@@ -24,9 +25,16 @@ public class Delivery {
 
     private int fee;
 
-    private String originAddress;
+    private String recipient;
+    private String recipientPhone;
 
+    private String originZoneCode;
+    private String originAddress;
+    private String originAddressDetail;
+
+    private String destinationZoneCode;
     private String destinationAddress;
+    private String destinationAddressDetail;
 
     private LocalDate expectedArrivalFrom;
 

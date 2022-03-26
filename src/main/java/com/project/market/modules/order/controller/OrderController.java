@@ -2,7 +2,10 @@ package com.project.market.modules.order.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.delivery.dao.DeliveryService;
+import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.delivery.entity.DeliveryMethod;
+import com.project.market.modules.delivery.entity.DeliveryStatus;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.dao.OrderService;
@@ -29,16 +32,17 @@ public class OrderController {
 
     private final OrderService orderService;
     private final ItemRepository itemRepository;
+    private final DeliveryService deliveryService;
 
 
     @GetMapping("/purchase")
     public String purchaseForm(@CurrentAccount Account account, @RequestParam("itemId") Item item,
-                               @RequestParam("delivery") String deliveryMethod, Model model, RedirectAttributes attributes) {
+                               @RequestParam("method") String deliveryMethod, Model model, RedirectAttributes attributes) {
         if (!item.canPurchase(account)) {
             attributes.addFlashAttribute("errorMassage", "구매할 수 없는 상품입니다.");
             return "redirect:/deal/" + item.getId();
         }
-        OrderForm orderForm = new OrderForm(item.getId(), DeliveryMethod.valueOf(deliveryMethod));
+        OrderForm orderForm = new OrderForm(item.getId(), deliveryMethod);
         model.addAttribute("orderForm", orderForm);
         model.addAttribute("item", item);
         return "order/purchase";
@@ -54,9 +58,11 @@ public class OrderController {
         if (!item.canPurchase(account)) {
             throw new IllegalStateException("구매할 수 없는 상품입니다.");
         }
-        Long orderId = orderService.processPurchase(account, orderForm, item);
+        Order order = orderService.createOrder(account, orderForm, item);
+        Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
+        orderService.join(order, delivery);
         attributes.addFlashAttribute("message", "주문이 완료 되었습니다.");
-        return "redirect:/order/" + orderId;
+        return "redirect:/order/" + order.getId();
     }
 
     @GetMapping("/order/{orderId}")

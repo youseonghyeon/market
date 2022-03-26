@@ -54,4 +54,8 @@ public class Order {
     public boolean isOwner(Account account) {
         return this.customer.equals(account);
     }
+
+    public void setOrderDelivery(Delivery orderDelivery) {
+        this.orderDelivery = orderDelivery;
+    }
 }

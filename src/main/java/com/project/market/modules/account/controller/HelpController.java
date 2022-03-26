@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +30,7 @@ public class HelpController {
         return "account/help/find-password";
     }
 
-    @PostMapping("/help/find-password")
+    @PostMapping("/help/find-password") // 비밀번호 찾기 -> 이메일 인증 -> 토큰 메일 전송
     public String sendMail(@RequestParam("email") String email, HttpServletResponse response, Model model) {
         Account account = accountRepository.findByEmail(email);
         if (account == null) {
@@ -42,7 +41,8 @@ public class HelpController {
         tokenMailSender.send(account.getEmail(), token);
 
         createCookie("temp_email", email, response);
-        createCookie("temp_token", token, response);
+        // TODO(DANGER)  post("/help/modify/password")에 바로 접근할 경우 인증을 거치지 않은채 바로 비밀번호가 변경됨.
+        // -> 검증 로직 생성
         return "redirect:/help/send-token";
     }
 
@@ -67,17 +67,16 @@ public class HelpController {
     }
 
     @PostMapping("/help/modify/password")
-    public String modifyPassword(@CookieValue(value = "temp_email") Cookie emailCookie, @CookieValue(value = "temp_token") Cookie tokenCookie,
+    public String modifyPassword(@CookieValue(value = "temp_email") Cookie emailCookie,
                                  @RequestParam("new-password") String password, HttpServletResponse response) {
         Account account = accountRepository.findByEmail(emailCookie.getValue());
-        if (account == null || !account.isValidPasswordToken(tokenCookie.getValue())) {
+        if (account == null || !account.isValidPasswordToken(account.getPasswordToken())) {
             return "account/help/fail";
         }
 
         accountService.modifyPassword(account, password);
         accountService.destroyPasswordToken(account);
         destroyCookie(emailCookie, response);
-        destroyCookie(tokenCookie, response);
         return "redirect:/login";
     }
 

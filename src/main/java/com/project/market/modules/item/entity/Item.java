@@ -63,12 +63,8 @@ public class Item {
         this.expired = true;
     }
 
-
     public boolean canPurchase(Account currentAccount) {
-        if (expired) return false;
-        if (enrolledBy.equals(currentAccount)) return false;
-        if (deleted) return false;
-        return true;
+        return !(enrolledBy.equals(currentAccount) || deleted || expired);
     }
 
     public void editItem(ItemForm itemForm) {

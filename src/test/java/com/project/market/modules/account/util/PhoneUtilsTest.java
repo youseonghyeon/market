@@ -15,10 +15,5 @@ class PhoneUtilsTest {
         assertEquals("010-123-4567", PhoneUtils.format("0101234567"));
     }
 
-    @Test
-    void uuidTest() {
-        String s = UUID.randomUUID().toString();
-        System.out.println("s = " + s);
-    }
 
 }

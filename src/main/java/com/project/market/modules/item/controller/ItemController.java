@@ -43,15 +43,13 @@ public class ItemController {
     }
 
     @PostMapping("/products/enroll")
-    public String productEnroll(@CurrentAccount Account account,
-                                @ModelAttribute @Valid ItemForm itemForm,
+    public String productEnroll(@CurrentAccount Account account, @ModelAttribute @Valid ItemForm itemForm,
                                 @ModelAttribute TagForm tagForm, Errors errors) {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
         tagService.createOrCountingTags(tagForm.getTags());
         Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
-
         return "redirect:/deal/" + item.getId();
     }
 
@@ -65,10 +63,10 @@ public class ItemController {
     // 상품 리스트 조회
     @GetMapping("/products/list")
     public String productListForm(@RequestParam(value = "tag", required = false) String tag,
-                              @RequestParam(value = "order", required = false) String orderBy,
-                              Model model) {
+                              @RequestParam(value = "order", required = false) String orderBy, Model model) {
         List<Item> itemList = itemRepository.findItemList(tag, orderBy);
         List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
+
         model.addAttribute("itemList", itemList);
         model.addAttribute("tagList", tagList);
         return "products/list";

@@ -7,9 +7,10 @@
     function openPopup() {
         new daum.Postcode({
             oncomplete: function (data) {
-                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-                // 예제를 참고하여 다양한 활용법을 확인해 보세요.
-                // http://postcode.map.daum.net/guide
+                let zonecode = document.getElementById("zonecode")
+                zonecode.value = data.zonecode
+                let roadAddress = document.getElementById("roadAddress")
+                roadAddress.value = data.roadAddress
             }
         }).open();
     }
@@ -22,25 +23,51 @@
         <div class="row justify-content-md-center mt-3">
             <div class="col-8">
                 <div class="row container pt-4 pb-4 border-dark border">
-                    <div>배송지</div>
+
+                    <div>
+                        <h3>배송지 정보</h3>
+                    </div>
+
+                    <div>이름</div>
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" th:field="*{destinationAddress}">
+                        <input class="form-control col-5" type="text" name="recipient">
+                    </div>
+
+                    <div>연락처</div>
+                    <div class="input-group ">
+                        <input class="form-control col-5" type="text" name="recipientPhone">
+                    </div>
+
+                    <div>주소</div>
+                    <div class="input-group ">
+                        <input id="zonecode" class="form-control col-5" type="text" name="destinationZoneCode" readonly>
                         <div class="col-4"></div>
                         <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">배송지
                             변경
                         </button>
                     </div>
-
-
-                    <div>배송 요청사항</div>
+                    <br>
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" th:field="*{shippingRequests}">
+                        <input id="roadAddress" class="form-control col-5" type="text" name="destinationAddress" placeholder="주소검색결과" readonly>
+                    </div>
+                    <br>
+                    <div class="input-group ">
+                        <input class="form-control col-5" type="text" name="destinationAddressDetail" placeholder="상세주소">
+                    </div>
+
+
+                    <div>배송 요청사항(200자 이내)</div>
+                    <div class="input-group ">
+                        <textarea class="form-control col-5" type="text" name="shippingRequests"></textarea>
                     </div>
                 </div>
 
                 <div class="row container border-dark border pt-4 mt-4 pb-4">
                     결제 방식
-                    <input type="text" class="form-control" th:field="*{paymentMethod}">
+                    <input type="radio" name="paymentMethod" value="카드" checked>
+                    <label>카드</label>
+                    <input type="radio" name="paymentMethod" value="무통장">
+                    <label>무통장</label>
                 </div>
             </div>
 
@@ -68,7 +95,7 @@
                         <span class="col-4" th:text="${item.getPrice()} + ${item.getShippingFee()}">000</span>
                     </div>
                 </div>
-
+                <input type="hidden" name="deliveryMethod" th:value="*{deliveryMethod}">
                 <button type="submit" class="btn btn-primary">결제하기</button>
             </div>
         </div>

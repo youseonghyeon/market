@@ -28,23 +28,15 @@ public class OrderService {
     private final DeliveryRepository deliveryRepository;
     private final DeliveryService deliveryService;
 
-    public Long processPurchase(Account account, OrderForm orderForm, Item item) {
-        //TODO 결제 로직
-        Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
-        Order order = createOrder(account, orderForm, delivery, item);
-        return order.getId();
-    }
-
-    private Order createOrder(Account account, OrderForm orderForm, Delivery delivery, Item item) {
+    public Order createOrder(Account account, OrderForm orderForm, Item item) {
         Order order = Order.builder()
                 .orderDateTime(LocalDateTime.now())
                 .orderStatus(OrderStatus.PAYMENT)
                 .paymentMethod(orderForm.getPaymentMethod())
                 .shippingRequests(orderForm.getShippingRequests())
-                .orderedItem(item)
-                .orderDelivery(delivery)
-                .customer(account)
                 .shippingFee(item.getShippingFee())
+                .orderedItem(item)
+                .customer(account)
                 .build();
         orderRepository.save(order);
         item.sold();
@@ -65,4 +57,7 @@ public class OrderService {
         }
     }
 
+    public void join(Order order, Delivery delivery) {
+        order.setOrderDelivery(delivery);
+    }
 }

@@ -36,26 +36,28 @@
         <div>
             <span>태그(추가 예정)</span>
         </div>
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01">배송 방법</label>
-            <select class="form-select" id="inputGroupSelect01">
-                <option th:each="deliveryMethod : ${T(com.project.market.modules.delivery.entity.DeliveryMethod).values()}"
-                        th:value="${deliveryMethod.name()}"
-                        th:text="${deliveryMethod.name()}">
-                    val
-                </option>
-            </select>
-        </div>
-        <div>
-<!--            TODO 아래 delivery를 위에있는 select에 맞춰주어야 함-->
-            <a th:href="@{/purchase(itemId=*{id}, delivery='POST')}" class="btn btn-primary">구매하기</a>
-        </div>
+        <form th:action="@{/purchase}" th:method="get">
+            <input type="hidden" name="itemId" th:value="*{id}">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">배송 방법</label>
+                <select class="form-select" id="inputGroupSelect01" name="method">
+                    <option th:each="deliveryMethod : ${T(com.project.market.modules.delivery.entity.DeliveryMethod).values()}"
+                            th:value="${deliveryMethod.name()}"
+                            th:text="${deliveryMethod.name()}">
+                        val
+                    </option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">구매하기</button>
+            </div>
+        </form>
         <div th:if="${errorMassage}">
             <span class="text-danger" th:text="${errorMassage}">flash massage</span>
         </div>
-<!--        <div th:if="*{sold()}">-->
-<!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->
-<!--        </div>-->
+        <!--        <div th:if="*{sold()}">-->
+        <!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->
+        <!--        </div>-->
     </div>
 </div>
 </body>
