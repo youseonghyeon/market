@@ -25,8 +25,7 @@ public class ItemService {
     private final JPAQueryFactory queryFactory;
     public static Integer DEFAULT_SHIPPING_FEE = 2500;
 
-    public Item createNewItem(Account account, ItemForm itemForm, List<String> tags) {
-
+    public Long createNewItem(Account account, ItemForm itemForm, List<String> tags) {
         Item item = Item.builder()
                 .name(itemForm.getName())
                 .price(itemForm.getPrice())
@@ -40,6 +39,8 @@ public class ItemService {
                 .deleted(false)
                 .expired(false)
                 .tags(new ArrayList<>())
+                .post(itemForm.getPostMethod())
+                .direct(itemForm.getDirectMethod())
                 .build();
 
         if (!tags.isEmpty()) {
@@ -48,16 +49,12 @@ public class ItemService {
                 item.getTags().add(t);
             }
         }
+        Item saveItem = itemRepository.save(item);
 
-        return itemRepository.save(item);
+        return saveItem.getId();
     }
 
     public void modifyItem(Item item, ItemForm itemForm) {
         item.editItem(itemForm);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean isMyItem(Account account, Item item) {
-        return account.getEnrolledItem().contains(item);
     }
 }

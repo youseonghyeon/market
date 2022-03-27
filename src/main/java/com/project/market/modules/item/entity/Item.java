@@ -58,6 +58,9 @@ public class Item {
     @ManyToMany
     private List<Tag> tags;
 
+    // 배송/직거래
+    private boolean post;
+    private boolean direct;
 
     public void sold() {
         this.expired = true;
@@ -74,6 +77,10 @@ public class Item {
         this.photo = itemForm.getPhoto();
         this.description = itemForm.getDescription();
         this.originAddress = itemForm.getOriginAddress();
+    }
+
+    public boolean isMyItem(Account account) {
+        return enrolledBy.getId().equals(account.getId());
     }
 
 }

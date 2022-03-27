@@ -28,6 +28,17 @@ public class ItemForm {
 
     private String description;
 
+    private String post;
+    private String direct;
+
     // private List<Tag> tags;
+
+    public boolean getPostMethod() {
+        return post != null && post.equals("true");
+    }
+
+    public boolean getDirectMethod() {
+        return direct != null && direct.equals("true");
+    }
 
 }

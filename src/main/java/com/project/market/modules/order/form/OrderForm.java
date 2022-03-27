@@ -26,6 +26,7 @@ public class OrderForm {
 
     private String deliveryMethod;
 
+
     public OrderForm(Long itemId, String deliveryMethod) {
         this.itemId = itemId;
         this.deliveryMethod = deliveryMethod;

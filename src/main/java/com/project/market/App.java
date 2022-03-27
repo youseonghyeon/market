@@ -77,6 +77,8 @@ public class App {
                         .shippingFee(2500)
                         .deleted(false)
                         .expired(false)
+                        .direct(true)
+                        .post(true)
                         .tags(new ArrayList<>())
                         .build();
                 itemRepository.save(item);

@@ -4,8 +4,6 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.dao.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.delivery.entity.DeliveryMethod;
-import com.project.market.modules.delivery.entity.DeliveryStatus;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.dao.OrderService;

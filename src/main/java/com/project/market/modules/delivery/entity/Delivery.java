@@ -40,8 +40,7 @@ public class Delivery {
 
     private LocalDate expectedArrivalUntil;
 
-    @Enumerated(STRING)
-    private DeliveryMethod deliveryMethod;
+    private String deliveryMethod;
 
     @Enumerated(STRING)
     private DeliveryStatus deliveryStatus;

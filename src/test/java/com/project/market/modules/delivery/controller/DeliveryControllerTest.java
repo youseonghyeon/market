@@ -6,7 +6,6 @@ import com.project.market.modules.delivery.dao.DeliveryRepository;
 import com.project.market.modules.delivery.dao.DeliveryService;
 import com.project.market.modules.delivery.dto.CompleteDto;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.delivery.entity.DeliveryMethod;
 import com.project.market.modules.delivery.entity.DeliveryStatus;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,7 +50,7 @@ class DeliveryControllerTest {
                 .destinationAddress("test-destination")
                 .expectedArrivalFrom(LocalDate.now().plus(2, ChronoUnit.DAYS))
                 .expectedArrivalUntil(LocalDate.now().plus(3, ChronoUnit.DAYS))
-                .deliveryMethod(DeliveryMethod.POST)
+                .deliveryMethod("POST")
                 .deliveryStatus(DeliveryStatus.READY)
                 .shippingCompany("test-company")
                 .shippingCode("aaa-bbb-ccc")
