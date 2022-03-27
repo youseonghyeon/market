@@ -71,12 +71,14 @@ public class Item {
     }
 
     public void editItem(ItemForm itemForm) {
-        this.name = itemForm.getName();
-        this.price = itemForm.getPrice();
-        this.coverPhoto = itemForm.getCoverPhoto();
-        this.photo = itemForm.getPhoto();
-        this.description = itemForm.getDescription();
-        this.originAddress = itemForm.getOriginAddress();
+        name = itemForm.getName();
+        price = itemForm.getPrice();
+        coverPhoto = itemForm.getCoverPhoto();
+        photo = itemForm.getPhoto();
+        description = itemForm.getDescription();
+        originAddress = itemForm.getOriginAddress();
+        post = itemForm.getPostMethod();
+        direct = itemForm.getDirectMethod();
     }
 
     public boolean isMyItem(Account account) {

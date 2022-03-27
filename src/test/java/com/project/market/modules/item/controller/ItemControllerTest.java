@@ -1,7 +1,9 @@
 package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
+import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
 import com.project.market.modules.item.entity.Item;
@@ -11,16 +13,30 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,11 +53,15 @@ class ItemControllerTest {
     ItemService itemService;
     @Autowired
     ItemRepository itemRepository;
+    @Autowired
+    AccountRepository accountRepository;
+    @Autowired
+    ModelMapper modelMapper;
 
     @BeforeEach
     @WithAccount("testUser")
     void beforeEach() {
-        AccountContext accountContext = (AccountContext)SecurityContextHolder
+        AccountContext accountContext = (AccountContext) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
         Account account = accountContext.getAccount();
         ItemForm itemForm = new ItemForm();
@@ -50,6 +70,8 @@ class ItemControllerTest {
         itemForm.setCoverPhoto("test.jpg");
         itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
+        itemForm.setPost("true");
+        itemForm.setDirect(null);
         itemService.createNewItem(account, itemForm, new ArrayList<>());
     }
 
@@ -79,6 +101,8 @@ class ItemControllerTest {
                         .param("coverPhoto", "A.jpg")
                         .param("photo", "B.jpg")
                         .param("originAddress", "은평구 신사동")
+                        .param("description", "설명")
+                        .param("post", "true")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection());
 
@@ -110,4 +134,57 @@ class ItemControllerTest {
                 .andExpect(model().attributeExists("itemList"))
                 .andExpect(view().name("products/list"));
     }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("내 상품 리스트 폼")
+    void myProductListForm() throws Exception {
+        mockMvc.perform(get("/my-products/list"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("itemList"))
+                .andExpect(view().name("products/my-list"));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("내 상품 수정 폼")
+    void editMyProductForm() throws Exception {
+        Item item = itemRepository.findByName("test상품");
+        mockMvc.perform(get("/my-products/edit/" + item.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("itemForm"))
+                .andExpect(view().name("products/edit"));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("상품 수정")
+    void modifyProduct() throws Exception {
+        Item item = itemRepository.findByName("test상품");
+
+        mockMvc.perform(post("/products/modify")
+                        .param("id", item.getId().toString())
+                        .param("name", "수정된 상품")
+                        .param("price", "4000")
+                        .param("coverPhoto", "없음")
+                        .param("photo", "없음")
+                        .param("originAddress", "잠실")
+                        .param("description", "상세 설명1")
+                        .param("direct", "true")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/deal/" + item.getId()));
+
+        Item modifiedItem = itemRepository.findByName("수정된 상품");
+        assertNotNull(modifiedItem);
+        assertEquals(modifiedItem.getPrice(), 4000);
+        assertEquals(modifiedItem.getCoverPhoto(), "없음");
+        assertEquals(modifiedItem.getPhoto(), "없음");
+        assertEquals(modifiedItem.getOriginAddress(), "잠실");
+        assertEquals(modifiedItem.getDescription(), "상세 설명1");
+        assertFalse(modifiedItem.isPost());
+        assertTrue(modifiedItem.isDirect());
+
+    }
+
 }
