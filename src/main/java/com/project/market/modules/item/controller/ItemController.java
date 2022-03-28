@@ -15,6 +15,8 @@ import com.project.market.modules.item.validator.ItemFormValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -77,12 +79,14 @@ public class ItemController {
 
     // 상품 리스트 조회
     @GetMapping("/products/list")
-    public String productListForm(@RequestParam(value = "tag", required = false) String tag,
+    public String productListForm(Pageable pageable,
+                                  @RequestParam(value = "tag", required = false) String tag,
                                   @RequestParam(value = "order", required = false) String orderBy, Model model) {
-        List<Item> itemList = itemRepository.findItemList(tag, orderBy);
+        Page<Item> itemPage = itemRepository.findItemList(tag, orderBy, pageable);
         List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
 
-        model.addAttribute("itemList", itemList);
+        model.addAttribute("itemPage", itemPage);
+        model.addAttribute("itemList", itemPage.getContent());
         model.addAttribute("tagList", tagList);
         model.addAttribute("now", LocalDateTime.now());
         return "products/list";
