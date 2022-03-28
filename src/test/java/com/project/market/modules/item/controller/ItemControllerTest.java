@@ -132,6 +132,8 @@ class ItemControllerTest {
         mockMvc.perform(get("/products/list"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemList"))
+                .andExpect(model().attributeExists("itemPage"))
+                .andExpect(model().attributeExists("tagList"))
                 .andExpect(view().name("products/list"));
     }
 

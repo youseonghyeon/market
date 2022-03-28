@@ -88,7 +88,6 @@ public class ItemController {
         model.addAttribute("itemPage", itemPage);
         model.addAttribute("itemList", itemPage.getContent());
         model.addAttribute("tagList", tagList);
-        model.addAttribute("now", LocalDateTime.now());
         return "products/list";
     }
 
