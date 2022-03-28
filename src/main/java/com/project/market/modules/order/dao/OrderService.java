@@ -34,6 +34,7 @@ public class OrderService {
                 .orderStatus(OrderStatus.PAYMENT)
                 .paymentMethod(orderForm.getPaymentMethod())
                 .shippingRequests(orderForm.getShippingRequests())
+                .totalPrice(item.getPrice() + item.getShippingFee())
                 .shippingFee(item.getShippingFee())
                 .orderedItem(item)
                 .customer(account)

@@ -22,6 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -83,8 +84,8 @@ public class ItemController {
 
         model.addAttribute("itemList", itemList);
         model.addAttribute("tagList", tagList);
+        model.addAttribute("now", LocalDateTime.now());
         return "products/list";
-
     }
 
     @GetMapping("/my-products/list")

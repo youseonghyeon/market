@@ -35,6 +35,8 @@ public class Order {
 
     private String shippingRequests;
 
+    private int totalPrice;
+
     private int shippingFee;
 
     private LocalDateTime arrivalDateTime;
