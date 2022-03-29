@@ -1,9 +1,8 @@
 package com.project.market.modules.item.dao;
 
 import com.project.market.modules.item.entity.Item;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,43 +23,54 @@ public class ItemRepositoryImpl implements CustomItemRepository {
     private final JPAQueryFactory queryFactory;
 
     public Page<Item> findItemList(String tagName, String orderCondition, Pageable pageable) {
-        BooleanBuilder condition = new BooleanBuilder();
-        if (StringUtils.hasText(tagName)) {
-            condition.and(tag.title.eq(tagName));
-        }
-
-        List<Item> content = getItems(orderCondition, pageable, condition);
-        int total = getItemsTotal(condition);
+        List<Item> content = getItems(orderCondition, pageable, tagName);
+        int total = getItemsTotal(tagName);
 
         return new PageImpl<>(content, pageable, total);
     }
 
-    private List<Item> getItems(String orderCondition, Pageable pageable, BooleanBuilder condition) {
+    private List<Item> getItems(String orderCondition, Pageable pageable, String tagName) {
         return queryFactory.selectFrom(item)
                 .leftJoin(item.tags, tag)
-                .where(condition)
-                .where(item.expired.isFalse())
-                .where(item.deleted.isFalse())
+                .where(
+                        item.expired.isFalse(),
+                        item.deleted.isFalse(),
+                        tagNameEq(tagName)
+                )
                 .orderBy(itemSort(orderCondition))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
-    private int getItemsTotal(BooleanBuilder condition) {
+    private Predicate tagNameEq(String tagName) {
+        return StringUtils.hasText(tagName) ? tag.title.eq(tagName) : null;
+    }
+
+    private int getItemsTotal(String tagName) {
         return queryFactory.selectFrom(item)
                 .leftJoin(item)
-                .where(condition)
-                .where(item.expired.isFalse())
-                .where(item.deleted.isFalse())
+                .where(
+                        item.expired.isFalse(),
+                        item.deleted.isFalse(),
+                        tagNameEq(tagName)
+                )
                 .fetch().size();
     }
 
     private OrderSpecifier<?> itemSort(String criteria) {
-        if ("popular".equals(criteria)) {
-            return item.rating.desc();
+        if (criteria == null) {
+            return item.enrolledDateTime.desc();
         }
-        return item.enrolledDateTime.desc();
+        switch (criteria) {
+            case "popular":
+                return item.rating.desc();
+            case "recent":
+                return item.enrolledDateTime.desc();
+                // case 추가 예정
+            default:
+                return item.enrolledDateTime.desc();
+        }
     }
 
 }

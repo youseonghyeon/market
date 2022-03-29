@@ -1,6 +1,5 @@
 package com.project.market.modules.item.controller;
 
-import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +31,6 @@ import java.util.List;
 public class ItemController {
 
     private final ModelMapper modelMapper;
-    private final AccountRepository accountRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final TagRepository tagRepository;
@@ -42,8 +39,8 @@ public class ItemController {
 
     @ExceptionHandler(IllegalAccessException.class)
     public String AccessEx() {
-        log.warn("접근 권한 거부");
-        return "access-ex";
+        log.warn("접근 권한 거부됨");
+        return "exception/access";
     }
 
     @InitBinder("itemForm")

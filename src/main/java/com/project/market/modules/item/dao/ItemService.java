@@ -21,12 +21,23 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
-    private final ModelMapper modelMapper;
-    private final JPAQueryFactory queryFactory;
     public static Integer DEFAULT_SHIPPING_FEE = 2500;
 
     public Long createNewItem(Account account, ItemForm itemForm, List<String> tags) {
-        Item item = Item.builder()
+        Item item = newItemBuild(account, itemForm);
+        if (!tags.isEmpty()) {
+            joinItemWithTags(item, tags);
+        }
+        itemRepository.save(item);
+        return item.getId();
+    }
+
+    public void modifyItem(Item item, ItemForm itemForm) {
+        item.editItem(itemForm);
+    }
+
+    private Item newItemBuild(Account account, ItemForm itemForm) {
+        return Item.builder()
                 .name(itemForm.getName())
                 .price(itemForm.getPrice())
                 .coverPhoto(itemForm.getCoverPhoto())
@@ -42,19 +53,12 @@ public class ItemService {
                 .post(itemForm.getPostMethod())
                 .direct(itemForm.getDirectMethod())
                 .build();
-
-        if (!tags.isEmpty()) {
-            List<Tag> findTags = tagRepository.findAllByTitleIn(tags);
-            for (Tag t : findTags) {
-                item.getTags().add(t);
-            }
-        }
-        Item saveItem = itemRepository.save(item);
-
-        return saveItem.getId();
     }
 
-    public void modifyItem(Item item, ItemForm itemForm) {
-        item.editItem(itemForm);
+    private void joinItemWithTags(Item item, List<String> tags) {
+        List<Tag> findTags = tagRepository.findAllByTitleIn(tags);
+        for (Tag t : findTags) {
+            item.getTags().add(t);
+        }
     }
 }

@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
+<script th:inline="javascript">
+    function show() {
+        console.log([[${itemPage.getPageable}]])
+    }
+</script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
+<div>
+    <div th:if="${itemPage.hasPrevious()}">
+        <a th:href="${itemPage.hasPrevious()} ? @{/products/list(page=${itemPage.number} - 1)} : '#'">이전 페이지</a>
+    </div>
+    <div th:if="${itemPage.hasNext()}">
+        <a th:href="${itemPage.hasNext()} ? @{/products/list(page=${itemPage.number} + 1)} : '#'">다음 페이지</a>
+    </div>
+    <button onclick="show()">페이징 로그</button>
+
+</div>
 <div class="container-xl">
     <div class="row mt-3">
         <h3 class="col">상품 목록</h3>
         <select class="col-2">
-            <option value="추천순">추천순</option>
-            <option value="추천순">평점순</option>
-            <!--            <a th:href="@{/products/list(order='popular')}">인기순</a>-->
-            <!--            <a th:href="@{/products/list(order='recent')}">최신순</a>-->
+            <option value="recent">최신순</option>
+            <option value="popular">평점순</option>
         </select>
+        <button>검색</button>
         <a class="btn btn-primary" th:href="@{/products/enroll}">상품 등록</a>
     </div>
     <div class="row border border-dark mt-3">
@@ -25,8 +39,8 @@
         </div>
         <div class="col row row-cols-4">
             <div class="col border border-dark container" th:each="item : ${itemList}">
-                <a th:href="@{/deal/{itemId}(itemId = ${item.getId()})}">
-                    <div style="height: 150px;">이미지</div>
+                <a style="margin: 1px;" th:href="@{/deal/{itemId}(itemId = ${item.getId()})}">
+                    <div class="border border-danger" style="height: 150px;">이미지 영역</div>
                     <div>
                         상품명 :
                         <span th:text="${item.getName()}"></span>
@@ -43,64 +57,7 @@
             </div>
         </div>
     </div>
-    <div>
-<!--        <div th:if="${!itemList.isEmpty()}">-->
-<!--&lt;!&ndash;            T(Math).floor(pageNumber / pageSize) * pageSize + 1&ndash;&gt;-->
-<!--            <nav th:with="-->
-<!--                pageNumber = ${itemList.pageable.pageNumber},-->
-<!--                pageSize = ${itemList.pageable.pageSize},-->
-<!--                totalPages = ${itemList.totalPages},-->
-<!--                startPage = ${5},-->
-<!--                tempEndPage = ${startPage + pageSize - 1},-->
-<!--                endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"-->
-<!--                 aria-label="Page navigation"-->
-<!--            >-->
-<!--                <ul class="pagination ">-->
-
-<!--                    <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">-->
-<!--                        <a class="page-link" th:href="@{/products/list(page=1)}">-->
-<!--                            <span>&laquo;</span>-->
-<!--                            <span class="sr-only">First</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-
-<!--                    <li th:classappend="${itemList.first} ? 'disabled'" class="page-item">-->
-<!--                        <a class="page-link"-->
-<!--                           th:href="${itemList.first} ? '#' : @{/products/list(page=${#numbers.formatDecimal(startPage - pageSize, 0, -1)})}"-->
-<!--                           aria-label="Previous">-->
-<!--                            &lt;!&ndash; 개인적으로 int 로 변환하는 법을 몰라서 이렇게 길어졌습니다 &ndash;&gt;-->
-<!--                            <span aria-hidden="true">&lt;</span>-->
-<!--                            <span class="sr-only">Previous</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-
-<!--                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}"-->
-<!--                        th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">-->
-<!--                        <a th:text="${page}" class="page-link" th:href="@{/products/list(page=${page})}"></a>-->
-<!--                    </li>-->
-
-<!--                    <li th:classappend="${itemList.last} ? 'disabled'" class="page-item">-->
-<!--                        <a class="page-link"-->
-<!--                           th:href="${itemList.last} ? '#' : @{/products/list(page=${#numbers.formatDecimal(startPage + pageSize, 0, -1)})}"-->
-<!--                           aria-label="Next">-->
-<!--                            <span aria-hidden="true">&gt;</span>-->
-<!--                            <span class="sr-only">Next</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-
-<!--                    <li th:classappend=" ${T(Math).floor(totalPages/10)*10 <= startPage} ? 'disabled'" class="page-item">-->
-<!--                    <li th:classappend=" ${5 <= startPage} ? 'disabled'" class="page-item">-->
-<!--                        <a class="page-link" th:href="@{/products/list(page=${totalPages})}">-->
-<!--                            <span>&raquo;</span>-->
-<!--                            <span class="sr-only">First</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-
-<!--                </ul>-->
-<!--            </nav>-->
-<!--        </div>-->
-    </div>
-
 </div>
+<footer th:replace="fragments/footer::footer"></footer>
 </body>
 </html>
