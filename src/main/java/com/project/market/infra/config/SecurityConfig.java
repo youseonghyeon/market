@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/login", "/sign-up", "/login*", "/deal/**", "/products/list", "/help/**").permitAll()
                 .antMatchers("/products/**").hasRole("USER")
+                .antMatchers("/delivery/**").hasRole("COURIER")
                 .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated();

@@ -2,14 +2,14 @@
 중고장터 및 배송 사이트
 
 
-###application.yml
+### application.yml
 ```yaml
 spring:
   profiles:
     active: dev
 
   datasource:
-    url: # url
+    url: jdbc:postgresql://localhost: #port/databaseName
     username: postgres
     password: pass
   jpa:

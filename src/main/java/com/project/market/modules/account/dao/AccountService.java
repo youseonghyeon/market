@@ -110,4 +110,7 @@ public class AccountService {
         account.savePasswordToken(null);
     }
 
+    public void modifyRole(Account account, String role) {
+        account.modifyRole(role);
+    }
 }

@@ -38,17 +38,10 @@
         </div>
         <form th:action="@{/purchase}" th:method="get">
             <input type="hidden" name="itemId" th:value="*{id}">
-            <div class="input-group mb-3">
-                <div th:if="*{post}">
-                    <input type="radio" name="method" value="post">
-                    <label>택배배송</label>
-                </div>
-                <div th:if="*{direct}">
-                    <input type="radio" name="method" value="direct">
-                    <label>직거래</label>
-                </div>
-
-            </div>
+            <select class="" name="method">
+                <option th:if="*{post}" value="post">택배배송</option>
+                <option th:if="*{direct}" value="direct">직거래</option>
+            </select>
             <div>
                 <button type="submit" class="btn btn-primary">구매하기</button>
             </div>

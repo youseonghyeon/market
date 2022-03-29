@@ -21,11 +21,9 @@ public class TokenMailSenderImpl implements TokenMailSender  {
 
     @Value("${spring.mail.username}")
     String sendFrom;
-//    @Value("${host}")
-//    String host;
 
     @Override
-    public void send(String sendTo, String token) {
+    public boolean send(String sendTo, String token) {
         String mailTitle = "비밀번호 찾기 메일 테스트";
         // String mailContent = host + "/help/confirm?token=" + token;
         String mailContent = "http://localhost:8080/help/confirm?token=" + token;
@@ -42,8 +40,10 @@ public class TokenMailSenderImpl implements TokenMailSender  {
         };
         try {
             mailSender.send(preparator);
+            return true;
         } catch (MailException e) {
             log.error("메일 전송 실패");
+            return false;
         }
     }
 }

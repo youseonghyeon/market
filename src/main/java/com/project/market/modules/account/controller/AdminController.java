@@ -1,17 +1,18 @@
 package com.project.market.modules.account.controller;
 
 import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +22,7 @@ import java.util.List;
 public class AdminController {
 
     private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
     @GetMapping("/manage")
     public String roleManagement(@CurrentAccount Account account, Model model) {
@@ -35,6 +37,17 @@ public class AdminController {
     public String editRoleForm(@PathVariable("accountId") Account account, Model model) {
         model.addAttribute(account);
         return "admin/edit-management";
+    }
+
+    @PostMapping("/manage/edit")
+    public String editRole(@CurrentAccount Account account, @RequestParam("targetId") Long targetId,
+                           @RequestParam("role") String role) throws IllegalAccessException {
+        if (!account.getRole().equals("ROLE_ADMIN")) {
+            throw new IllegalAccessException();
+        }
+        Account targetAccount = accountRepository.findById(targetId).orElseThrow();
+        accountService.modifyRole(targetAccount, role);
+        return "redirect:/admin/manage/" + targetId;
     }
 
     @GetMapping("/role")

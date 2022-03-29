@@ -15,4 +15,6 @@ public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRep
     List<Item> findAllByEnrolledByOrderByEnrolledDateTimeDesc(Account account);
 
     boolean existsByName(String name);
+
+    Item findItemReadOnlyById(Long itemId);
 }

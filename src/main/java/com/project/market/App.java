@@ -55,9 +55,12 @@ public class App {
             signupForm.setLoginId("user1");
             signupForm.setPassword("qwerqwer");
             signupForm.setUsername("유성현");
-            signupForm.setPhone("01023778747");
-            signupForm.setEmail("dolla_@naver.com");
+            signupForm.setPhone("01012032022");
+            signupForm.setEmail("mail@mail.com");
             accountService.saveNewAccount(signupForm);
+            Account account = accountRepository.findByLoginId("user1");
+            account.modifyRole("ROLE_ADMIN");
+            accountRepository.save(account);
         }
     }
 

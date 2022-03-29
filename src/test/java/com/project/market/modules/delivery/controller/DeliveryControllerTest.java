@@ -67,17 +67,17 @@ class DeliveryControllerTest {
     }
 
     @Test
-    @WithAccount("testUser")
+    @WithAccount("testCourier")
     @DisplayName("배송 리스트 폼")
     void deliveryHome() throws Exception {
         mockMvc.perform(get("/delivery/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("delivery/list"))
-                .andExpect(model().attributeExists("deliveryList"));
+                .andExpect(model().attributeExists("deliveryList"))
+                .andExpect(view().name("delivery/list"));
     }
 
     @Test
-    @WithAccount("testUser")
+    @WithAccount("testCourier")
     @DisplayName("배송 완료")
     void completeDelivery() throws Exception {
         CompleteDto completeDto = new CompleteDto();
@@ -94,7 +94,7 @@ class DeliveryControllerTest {
     }
 
     @Test
-    @WithAccount("testUser")
+    @WithAccount("testCourier")
     @DisplayName("배송 취소")
     void cancelDeliverySuccess() throws Exception {
         CompleteDto completeDto = new CompleteDto();

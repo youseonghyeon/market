@@ -6,6 +6,7 @@ import com.project.market.modules.delivery.dao.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.form.PurchaseForm;
 import com.project.market.modules.order.dao.OrderService;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.OrderForm;
@@ -13,11 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -34,14 +33,13 @@ public class OrderController {
 
 
     @GetMapping("/purchase")
-    public String purchaseForm(@CurrentAccount Account account, @RequestParam("itemId") Item item,
-                               @RequestParam("method") String deliveryMethod, Model model, RedirectAttributes attributes) {
+    public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model, RedirectAttributes attributes) {
+        Item item = itemRepository.findItemReadOnlyById(purchaseForm.getItemId());
         if (!item.canPurchase(account)) {
             attributes.addFlashAttribute("errorMassage", "구매할 수 없는 상품입니다.");
             return "redirect:/deal/" + item.getId();
         }
-        OrderForm orderForm = new OrderForm(item.getId(), deliveryMethod);
-        model.addAttribute("orderForm", orderForm);
+        model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod()));
         model.addAttribute("item", item);
         return "order/purchase";
     }
