@@ -1,6 +1,7 @@
 package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
+import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
@@ -57,22 +58,14 @@ class ItemControllerTest {
     AccountRepository accountRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    TestUtils testUtils;
 
     @BeforeEach
     @WithAccount("testUser")
     void beforeEach() {
-        AccountContext accountContext = (AccountContext) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal();
-        Account account = accountContext.getAccount();
-        ItemForm itemForm = new ItemForm();
-        itemForm.setName("test상품");
-        itemForm.setPrice(8000);
-        itemForm.setCoverPhoto("test.jpg");
-        itemForm.setPhoto("test.jpg");
-        itemForm.setOriginAddress("서울시 은평구");
-        itemForm.setPost("true");
-        itemForm.setDirect(null);
-        itemService.createNewItem(account, itemForm, new ArrayList<>());
+        Account account = accountRepository.findByLoginId("testUser");
+        testUtils.createMockItem(account, "test상품");
     }
 
     @AfterEach

@@ -1,11 +1,13 @@
 package com.project.market.modules.order.form;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
 @Data
+@NoArgsConstructor
 public class OrderForm {
 
     @Positive

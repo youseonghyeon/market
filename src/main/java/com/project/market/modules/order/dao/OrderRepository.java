@@ -17,4 +17,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
     List<Order> findByCustomerOrderByOrderDateTimeDesc(Account account);
+
 }

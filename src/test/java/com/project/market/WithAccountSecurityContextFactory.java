@@ -1,5 +1,6 @@
 package com.project.market;
 
+import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
@@ -23,6 +24,8 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
     private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private TestUtils testUtils;
 
     public WithAccountSecurityContextFactory(AccountService accountService) {
         this.accountService = accountService;
@@ -37,7 +40,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         signupForm.setPassword("testpass");
         signupForm.setUsername("testname");
         signupForm.setEmail("email@email.com");
-        signupForm.setPhone("010-9900-9900");
+        signupForm.setPhone(testUtils.createRandomPhoneNumber());
 
         accountService.saveNewAccount(signupForm);
         Account account = accountRepository.findByLoginId(loginId);

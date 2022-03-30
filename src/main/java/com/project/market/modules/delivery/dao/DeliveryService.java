@@ -20,7 +20,12 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     public Delivery createDelivery(Account account, OrderForm orderForm, Item item) {
-        Delivery delivery = Delivery.builder()
+        Delivery delivery = newDeliveryBuild(account, orderForm, item);
+        return deliveryRepository.save(delivery);
+    }
+
+    private Delivery newDeliveryBuild(Account account, OrderForm orderForm, Item item) {
+        return Delivery.builder()
                 .accountId(account.getId())
                 .fee(item.getShippingFee())
                 .recipient(orderForm.getRecipient())
@@ -40,9 +45,6 @@ public class DeliveryService {
                 .trackingNumber("test-tracking-number")
                 .trackingUrl("test-tracking-url")
                 .build();
-
-
-        return deliveryRepository.save(delivery);
     }
 
     public void competeDelivery(Delivery delivery) {

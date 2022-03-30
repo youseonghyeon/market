@@ -32,16 +32,18 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
 
     public void saveNewAccount(SignupForm signupForm) {
-        String encode = passwordEncoder.encode(signupForm.getPassword());
-        String phone = PhoneUtils.trim(signupForm.getPhone());
+        Account account = newAccountBuild(signupForm);
+        accountRepository.save(account);
+    }
 
-        Account account = Account.builder()
+    private Account newAccountBuild(SignupForm signupForm) {
+        return Account.builder()
                 .username(signupForm.getUsername())
                 .loginId(signupForm.getLoginId())
-                .phone(phone)
+                .phone(PhoneUtils.trim(signupForm.getPhone()))
                 .email(signupForm.getEmail())
                 .nickname(signupForm.getLoginId())
-                .password(encode)
+                .password(passwordEncoder.encode(signupForm.getPassword()))
                 .joinedAt(LocalDateTime.now())
                 .role("ROLE_USER")
                 .orders(new ArrayList<>())
@@ -49,8 +51,6 @@ public class AccountService {
                 .tags(new ArrayList<>())
                 .zones(new ArrayList<>())
                 .build();
-
-        accountRepository.save(account);
     }
 
     public void editProfile(Account account, ProfileForm profileForm) {

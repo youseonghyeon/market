@@ -29,7 +29,14 @@ public class OrderService {
     private final DeliveryService deliveryService;
 
     public Order createOrder(Account account, OrderForm orderForm, Item item) {
-        Order order = Order.builder()
+        Order order = newOrderBuild(account, orderForm, item);
+        orderRepository.save(order);
+        item.sold();
+        return order;
+    }
+
+    private Order newOrderBuild(Account account, OrderForm orderForm, Item item) {
+        return Order.builder()
                 .orderDateTime(LocalDateTime.now())
                 .orderStatus(OrderStatus.PAYMENT)
                 .paymentMethod(orderForm.getPaymentMethod())
@@ -39,9 +46,6 @@ public class OrderService {
                 .orderedItem(item)
                 .customer(account)
                 .build();
-        orderRepository.save(order);
-        item.sold();
-        return order;
     }
 
     @Transactional(readOnly = true)
