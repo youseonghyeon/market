@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -25,14 +26,31 @@ public class HelpController {
     private final AccountRepository accountRepository;
     private final TokenMailSender tokenMailSender;
 
+    @GetMapping("/help/find-id")
+    public String findLonginIdForm() {
+        return "account/help/find-id";
+    }
+
+    @PostMapping("/help/find-id")
+    public String findLoginId(@RequestParam("email") String email, RedirectAttributes attributes, Model model) {
+        Account account = accountRepository.findByEmail(email);
+        if (account == null) {
+            attributes.addFlashAttribute("message", "등록된 회원이 존재하지 않습니다.");
+            return "redirect:/help/find-id";
+        }
+        model.addAttribute("id", account.getLoginId());
+        return "account/help/login-id";
+    }
+
+
     @GetMapping("/help/find-password")
     public String findPasswordForm() {
         return "account/help/find-password";
     }
 
     @PostMapping("/help/find-password") // 비밀번호 찾기 -> 이메일 인증 -> 토큰 메일 전송
-    public String sendMail(@RequestParam("email") String email, HttpServletResponse response, Model model) {
-        Account account = accountRepository.findByEmail(email);
+    public String sendMail(@RequestParam("loginId") String loginId, HttpServletResponse response, Model model) {
+        Account account = accountRepository.findByLoginId(loginId);
         if (account == null) {
             model.addAttribute("message", "error");
             return "account/help/find-password";
@@ -40,7 +58,7 @@ public class HelpController {
         String token = accountService.createPasswordToken(account);
         tokenMailSender.send(account.getEmail(), token);
 
-        createCookie("temp_email", email, response);
+        createCookie("temp_loginId", loginId, response);
         // TODO(DANGER)  post("/help/modify/password")에 바로 접근할 경우 인증을 거치지 않은채 바로 비밀번호가 변경됨.
         // -> 검증 로직 생성
         return "redirect:/help/send-token";
@@ -67,16 +85,16 @@ public class HelpController {
     }
 
     @PostMapping("/help/modify/password")
-    public String modifyPassword(@CookieValue(value = "temp_email") Cookie emailCookie,
+    public String modifyPassword(@CookieValue(value = "temp_loginId") Cookie idCookie,
                                  @RequestParam("new-password") String password, HttpServletResponse response) {
-        Account account = accountRepository.findByEmail(emailCookie.getValue());
+        Account account = accountRepository.findByLoginId(idCookie.getValue());
         if (account == null || !account.isValidPasswordToken(account.getPasswordToken())) {
             return "account/help/fail";
         }
 
         accountService.modifyPassword(account, password);
         accountService.destroyPasswordToken(account);
-        destroyCookie(emailCookie, response);
+        destroyCookie(idCookie, response);
         return "redirect:/login";
     }
 

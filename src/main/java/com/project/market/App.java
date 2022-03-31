@@ -67,7 +67,7 @@ public class App {
     }
 
     private void initItem() {
-        Account account = accountRepository.findByLoginId("user1");
+        Account account = accountRepository.findByLoginId("admin");
         for (int i = 1; i <= 100; i++) {
             if (!itemRepository.existsByName("mockItem" + i)) {
                 Item item = Item.builder()

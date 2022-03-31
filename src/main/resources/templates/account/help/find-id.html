@@ -6,9 +6,10 @@
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container">
     <div th:text="${message}">메시지</div>
-    <form th:action="@{/help/find-password}" th:method="post">
-        <input type="text" id="loginId" name="loginId" placeholder="ID">
-        <button type="submit">메일 전송</button>
+    <form th:action="@{/help/find-id}" th:method="post">
+        이메일을 입력하세요~
+        <input type="text" id="email" name="email" placeholder="Email">
+        <button type="submit">아이디 확인</button>
     </form>
 </div>
 </body>
