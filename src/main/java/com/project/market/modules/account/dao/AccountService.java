@@ -51,6 +51,8 @@ public class AccountService {
                 .enrolledItem(new ArrayList<>())
                 .tags(new ArrayList<>())
                 .zones(new ArrayList<>())
+                .itemEnrollAlertByWeb(true)
+                .itemEnrollAlertByMail(false)
                 .build();
     }
 

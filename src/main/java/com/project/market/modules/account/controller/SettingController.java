@@ -63,7 +63,7 @@ public class SettingController {
             return "account/settings/profile-edit";
         }
         accountService.editProfile(account, profileForm);
-        attributes.addFlashAttribute("message", "수정 완료!");
+        attributes.addFlashAttribute("message", "프로필 수정 완료!");
         return "redirect:/profile";
     }
 

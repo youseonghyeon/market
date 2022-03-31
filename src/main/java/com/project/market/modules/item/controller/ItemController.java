@@ -1,5 +1,6 @@
 package com.project.market.modules.item.controller;
 
+import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
@@ -11,6 +12,7 @@ import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.form.TagForm;
 import com.project.market.modules.item.validator.ItemFormValidator;
+import com.project.market.modules.notification.dao.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,8 @@ public class ItemController {
     private final TagRepository tagRepository;
     private final TagService tagService;
     private final ItemFormValidator itemFormValidator;
+    private final NotificationService notificationService;
+
 
     @ExceptionHandler(IllegalAccessException.class)
     public String AccessEx() {
@@ -63,8 +67,10 @@ public class ItemController {
         }
         tagService.createOrCountingTags(tagForm.getTags());
         // itemFormValidator 사용중
-        Long itemId = itemService.createNewItem(account, itemForm, tagForm.getTags());
-        return "redirect:/deal/" + itemId;
+        Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
+        // Async 적용 해야함
+        notificationService.noticeItemEnrollment(item);
+        return "redirect:/deal/" + item.getId();
     }
 
     // 상품 페이지

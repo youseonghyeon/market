@@ -4,6 +4,7 @@ import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
+import com.project.market.modules.notification.entity.Notification;
 import com.project.market.modules.order.entity.Order;
 import lombok.*;
 
@@ -63,6 +64,9 @@ public class Account {
     private String roadAddress;
     private String addressDetail;
 
+    private boolean itemEnrollAlertByWeb = true;
+    private boolean itemEnrollAlertByMail = false;
+
     @ManyToMany
     private List<Zone> zones = new ArrayList<>();
 
@@ -75,13 +79,16 @@ public class Account {
     @ManyToMany
     private List<Tag> tags = new ArrayList<>();
 
+    @OneToMany(mappedBy = "recipient")
+    private List<Notification> notifications = new ArrayList<>();
 
     public void modifyProfile(ProfileForm profileForm) {
         nickname = profileForm.getNickname();
         profileImage = profileForm.getProfileImage();
         email = profileForm.getEmail();
         phone = profileForm.getPhone();
-
+        itemEnrollAlertByWeb = profileForm.isItemEnrollAlertByWeb();
+        itemEnrollAlertByMail = profileForm.isItemEnrollAlertByMail();
     }
 
     public void modifyPassword(String newPassword) {

@@ -68,8 +68,7 @@ class ItemServiceTest {
         //given
         Account account = accountRepository.findByLoginId("testUser");
         ItemForm itemForm1 = createItemForm();
-        Long itemId = itemService.createNewItem(account, itemForm1, new ArrayList<>());
-        Item item = itemRepository.findById(itemId).orElseThrow();
+        Item item = itemService.createNewItem(account, itemForm1, new ArrayList<>());
         //when
         ItemForm itemForm2 = new ItemForm();
         itemForm2.setName("상품2");

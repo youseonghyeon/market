@@ -32,6 +32,20 @@
                 <input type="text" class="form-control" th:field="*{email}" required>
             </div>
         </div>
+
+
+        <div>
+            <div>
+                <input type="checkbox" th:field="*{itemEnrollAlertByWeb}">
+                <label>웹으로 알림 받기</label>
+            </div>
+            <div>
+                <input type="checkbox" th:field="*{itemEnrollAlertByMail}">
+                <label>메일로 알림 받기</label>
+            </div>
+        </div>
+
+
         <button type="submit" class="btn btn-primary">저장</button>
     </form>
 </div>

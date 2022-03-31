@@ -19,17 +19,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemService {
 
+    public static Integer DEFAULT_SHIPPING_FEE = 2500;
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
-    public static Integer DEFAULT_SHIPPING_FEE = 2500;
+    private final JPAQueryFactory queryFactory;
 
-    public Long createNewItem(Account account, ItemForm itemForm, List<String> tags) {
+    public Item createNewItem(Account account, ItemForm itemForm, List<String> tags) {
         Item item = newItemBuild(account, itemForm);
         if (!tags.isEmpty()) {
             joinItemWithTags(item, tags);
         }
         itemRepository.save(item);
-        return item.getId();
+        return item;
     }
 
     public void modifyItem(Item item, ItemForm itemForm) {
@@ -61,4 +62,5 @@ public class ItemService {
             item.getTags().add(t);
         }
     }
+
 }
