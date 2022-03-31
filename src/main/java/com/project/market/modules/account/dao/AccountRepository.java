@@ -19,7 +19,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByLoginId(String loginId);
 
-    //    @EntityGraph(value = "Account.withTags", type = EntityGraph.EntityGraphType.FETCH)
     @EntityGraph(attributePaths = {"tags"}, type = EntityGraph.EntityGraphType.FETCH)
     Account findAccountWithTagsById(Long id);
 
@@ -33,4 +32,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByEmail(String email);
 
+    @EntityGraph(attributePaths = {"notifications"}, type = EntityGraph.EntityGraphType.FETCH)
+    Account findAccountWithNotificationById(Long id);
 }

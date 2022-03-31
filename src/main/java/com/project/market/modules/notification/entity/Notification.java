@@ -1,19 +1,17 @@
 package com.project.market.modules.notification.entity;
 
 import com.project.market.modules.account.entity.Account;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Notification {
+public class Notification  {
 
     @Id
     @GeneratedValue

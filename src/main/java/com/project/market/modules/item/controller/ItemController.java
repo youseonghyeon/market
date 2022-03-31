@@ -65,11 +65,12 @@ public class ItemController {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
+        tagForm.getTags().add("테스트");
         tagService.createOrCountingTags(tagForm.getTags());
         // itemFormValidator 사용중
         Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
         // Async 적용 해야함
-        notificationService.noticeItemEnrollment(item);
+        notificationService.noticeItemEnrollment(account, item);
         return "redirect:/deal/" + item.getId();
     }
 

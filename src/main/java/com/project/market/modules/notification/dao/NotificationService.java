@@ -2,14 +2,13 @@ package com.project.market.modules.notification.dao;
 
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.QAccount;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.entity.QTag;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,21 +28,26 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final JPAQueryFactory queryFactory;
 
-    public void noticeItemEnrollment(Item item) {
+    @Async
+    public void noticeItemEnrollment(Account sender, Item item) {
         List<Tag> tags = item.getTags();
-        List<Account> accounts = getAccountsByTags(tags);
-        for (Account recipient : accounts) {
+        List<Account> recipients = getAccountsByTags(sender, tags);
+        for (Account recipient : recipients) {
             Notification notification = newItemNoticeBuild(item);
             notification.setRecipient(recipient);
             notificationRepository.save(notification);
         }
     }
 
-    private List<Account> getAccountsByTags(List<Tag> tags) {
+    private List<Account> getAccountsByTags(Account sender, List<Tag> tags) {
         return queryFactory.select(account)
                 .from(account)
                 .join(account.tags, tag)
-                .where(tag.in(tags))
+                .where(
+                        account.id.ne(sender.getId()), // 상품 등록자 제외
+                        account.itemEnrollAlertByWeb.isTrue(), // 알림 거부자 제외
+                        tag.in(tags)
+                )
                 .fetch();
     }
 

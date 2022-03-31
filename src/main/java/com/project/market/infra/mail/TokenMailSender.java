@@ -2,5 +2,5 @@ package com.project.market.infra.mail;
 
 public interface TokenMailSender {
 
-    boolean send(String sendTo, String token);
+    void send(String sendTo, String token);
 }

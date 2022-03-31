@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 public class TokenMailSenderTest implements TokenMailSender {
 
     @Override
-    public boolean send(String sendTo, String token) {
+    public void send(String sendTo, String token) {
 
         log.info("------------------------------------");
         log.info("sendTo={}", sendTo);
         log.info("token={}", token);
         log.info("------------------------------------");
-        return true;
     }
 }

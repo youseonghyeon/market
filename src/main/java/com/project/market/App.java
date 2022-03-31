@@ -11,12 +11,14 @@ import com.project.market.modules.item.entity.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@EnableAsync
 @SpringBootApplication
 @RequiredArgsConstructor
 public class App {

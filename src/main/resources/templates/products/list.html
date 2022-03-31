@@ -21,11 +21,10 @@
 <div class="container-xl">
     <div class="row mt-3">
         <h3 class="col">상품 목록</h3>
-        <select class="col-2">
-            <option value="recent">최신순</option>
-            <option value="popular">평점순</option>
-        </select>
-        <button>검색</button>
+
+        <button th:onclick="|location.href='@{/products/list(order=recent)}'|" value="recent">최신순</button>
+        <button th:onclick="|location.href='@{/products/list(order=popular)}'|" value="popular">평점순</button>
+
         <a class="btn btn-primary" th:href="@{/products/enroll}">상품 등록</a>
     </div>
     <div class="row border border-dark mt-3">
