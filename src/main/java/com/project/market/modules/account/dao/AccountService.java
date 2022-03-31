@@ -2,6 +2,7 @@ package com.project.market.modules.account.dao;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
+import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
@@ -112,5 +113,10 @@ public class AccountService {
 
     public void modifyRole(Account account, String role) {
         account.modifyRole(role);
+    }
+
+    public void modifyAddress(Account account, AddressForm addressForm) {
+        account.modifyAddress(addressForm);
+        accountRepository.save(account);
     }
 }

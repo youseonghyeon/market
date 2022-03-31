@@ -36,7 +36,11 @@ public class OrderController {
     public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model, RedirectAttributes attributes) {
         Item item = itemRepository.findItemReadOnlyById(purchaseForm.getItemId());
         if (!item.canPurchase(account)) {
-            attributes.addFlashAttribute("errorMassage", "구매할 수 없는 상품입니다.");
+            String errorMassage = "구매할 수 없는 상품입니다.";
+            if (item.isMyItem(account)) {
+                errorMassage = "내 상품은 구매할 수 없습니다.";
+            }
+            attributes.addFlashAttribute("errorMassage", errorMassage);
             return "redirect:/deal/" + item.getId();
         }
         model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod()));

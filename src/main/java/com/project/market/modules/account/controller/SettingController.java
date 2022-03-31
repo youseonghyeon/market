@@ -5,6 +5,7 @@ import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
+import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.PasswordForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.util.CurrentAccount;
@@ -122,7 +123,20 @@ public class SettingController {
         if (zone == null) {
             return "account/settings/zone";
         }
-        accountService.saveNewZone(account,zone);
+        accountService.saveNewZone(account, zone);
         return "redirect:/profile/zone";
+    }
+
+    @GetMapping("/profile/address")
+    public String addressSettingForm(@CurrentAccount Account account, Model model) {
+        model.addAttribute("addressForm", modelMapper.map(account, AddressForm.class));
+        return "account/settings/address";
+    }
+
+    @PostMapping("/profile/address")
+    public String addressSetting(@CurrentAccount Account account, @Valid AddressForm addressForm, RedirectAttributes attributes) {
+        accountService.modifyAddress(account, addressForm);
+        attributes.addFlashAttribute("message", "주소 변경 완료!");
+        return "redirect:/profile";
     }
 }

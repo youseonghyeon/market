@@ -1,5 +1,6 @@
 package com.project.market.modules.account.entity;
 
+import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
@@ -56,7 +57,11 @@ public class Account {
 
     private String passwordToken;
 
-    private LocalDateTime passwordTokenCreateDate;
+    private LocalDateTime passwordTokenCreatedAt;
+
+    private String zoneCode;
+    private String roadAddress;
+    private String addressDetail;
 
     @ManyToMany
     private List<Zone> zones = new ArrayList<>();
@@ -91,18 +96,23 @@ public class Account {
         passwordToken = token;
         if (token == null) {
             // 토큰 폐기
-            passwordTokenCreateDate = LocalDateTime.now().minusDays(3);
+            passwordTokenCreatedAt = LocalDateTime.now().minusDays(3);
         } else {
             // 토큰 생성
-            passwordTokenCreateDate = LocalDateTime.now();
+            passwordTokenCreatedAt = LocalDateTime.now();
         }
     }
 
     public boolean isValidPasswordToken(String token) {
         return passwordToken != null &&
                 passwordToken.equals(token) &&
-                passwordTokenCreateDate.isAfter(LocalDateTime.now().minusSeconds(600));
+                passwordTokenCreatedAt.isAfter(LocalDateTime.now().minusSeconds(600));
     }
 
+    public void modifyAddress(AddressForm addressForm) {
+        zoneCode = addressForm.getZoneCode();
+        roadAddress = addressForm.getRoadAddress();
+        addressDetail = addressForm.getAddressDetail();
+    }
 
 }

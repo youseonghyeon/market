@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<script>
+    function openPopup() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                let zonecode = document.getElementById("zonecode")
+                zonecode.value = data.zonecode
+                let roadAddress = document.getElementById("roadAddress")
+                roadAddress.value = data.roadAddress
+            }
+        }).open();
+    }
+
+</script>
+<div class="container">
+
+    <h3 class="col-12 mt-5">주소 등록</h3>
+    <form th:action="@{/profile/address}" th:method="post" th:object="${addressForm}">
+        <div>주소</div>
+        <div class="input-group ">
+            <input id="zonecode" class="form-control col-5" type="text" th:field="*{zoneCode}" readonly>
+            <div class="col-4"></div>
+            <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">주소
+                변경
+            </button>
+        </div>
+        <br>
+        <div class="input-group ">
+            <input class="form-control col-5" type="text" th:field="*{roadAddress}"
+                   placeholder="주소검색결과" readonly>
+        </div>
+        <br>
+        <div class="input-group ">
+            <input class="form-control col-5" type="text" th:field="*{addressDetail}" placeholder="상세주소">
+        </div>
+
+        <button class="btn btn-primary" type="submit">저장</button>
+
+
+    </form>
+
+</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</body>
+</html>
