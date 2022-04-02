@@ -21,6 +21,10 @@
 <div class="container-xl">
     <div class="row mt-3">
         <h3 class="col">상품 목록</h3>
+        <input type="radio" id="sorter-latestAsc" name="sorter">
+        <label for="sorter-latestAsc">최신순</label>
+        <input type="radio" id="sorter-popularDesc" name="sorter">
+        <label for="sorter-latestAsc">평점순</label>
 
         <button th:onclick="|location.href='@{/products/list(order=recent)}'|" value="recent">최신순</button>
         <button th:onclick="|location.href='@{/products/list(order=popular)}'|" value="popular">평점순</button>

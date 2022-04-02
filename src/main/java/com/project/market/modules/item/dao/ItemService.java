@@ -51,8 +51,8 @@ public class ItemService {
                 .deleted(false)
                 .expired(false)
                 .tags(new ArrayList<>())
-                .post(itemForm.getPostMethod())
-                .direct(itemForm.getDirectMethod())
+                .post(itemForm.isPost())
+                .direct(itemForm.isDirect())
                 .build();
     }
 

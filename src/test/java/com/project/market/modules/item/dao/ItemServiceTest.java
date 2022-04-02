@@ -76,8 +76,8 @@ class ItemServiceTest {
         itemForm2.setCoverPhoto("없음");
         itemForm2.setPhoto("없음");
         itemForm2.setOriginAddress("서울");
-        itemForm2.setPost(null);
-        itemForm2.setDirect("true");
+        itemForm2.setPost(false);
+        itemForm2.setDirect(true);
         itemService.modifyItem(item, itemForm2);
         //then
         assertEquals(item.getName(), "상품2");
@@ -98,8 +98,8 @@ class ItemServiceTest {
         itemForm.setCoverPhoto("test.jpg");
         itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
-        itemForm.setPost("true");
-        itemForm.setDirect(null);
+        itemForm.setPost(true);
+        itemForm.setDirect(false);
         return itemForm;
     }
 }

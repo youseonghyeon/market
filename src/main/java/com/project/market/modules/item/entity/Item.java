@@ -77,8 +77,8 @@ public class Item {
         photo = itemForm.getPhoto();
         description = itemForm.getDescription();
         originAddress = itemForm.getOriginAddress();
-        post = itemForm.getPostMethod();
-        direct = itemForm.getDirectMethod();
+        post = itemForm.isPost();
+        direct = itemForm.isDirect();
     }
 
     public boolean isMyItem(Account account) {

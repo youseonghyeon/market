@@ -54,8 +54,8 @@ class DeliveryServiceTest {
         itemForm.setCoverPhoto("test.jpg");
         itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
-        itemForm.setPost("true");
-        itemForm.setDirect(null);
+        itemForm.setPost(true);
+        itemForm.setDirect(false);
         return itemForm;
     }
 
