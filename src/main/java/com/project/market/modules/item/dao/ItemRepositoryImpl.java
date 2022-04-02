@@ -1,6 +1,7 @@
 package com.project.market.modules.item.dao;
 
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.entity.QTag;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -43,19 +44,18 @@ public class ItemRepositoryImpl implements CustomItemRepository {
                 .fetch();
     }
 
-    private Predicate tagNameEq(String tagName) {
-        return StringUtils.hasText(tagName) ? tag.title.eq(tagName) : null;
-    }
-
     private int getItemsTotal(String tagName) {
         return queryFactory.selectFrom(item)
-                .leftJoin(item)
+                .leftJoin(item.tags, tag)
                 .where(
                         item.expired.isFalse(),
                         item.deleted.isFalse(),
                         tagNameEq(tagName)
                 )
                 .fetch().size();
+    }
+    private Predicate tagNameEq(String tagName) {
+        return StringUtils.hasText(tagName) ? tag.title.eq(tagName) : null;
     }
 
     private OrderSpecifier<?> itemSort(String criteria) {
@@ -67,7 +67,7 @@ public class ItemRepositoryImpl implements CustomItemRepository {
                 return item.rating.desc();
             case "recent":
                 return item.enrolledDateTime.desc();
-                // case 추가 예정
+            // case 추가 예정
             default:
                 return item.enrolledDateTime.desc();
         }

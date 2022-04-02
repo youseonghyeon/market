@@ -59,19 +59,19 @@ class HelpControllerTest {
     @DisplayName("토큰 메일 전송 성공")
     void sendTokenMail() throws Exception {
         mockMvc.perform(post("/help/find-password")
-                        .param("email", "email@email.com")
+                        .param("loginId", "admin")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/help/send-token"))
-                .andExpect(cookie().value("temp_email", "email@email.com"));
+                .andExpect(cookie().value("temp_loginId", "admin"));
     }
 
     @Test
     @WithAccount("testUser")
-    @DisplayName("토큰 메일 전송 실패(유효하지 않은 이메일)")
+    @DisplayName("토큰 메일 전송 실패(유효하지 않은 아이디)")
     void sendTokenMailFail() throws Exception {
         mockMvc.perform(post("/help/find-password")
-                        .param("email", "ooo@ooo.ooo")
+                        .param("loginId", "aaaaaa")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("message"))
@@ -107,7 +107,7 @@ class HelpControllerTest {
         Account account = accountRepository.findByLoginId("testUser");
         String token = accountService.createPasswordToken(account);
         mockMvc.perform(post("/help/modify/password")
-                        .cookie(new Cookie("temp_email", account.getEmail()))
+                        .cookie(new Cookie("temp_loginId", account.getLoginId()))
                         .cookie(new Cookie("temp_token", token))
                         .param("new-password", "newpassword")
                         .with(csrf()))

@@ -10,10 +10,10 @@
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div>
     <div th:if="${itemPage.hasPrevious()}">
-        <a th:href="${itemPage.hasPrevious()} ? @{/products/list(page=${itemPage.number} - 1)} : '#'">이전 페이지</a>
+        <a th:href="${itemPage.hasPrevious()} ? @{/product/list(page=${itemPage.number} - 1)} : '#'">이전 페이지</a>
     </div>
     <div th:if="${itemPage.hasNext()}">
-        <a th:href="${itemPage.hasNext()} ? @{/products/list(page=${itemPage.number} + 1)} : '#'">다음 페이지</a>
+        <a th:href="${itemPage.hasNext()} ? @{/product/list(page=${itemPage.number} + 1)} : '#'">다음 페이지</a>
     </div>
     <button onclick="show()">페이징 로그</button>
 
@@ -26,23 +26,23 @@
         <input type="radio" id="sorter-popularDesc" name="sorter">
         <label for="sorter-latestAsc">평점순</label>
 
-        <button th:onclick="|location.href='@{/products/list(order=recent)}'|" value="recent">최신순</button>
-        <button th:onclick="|location.href='@{/products/list(order=popular)}'|" value="popular">평점순</button>
+        <button th:onclick="|location.href='@{/product/list(order=recent)}'|" value="recent">최신순</button>
+        <button th:onclick="|location.href='@{/product/list(order=popular)}'|" value="popular">평점순</button>
 
-        <a class="btn btn-primary" th:href="@{/products/enroll}">상품 등록</a>
+        <a class="btn btn-primary" th:href="@{/product/enroll}">상품 등록</a>
     </div>
     <div class="row border border-dark mt-3">
         <div class="col-2">
             <span>태그 목록</span>
             <div th:each="tag : ${tagList}">
-                <button class="badge" th:onclick="|location.href='@{/products/list(tag=${tag.getTitle()})}'|"
+                <button class="badge" th:onclick="|location.href='@{/product/list(tag=${tag.getTitle()})}'|"
                         th:text="${tag.getTitle()}">태그
                 </button>
             </div>
         </div>
         <div class="col row row-cols-4">
             <div class="col border border-dark container" th:each="item : ${itemList}">
-                <a style="margin: 1px;" th:href="@{/deal/{itemId}(itemId = ${item.getId()})}">
+                <a style="margin: 1px;" th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                     <div class="border border-danger" style="height: 150px;">이미지 영역</div>
                     <div>
                         상품명 :

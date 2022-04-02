@@ -6,7 +6,7 @@
 <div class="container">
     <h2>상품수정 폼</h2>
     <div th:object="${itemForm}">
-        <form th:action="@{/products/modify}" method="post">
+        <form th:action="@{/product/modify}" method="post">
 
             <input type="hidden" th:field="*{id}">
 

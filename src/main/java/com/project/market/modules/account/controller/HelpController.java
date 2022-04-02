@@ -1,6 +1,6 @@
 package com.project.market.modules.account.controller;
 
-import com.project.market.infra.mail.TokenMailSender;
+import com.project.market.infra.mail.MailSender;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
@@ -24,7 +24,7 @@ public class HelpController {
 
     private final AccountService accountService;
     private final AccountRepository accountRepository;
-    private final TokenMailSender tokenMailSender;
+    private final MailSender mailSender;
 
     @GetMapping("/help/find-id")
     public String findLonginIdForm() {
@@ -56,7 +56,7 @@ public class HelpController {
             return "account/help/find-password";
         }
         String token = accountService.createPasswordToken(account);
-        tokenMailSender.send(account.getEmail(), token);
+        mailSender.send(account.getEmail(), token);
 
         createCookie("temp_loginId", loginId, response);
         // TODO(DANGER)  post("/help/modify/password")에 바로 접근할 경우 인증을 거치지 않은채 바로 비밀번호가 변경됨.

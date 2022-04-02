@@ -1,10 +1,12 @@
 package com.project.market.modules.notification.dao;
 
+import com.project.market.infra.mail.MailSender;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +29,13 @@ public class NotificationService {
     private final AccountRepository accountRepository;
     private final NotificationRepository notificationRepository;
     private final JPAQueryFactory queryFactory;
+    private final MailSender mailSender;
 
     @Async
-    public void noticeItemEnrollment(Account sender, Item item) {
-        List<Tag> tags = item.getTags();
-        List<Account> recipients = getAccountsByTags(sender, tags);
+    public void noticeItemEnrollment(Item item) {
+        BooleanExpression condition = account.itemEnrollAlertByWeb.isTrue();
+        List<Account> recipients = getAccountsHasTags(item, condition);
+
         for (Account recipient : recipients) {
             Notification notification = newItemNoticeBuild(item);
             notification.setRecipient(recipient);
@@ -39,13 +43,24 @@ public class NotificationService {
         }
     }
 
-    private List<Account> getAccountsByTags(Account sender, List<Tag> tags) {
+    public void noticeByEmailItemEnrollment(Item item) {
+        BooleanExpression condition = account.itemEnrollAlertByMail.isTrue();
+        List<Account> recipients = getAccountsHasTags(item, condition);
+
+        for (Account recipient : recipients) {
+            mailSender.sendNotification(recipient, item);
+        }
+    }
+
+    private List<Account> getAccountsHasTags(Item item, BooleanExpression condition) {
+        Account itemOwner = item.getEnrolledBy();
+        List<Tag> tags = item.getTags();
         return queryFactory.select(account)
                 .from(account)
                 .join(account.tags, tag)
                 .where(
-                        account.id.ne(sender.getId()), // 상품 등록자 제외
-                        account.itemEnrollAlertByWeb.isTrue(), // 알림 거부자 제외
+                        account.id.ne(itemOwner.getId()), // 상품 등록자 제외
+                        condition, // 알림 거부자 제외
                         tag.in(tags)
                 )
                 .fetch();

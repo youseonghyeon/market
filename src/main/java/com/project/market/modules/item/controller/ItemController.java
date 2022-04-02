@@ -52,40 +52,45 @@ public class ItemController {
         webDataBinder.addValidators(itemFormValidator);
     }
 
-    @GetMapping("/products/enroll")
+    @GetMapping("/product/enroll")
     public String productEnrollForm(Model model) {
-        List<Tag> whiteList = tagRepository.findTop100ByOrderByCountDesc();
+        List<Tag> whiteList = tagRepository.findTop100ByOrderByCountDesc(); // 태그 목록 (최대 상위 100개)
         model.addAttribute("whiteList", whiteList);
         model.addAttribute("itemForm", new ItemForm());
         return "products/enroll";
     }
 
-    @PostMapping("/products/enroll")
+    @PostMapping("/product/enroll")
     public String productEnroll(@CurrentAccount Account account, @Valid ItemForm itemForm, @ModelAttribute TagForm tagForm, Errors errors) {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
-        tagForm.getTags().add("테스트");
+
         tagService.createOrCountingTags(tagForm.getTags());
-        // itemFormValidator 사용중
         Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
-        // Async 적용 해야함
-        notificationService.noticeItemEnrollment(account, item);
-        return "redirect:/deal/" + item.getId();
+
+        /**
+         * item에 있는 태그들을 관심태그로 등록한 회원에게 Web알림 전송
+         */
+        notificationService.noticeItemEnrollment(item);
+        /**
+         * item에 있는 태그들을 관심태그로 등록한 회원에게 메일 전송
+         */
+        notificationService.noticeByEmailItemEnrollment(item);
+        return "redirect:/product/" + item.getId();
     }
 
-    // 상품 페이지
-    @GetMapping("/deal/{itemId}")
+    @GetMapping("/product/{itemId}")
     public String productForm(@PathVariable("itemId") Item item, Model model) {
         model.addAttribute("item", item);
         return "products/product";
     }
 
-    // 상품 리스트 조회
-    @GetMapping("/products/list")
+    @GetMapping("/product/list")
     public String productListForm(Pageable pageable,
                                   @RequestParam(value = "tag", required = false) String tag,
                                   @RequestParam(value = "order", required = false) String orderBy, Model model) {
+
         Page<Item> itemPage = itemRepository.findItemList(tag, orderBy, pageable);
         List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
 
@@ -95,14 +100,14 @@ public class ItemController {
         return "products/list";
     }
 
-    @GetMapping("/my-products/list")
+    @GetMapping("/product/my-list")
     public String myProductList(@CurrentAccount Account account, Model model) {
         List<Item> itemList = itemRepository.findAllByEnrolledByOrderByEnrolledDateTimeDesc(account);
         model.addAttribute("itemList", itemList);
         return "products/my-list";
     }
 
-    @GetMapping("/my-products/edit/{itemId}")
+    @GetMapping("/product/edit/{itemId}")
     public String editMyProduct(@CurrentAccount Account account, @PathVariable("itemId") Item item, Model model) throws IllegalAccessException {
         if (!item.isMyItem(account)) {
             throw new IllegalAccessException("접근 권한이 없습니다.");
@@ -112,7 +117,7 @@ public class ItemController {
         return "products/edit";
     }
 
-    @PostMapping("/products/modify")
+    @PostMapping("/product/modify")
     public String modifyProduct(@CurrentAccount Account account, @ModelAttribute ItemForm itemForm, Errors errors) throws IllegalAccessException {
         if (errors.hasErrors()) {
             return "products/edit";
@@ -122,6 +127,6 @@ public class ItemController {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
         itemService.modifyItem(item, itemForm);
-        return "redirect:/deal/" + itemForm.getId();
+        return "redirect:/product/" + itemForm.getId();
     }
 }

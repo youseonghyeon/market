@@ -6,7 +6,7 @@
 <div class="container">
     <h3>내가 등록한 상품 목록</h3>
     <div class="border-dark border" th:each="item : ${itemList}">
-        <a th:href="@{/deal/{itemId}(itemId = ${item.getId()})}">
+        <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
             <div>
                 상품명 :
                 <span th:text="${item.getName()}"></span>
@@ -22,8 +22,8 @@
         </a>
 
         <div>
-<!--            <a th:href="@{/my-products/edit/{itemId}(itemId = ${item.getId()})}"></a>-->
-            <button th:onclick="|location.href='@{/my-products/edit/{itemId}(itemId = ${item.getId()})}'|">수정하기</button>
+<!--            <a th:href="@{/product/edit/{itemId}(itemId = ${item.getId()})}"></a>-->
+            <button th:onclick="|location.href='@{/product/edit/{itemId}(itemId = ${item.getId()})}'|">수정하기</button>
         </div>
     </div>
 </div>
