@@ -41,6 +41,14 @@
 
             <button type="submit" class="btn btn-primary mt-3">수정</button>
         </form>
+        <form th:action="@{/product/tag}" th:method="post">
+            <input type="hidden" name="itemId" th:value="${itemForm.getId()}">
+            <input type="text" name="tag">
+            <button type="submit">임시 태그 추가</button>
+        </form>
+        <div th:each="tag : ${tagList}">
+            <div th:text="${tag.getTitle()}">tag</div>
+        </div>
     </div>
 </div>
 </body>

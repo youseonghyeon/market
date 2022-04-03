@@ -5,7 +5,7 @@ import com.project.market.modules.item.entity.Item;
 
 public interface MailSender {
 
-    void send(String sendTo, String token);
+    void sendTokenMail(Account recipient, String token);
 
-    void sendNotification(Account recipient, Item item);
+    void sendNoticeMail(Account recipient, Item item);
 }

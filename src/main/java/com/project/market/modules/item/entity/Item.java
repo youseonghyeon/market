@@ -33,7 +33,7 @@ public class Item {
     private float rating;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "account")
+//    @JoinColumn(name = "account")
     private Account enrolledBy;
 
     private LocalDateTime enrolledDateTime;

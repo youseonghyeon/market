@@ -12,16 +12,18 @@ import org.springframework.stereotype.Component;
 public class MailSenderTest implements MailSender {
 
     @Override
-    public void send(String sendTo, String token) {
-
+    public void sendTokenMail(Account recipient, String token) {
         log.info("------------------------------------");
-        log.info("sendTo={}", sendTo);
+        log.info("sendTo={}", recipient.getUsername());
         log.info("token={}", token);
         log.info("------------------------------------");
     }
 
     @Override
-    public void sendNotification(Account recipient, Item item) {
-
+    public void sendNoticeMail(Account recipient, Item item) {
+        log.info("------------------------------------");
+        log.info("sendTo={}", recipient.getEmail());
+        log.info("item={}", item.getName());
+        log.info("------------------------------------");
     }
 }

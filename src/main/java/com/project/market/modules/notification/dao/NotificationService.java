@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.project.market.modules.account.entity.QAccount.account;
 import static com.project.market.modules.item.entity.QTag.tag;
@@ -34,7 +36,8 @@ public class NotificationService {
     @Async
     public void noticeItemEnrollment(Item item) {
         BooleanExpression condition = account.itemEnrollAlertByWeb.isTrue();
-        List<Account> recipients = getAccountsHasTags(item, condition);
+        // BUG FIX : 수신자 중복 제거
+        Set<Account> recipients = getAccountsHasTags(item, condition);
 
         for (Account recipient : recipients) {
             Notification notification = newItemNoticeBuild(item);
@@ -45,17 +48,17 @@ public class NotificationService {
 
     public void noticeByEmailItemEnrollment(Item item) {
         BooleanExpression condition = account.itemEnrollAlertByMail.isTrue();
-        List<Account> recipients = getAccountsHasTags(item, condition);
+        Set<Account> recipients = getAccountsHasTags(item, condition);
 
         for (Account recipient : recipients) {
-            mailSender.sendNotification(recipient, item);
+            mailSender.sendNoticeMail(recipient, item);
         }
     }
 
-    private List<Account> getAccountsHasTags(Item item, BooleanExpression condition) {
+    private Set<Account> getAccountsHasTags(Item item, BooleanExpression condition) {
         Account itemOwner = item.getEnrolledBy();
         List<Tag> tags = item.getTags();
-        return queryFactory.select(account)
+        List<Account> accounts = queryFactory.select(account)
                 .from(account)
                 .join(account.tags, tag)
                 .where(
@@ -64,12 +67,14 @@ public class NotificationService {
                         tag.in(tags)
                 )
                 .fetch();
+        return new HashSet<>(accounts);
     }
 
     private Notification newItemNoticeBuild(Item item) {
         // TODO admin의 아이디가 변경될 수 있으므로 매니저 아이디를 새로 만들어서 넣어야 함
         Account admin = accountRepository.findByLoginId("admin");
         return Notification.builder()
+                .itemId(item.getId())
                 .subject("관심 상품이 등록되었습니다.")
                 .content("상품 이름: " + item.getName())
                 .createdAt(LocalDateTime.now())

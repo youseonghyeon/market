@@ -6,11 +6,19 @@
 <div class="container">
     <h3>알림 목록</h3>
     <div th:each="notice : ${notificationList}">
-        <div class="mt-3"></div>
-        제목 : <div th:text="${notice.getSubject()}">제목</div>
-        내용 : <div th:text="${notice.getContent()}">내용</div>
-        전송자 : <div th:text="${notice.getSender().getNickname()}">전송자 아이디</div>
-
+        <div class="container mt-3 border border-dark">
+            <a th:href="@{/product/{itemId}(itemId = ${notice.getItemId()})}">
+                <div class="row">
+                    <span th:text="'보낸사람 : '+${notice.getSender().getNickname()}">전송자 아이디</span>
+                </div>
+                <div class="row">
+                    <span th:text="${notice.getSubject()}">제목</span>
+                </div>
+                <div class="row">
+                    <span th:text="${notice.getContent()}">내용</span>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
 </body>

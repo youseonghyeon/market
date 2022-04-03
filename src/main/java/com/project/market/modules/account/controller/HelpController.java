@@ -56,7 +56,7 @@ public class HelpController {
             return "account/help/find-password";
         }
         String token = accountService.createPasswordToken(account);
-        mailSender.send(account.getEmail(), token);
+        mailSender.sendTokenMail(account, token);
 
         createCookie("temp_loginId", loginId, response);
         // TODO(DANGER)  post("/help/modify/password")에 바로 접근할 경우 인증을 거치지 않은채 바로 비밀번호가 변경됨.

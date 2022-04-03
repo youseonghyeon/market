@@ -25,17 +25,17 @@ public class MailSenderImpl implements MailSender {
 
     @Async
     @Override
-    public void send(String sendTo, String token) {
+    public void sendTokenMail(Account recipient, String token) {
         String subject = "비밀번호 찾기 메일 테스트";
         String content = "http://localhost:8080/help/confirm?token=" + token;
 
-        MimeMessagePreparator preparator = createPrepare(sendTo, subject, content);
+        MimeMessagePreparator preparator = createPrepare(recipient.getEmail(), subject, content);
         sendMail(preparator);
     }
 
     @Async
     @Override
-    public void sendNotification(Account recipient, Item item) {
+    public void sendNoticeMail(Account recipient, Item item) {
         String title = "관심 상품이 등록되었습니다.";
         String content = "상품명: " + item.getName();
 

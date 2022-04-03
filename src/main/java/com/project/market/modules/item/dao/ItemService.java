@@ -56,7 +56,7 @@ public class ItemService {
                 .build();
     }
 
-    private void joinItemWithTags(Item item, List<String> tags) {
+    public void joinItemWithTags(Item item, List<String> tags) {
         List<Tag> findTags = tagRepository.findAllByTitleIn(tags);
         for (Tag t : findTags) {
             item.getTags().add(t);

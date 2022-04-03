@@ -18,6 +18,8 @@ public class Notification  {
     @Column(name = "notification_id")
     private Long id;
 
+    private Long itemId;
+
     private String subject;
 
     private String content;

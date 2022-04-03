@@ -25,6 +25,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +66,10 @@ public class ItemController {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
+        tagForm.getTags().add("A");
+        tagForm.getTags().add("B");
+        tagForm.getTags().add("C");
+        tagForm.getTags().add("D");
 
         tagService.createOrCountingTags(tagForm.getTags());
         Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
@@ -112,8 +117,10 @@ public class ItemController {
         if (!item.isMyItem(account)) {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
+        List<Tag> tagList = item.getTags();
 
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
+        model.addAttribute("tagList", tagList);
         return "products/edit";
     }
 
@@ -128,5 +135,14 @@ public class ItemController {
         }
         itemService.modifyItem(item, itemForm);
         return "redirect:/product/" + itemForm.getId();
+    }
+
+    @PostMapping("/product/tag")
+    public String addNewTag(@CurrentAccount Account account, @RequestParam("itemId") Item item, @RequestParam("tag") String tag) {
+        List<String> tags = new ArrayList<>();
+        tags.add(tag);
+        tagService.createOrCountingTags(tags);
+        itemService.joinItemWithTags(item, tags);
+        return "redirect:/product/edit/" + item.getId();
     }
 }
