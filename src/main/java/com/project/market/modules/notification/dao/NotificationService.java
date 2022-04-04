@@ -82,4 +82,8 @@ public class NotificationService {
                 .sender(admin)
                 .build();
     }
+
+    public void confirm(List<Notification> notifications) {
+        notifications.forEach(Notification::confirm);
+    }
 }

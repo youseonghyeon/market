@@ -4,12 +4,9 @@ import com.project.market.WithAccount;
 import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.security.AccountContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,24 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -78,7 +59,7 @@ class ItemControllerTest {
     @WithAccount("testUser")
     @DisplayName("상품 등록 폼")
     void productEnrollForm() throws Exception {
-        mockMvc.perform(get("/products/enroll"))
+        mockMvc.perform(get("/product/enroll"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemForm"))
                 .andExpect(view().name("products/enroll"));
@@ -88,7 +69,7 @@ class ItemControllerTest {
     @WithAccount("testUser")
     @DisplayName("상품 등록")
     void productEnroll() throws Exception {
-        mockMvc.perform(post("/products/enroll")
+        mockMvc.perform(post("/product/enroll")
                         .param("name", "상품A")
                         .param("price", "6000")
                         .param("coverPhoto", "A.jpg")
@@ -112,7 +93,7 @@ class ItemControllerTest {
     @DisplayName("단일 상품 조회 폼")
     void productForm() throws Exception {
         Item item = itemRepository.findByName("test상품");
-        mockMvc.perform(get("/deal/" + item.getId()))
+        mockMvc.perform(get("/product/" + item.getId()))
                 .andExpect(model().attributeExists("item"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("products/product"));
@@ -122,7 +103,7 @@ class ItemControllerTest {
     @WithAccount("testUser")
     @DisplayName("전체 상품 리스트 조회 폼")
     void productList() throws Exception {
-        mockMvc.perform(get("/products/list"))
+        mockMvc.perform(get("/product/list"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemList"))
                 .andExpect(model().attributeExists("itemPage"))
@@ -134,10 +115,10 @@ class ItemControllerTest {
     @WithAccount("testUser")
     @DisplayName("내 상품 리스트 폼")
     void myProductListForm() throws Exception {
-        mockMvc.perform(get("/my-products/list"))
+        mockMvc.perform(get("/product/list"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemList"))
-                .andExpect(view().name("products/my-list"));
+                .andExpect(view().name("products/list"));
     }
 
     @Test
@@ -145,7 +126,7 @@ class ItemControllerTest {
     @DisplayName("내 상품 수정 폼")
     void editMyProductForm() throws Exception {
         Item item = itemRepository.findByName("test상품");
-        mockMvc.perform(get("/my-products/edit/" + item.getId()))
+        mockMvc.perform(get("/product/edit/" + item.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemForm"))
                 .andExpect(view().name("products/edit"));
@@ -157,7 +138,7 @@ class ItemControllerTest {
     void modifyProduct() throws Exception {
         Item item = itemRepository.findByName("test상품");
 
-        mockMvc.perform(post("/products/modify")
+        mockMvc.perform(post("/product/modify")
                         .param("id", item.getId().toString())
                         .param("name", "수정된 상품")
                         .param("price", "4000")
@@ -168,7 +149,7 @@ class ItemControllerTest {
                         .param("direct", "true")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/deal/" + item.getId()));
+                .andExpect(redirectedUrl("/product/" + item.getId()));
 
         Item modifiedItem = itemRepository.findByName("수정된 상품");
         assertNotNull(modifiedItem);

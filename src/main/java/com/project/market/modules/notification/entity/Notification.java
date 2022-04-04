@@ -39,4 +39,8 @@ public class Notification  {
         account.getNotifications().add(this);
     }
 
+    public void confirm() {
+        confirmed = true;
+    }
+
 }

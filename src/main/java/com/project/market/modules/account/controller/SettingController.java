@@ -12,6 +12,7 @@ import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.account.validator.PasswordFormValidator;
 import com.project.market.modules.item.dao.TagRepository;
 import com.project.market.modules.item.dao.TagService;
+import com.project.market.modules.item.dto.TagDto;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,10 +96,11 @@ public class SettingController {
     }
 
     @PostMapping("/profile/tag")
-    public String tagSetting(@CurrentAccount Account account, @RequestParam("new-tag") String tag) {
-        Tag findTag = tagService.findOrCreateTag(tag);
+    @ResponseBody
+    public String tagSetting(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
+        Tag findTag = tagService.findOrCreateTag(tagDto.getNewTag());
         accountService.saveNewTag(account, findTag);
-        return "redirect:/profile/tag";
+        return "ok";
     }
 
     @GetMapping("/profile/zone")

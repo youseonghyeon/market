@@ -41,7 +41,7 @@ public class OrderController {
                 errorMassage = "내 상품은 구매할 수 없습니다.";
             }
             attributes.addFlashAttribute("errorMassage", errorMassage);
-            return "redirect:/deal/" + item.getId();
+            return "redirect:/product/" + item.getId();
         }
         model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod()));
         model.addAttribute("item", item);
@@ -59,10 +59,23 @@ public class OrderController {
             throw new IllegalStateException("구매할 수 없는 상품입니다.");
         }
         Order order = orderService.createOrder(account, orderForm, item);
+        // TODO 결제로직 추가
+        // 1. 카드 결제 시 결제 페이지로 이동
+        // 2. 무통장 결제 시 무동장 계좌 페이지로 이동
         Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
         orderService.join(order, delivery);
         attributes.addFlashAttribute("message", "주문이 완료 되었습니다.");
         return "redirect:/order/" + order.getId();
+    }
+
+    @GetMapping("/purchase/pay")
+    public String purchaseByNoBank() {
+        return null;
+    }
+
+    @GetMapping("/purchase/card")
+    public String purchaseByCard() {
+        return null;
     }
 
     @GetMapping("/order/{orderId}")
