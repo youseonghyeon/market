@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div class="container">
+    <h3>무통장 결제</h3>
+
+    <form th:action="@{/pay}" th:method="POST">
+        <input type="hidden" name="order-id" th:value="${orderId}">
+        <button type="submit">결제</button>
+    </form>
+</div>
+</body>
+</html>

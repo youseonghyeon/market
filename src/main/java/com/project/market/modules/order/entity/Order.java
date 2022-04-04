@@ -60,4 +60,8 @@ public class Order {
     public void setOrderDelivery(Delivery orderDelivery) {
         this.orderDelivery = orderDelivery;
     }
+
+    public void payment() {
+        orderStatus = OrderStatus.PAYMENT;
+    }
 }

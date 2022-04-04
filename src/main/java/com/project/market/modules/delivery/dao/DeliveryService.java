@@ -36,10 +36,12 @@ public class DeliveryService {
                 .destinationZoneCode(orderForm.getDestinationZoneCode())
                 .destinationAddress(orderForm.getDestinationAddress())
                 .destinationAddressDetail(orderForm.getDestinationAddressDetail())
-                .expectedArrivalFrom(LocalDate.now().plus(2, ChronoUnit.DAYS))
-                .expectedArrivalUntil(LocalDate.now().plus(4, ChronoUnit.DAYS))
+//                .expectedArrivalFrom(LocalDate.now().plus(2, ChronoUnit.DAYS))
+                .expectedArrivalFrom(null)
+//                .expectedArrivalUntil(LocalDate.now().plus(4, ChronoUnit.DAYS))
+                .expectedArrivalUntil(null)
                 .deliveryMethod(orderForm.getDeliveryMethod())
-                .deliveryStatus(DeliveryStatus.READY)
+                .deliveryStatus(DeliveryStatus.WAITING)
                 .shippingCompany("company")
                 .shippingCode("test-shipping-code")
                 .trackingNumber("test-tracking-number")
@@ -49,5 +51,11 @@ public class DeliveryService {
 
     public void competeDelivery(Delivery delivery) {
         delivery.completeDelivery();
+    }
+
+    public void startDelivery(Delivery delivery) {
+        LocalDate expectedArrivalFrom = LocalDate.now().plus(2, ChronoUnit.DAYS);
+        LocalDate expectedArrivalUntil = LocalDate.now().plus(4, ChronoUnit.DAYS);
+        delivery.startDelivery(expectedArrivalFrom, expectedArrivalUntil);
     }
 }

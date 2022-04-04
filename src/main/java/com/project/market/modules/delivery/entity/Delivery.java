@@ -72,4 +72,11 @@ public class Delivery {
         }
         this.deliveryStatus = DeliveryStatus.CANCEL;
     }
+
+    public void startDelivery(LocalDate expectedArrivalFrom, LocalDate expectedArrivalUntil) {
+        deliveryStatus = DeliveryStatus.PAYMENT;
+        this.expectedArrivalFrom = expectedArrivalFrom;
+        this.expectedArrivalUntil = expectedArrivalUntil;
+
+    }
 }

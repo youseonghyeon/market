@@ -38,7 +38,7 @@ public class OrderService {
     private Order newOrderBuild(Account account, OrderForm orderForm, Item item) {
         return Order.builder()
                 .orderDateTime(LocalDateTime.now())
-                .orderStatus(OrderStatus.PAYMENT)
+                .orderStatus(OrderStatus.WAITING)
                 .paymentMethod(orderForm.getPaymentMethod())
                 .shippingRequests(orderForm.getShippingRequests())
                 .totalPrice(item.getPrice() + item.getShippingFee())
@@ -64,5 +64,9 @@ public class OrderService {
 
     public void join(Order order, Delivery delivery) {
         order.setOrderDelivery(delivery);
+    }
+
+    public void payment(Order order) {
+        order.payment();
     }
 }
