@@ -15,11 +15,20 @@
                 type: "GET"
             }).done(function (total) {
                 if (total > 0) {
-                    let element = document.getElementById("total");
+                    let element = document.getElementById('total')
                     element.hidden = false;
                     element.innerText = total;
                 }
             })
+        }
+        const openModal = () => {
+            let noticeModal = document.getElementById('notice');
+            let currDisplay = noticeModal.style.display;
+            if (currDisplay === 'none') {
+                noticeModal.style.display = 'block';
+            } else {
+                noticeModal.style.display = 'none'
+            }
         }
     </script>
     <a class="navbar-brand" href="/" th:href="@{/}">
@@ -51,11 +60,14 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/product/my-list}">내상품</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link position-relative" th:href="@{/notification}">알림
+            <li class="nav-item position-relative">
+                <a class="nav-link position-relative" onclick="openModal()">알림
                     <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                          id="total" hidden="hidden"></div>
                 </a>
+                <div id="notice" class="position-absolute" style="display: none;">
+                    <div th:replace="fragments/notice::notice"></div>
+                </div>
             </li>
 
 

@@ -63,7 +63,8 @@ public class Item {
     private boolean direct;
 
     public void sold() {
-        this.expired = true;
+        expired = true;
+        reserved = true;
     }
 
     public boolean canPurchase(Account currentAccount) {

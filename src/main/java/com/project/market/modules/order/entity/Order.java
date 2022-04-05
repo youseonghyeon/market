@@ -54,7 +54,8 @@ public class Order {
     private Account customer;
 
     public boolean isOwner(Account account) {
-        return this.customer.equals(account);
+        // 객체 비교 시 Select account문이 실행되므로 ID값으로 비교함
+        return this.customer.getId().equals(account.getId());
     }
 
     public void setOrderDelivery(Delivery orderDelivery) {
@@ -63,5 +64,20 @@ public class Order {
 
     public void payment() {
         orderStatus = OrderStatus.PAYMENT;
+    }
+
+    public String getOrderStatusKo() {
+        switch (orderStatus) {
+            case WAITING:
+                return "입금 대기중";
+            case PAYMENT:
+                return "결제 완료";
+            case DELIVERY:
+                return "배송중";
+            case CANCEL:
+                return "취소됨";
+            default:
+                return "";
+        }
     }
 }

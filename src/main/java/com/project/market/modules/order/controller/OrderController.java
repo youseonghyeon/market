@@ -51,8 +51,7 @@ public class OrderController {
     }
 
     @PostMapping("/purchase")
-    public String purchase(@CurrentAccount Account account, @Valid OrderForm orderForm, Errors errors,
-                           RedirectAttributes attributes) {
+    public String purchase(@CurrentAccount Account account, @Valid OrderForm orderForm, Errors errors) {
         if (errors.hasErrors()) {
             return "order/purchase";
         }
@@ -70,16 +69,7 @@ public class OrderController {
         if (orderForm.getPaymentMethod().equals("nobank")) {
             return "redirect:/purchase/card/" + order.getId();
         }
-
-/**
- *         // 1. 카드 결제 시 결제 페이지로 이동
- *         // 2. 무통장 결제 시 무동장 계좌 페이지로 이동
- Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
- orderService.join(order, delivery);
- attributes.addFlashAttribute("message", "주문이 완료 되었습니다.");
- return "redirect:/order/" + order.getId();
- */
-        return null;
+        throw new IllegalStateException("결제 방식이 선택되지 않았습니다.");
     }
 
     @GetMapping("/purchase/pay/{orderId}")

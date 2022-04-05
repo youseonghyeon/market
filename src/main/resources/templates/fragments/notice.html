@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<div>
+    <div th:fragment="notice" class="bg-white border border-dark" style="width: 450px; height: 500px;">
+        <script th:inline="javascript">
+            const btn = () => {
+                console.log("실행")
+                $.ajax({
+                    url: "/notification",
+                    type: "GET",
+                    success: function (data) {
+                        console.log(data)
+                    }
+                })
+            }
+        </script>
+        <h3>알림 목록</h3>
+        <button onclick="btn()">버튼</button>
+        <!--        <div th:each="notice : ${notificationList}">-->
+        <!--            <div class="container mt-3 border border-dark">-->
+        <!--                <a th:href="@{/product/{itemId}(itemId = ${notice.getItemId()})}">-->
+        <!--                    <div class="row">-->
+        <!--                        <span th:text="'보낸사람 : '+${notice.getSender().getNickname()}">전송자 아이디</span>-->
+        <!--                    </div>-->
+        <!--                    <div class="row">-->
+        <!--                        <span th:text="${notice.getSubject()}">제목</span>-->
+        <!--                    </div>-->
+        <!--                    <div class="row">-->
+        <!--                        <span th:text="${notice.getContent()}">내용</span>-->
+        <!--                    </div>-->
+        <!--                </a>-->
+        <!--            </div>-->
+        <!--        </div>-->
+    </div>
+</div>
+</body>
+</html>
