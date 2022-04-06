@@ -84,21 +84,20 @@ class OrderControllerTest {
                         .param("destinationZoneCode", "12334")
                         .param("destinationAddress", "메인 주소")
                         .param("destinationAddressDetail", "서브 주소")
-                        .param("paymentMethod", "카드")
+                        .param("paymentMethod", "card")
                         .param("deliveryMethod", item.isPost() ? "post" : "direct")
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(flash().attributeExists("message"));
+                .andExpect(status().is3xxRedirection());
 
         Item findItem = itemRepository.findByName("mockItem");
         Account customer = accountRepository.findByLoginId("testUser");
 
         List<Order> orders = orderRepository.findByCustomerOrderByOrderDateDesc(customer);
         Order order = orders.get(0);
-        assertEquals(order.getOrderStatus(), OrderStatus.PAYMENT);
+        assertEquals(order.getOrderStatus(), OrderStatus.WAITING);
         assertEquals(order.getOrderedItem(), findItem);
         assertEquals(order.getCustomer(), customer);
-        assertEquals(order.getPaymentMethod(), "카드");
+        assertEquals(order.getPaymentMethod(), "card");
         assertEquals(order.getShippingRequests(), "배송 요청사항");
     }
 

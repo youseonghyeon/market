@@ -97,10 +97,9 @@ public class SettingController {
 
     @PostMapping("/profile/tag")
     @ResponseBody
-    public String tagSetting(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
+    public void tagSetting(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
         Tag findTag = tagService.findOrCreateTag(tagDto.getNewTag());
         accountService.saveNewTag(account, findTag);
-        return "ok";
     }
 
     @GetMapping("/profile/zone")

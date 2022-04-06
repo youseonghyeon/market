@@ -1,6 +1,5 @@
 package com.project.market.modules.item.controller;
 
-import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemRepository;
@@ -137,6 +136,7 @@ public class ItemController {
         return "redirect:/product/" + itemForm.getId();
     }
 
+    // 테스트용
     @PostMapping("/product/tag")
     public String addNewTag(@CurrentAccount Account account, @RequestParam("itemId") Item item, @RequestParam("tag") String tag) {
         List<String> tags = new ArrayList<>();

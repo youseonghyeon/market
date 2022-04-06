@@ -1,9 +1,15 @@
 package com.project.market.modules.account.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.entity.Zone;
+import com.project.market.modules.account.form.AddressForm;
+import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.TagRepository;
+import com.project.market.modules.item.dto.TagDto;
 import com.project.market.modules.item.entity.Tag;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,12 +17,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,6 +53,10 @@ class SettingControllerTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     TagRepository tagRepository;
+    @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
+    ZoneRepository zoneRepository;
 
     @AfterEach
     public void afterEach() {
@@ -113,7 +130,7 @@ class SettingControllerTest {
     void tagSettingForm() throws Exception {
         mockMvc.perform(get("/profile/tag"))
                 .andExpect(status().isOk())
-//                .andExpect(model().attributeExists("tagList"))
+                .andExpect(model().attributeExists("tagList"))
                 .andExpect(model().attributeExists("whiteList"))
                 .andExpect(view().name("account/settings/tag"));
     }
@@ -123,13 +140,77 @@ class SettingControllerTest {
     @WithAccount("testUser")
     @DisplayName("태그 추가")
     void tagSetting() throws Exception {
+        TagDto tagDto = new TagDto();
+        tagDto.setNewTag("홈런볼");
         mockMvc.perform(post("/profile/tag")
-                        .param("new-tag", "홈런볼")
+                        .param("newTag", "홈런볼")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(tagDto))
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile/tag"));
-        List<String> tags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
-        assertTrue(tags.contains("홈런볼"));
+                .andExpect(status().isOk());
+        Tag tag = tagRepository.findByTitle("홈런볼");
+        Account account = accountRepository.findByLoginId("testUser");
+        List<Tag> tagContainer = account.getTags();
+        assertTrue(tagContainer.contains(tag));
     }
 
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("지역 추가 폼")
+    void zoneSettingFrom() throws Exception {
+        mockMvc.perform(get("/profile/zone"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("zoneList"))
+                .andExpect(model().attributeExists("whiteList"))
+                .andExpect(view().name("account/settings/zone"));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("지역 추가")
+    void zoneSetting() throws Exception {
+        List<Zone> zoneList = zoneRepository.findAll();
+        if (zoneList.isEmpty()) {
+            throw new IllegalStateException();
+        }
+        Zone zone = zoneList.get(0);
+        mockMvc.perform(post("/profile/zone")
+                        .param("new-zone", zone.getCity())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profile/zone"));
+
+        Account account = accountRepository.findByLoginId("testUser");
+        List<Zone> zoneContainer = account.getZones();
+        assertTrue(zoneContainer.contains(zone));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("사용자 주소 설정 폼")
+    void addressSettingForm() throws Exception {
+        mockMvc.perform(get("/profile/address"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("addressForm"))
+                .andExpect(view().name("account/settings/address"));
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("사용자 주소 설정")
+    void addressSetting() throws Exception {
+        mockMvc.perform(post("/profile/address")
+                        .param("zoneCode", "11111")
+                        .param("roadAddress", "은평터널로 111")
+                        .param("addressDetail", "111동 111호")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(redirectedUrl("/profile"));
+
+        Account account = accountRepository.findByLoginId("testUser");
+        assertEquals(account.getZoneCode(), "11111");
+        assertEquals(account.getRoadAddress(), "은평터널로 111");
+        assertEquals(account.getAddressDetail(), "111동 111호");
+    }
 }
