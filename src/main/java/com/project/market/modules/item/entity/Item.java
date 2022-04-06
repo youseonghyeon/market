@@ -36,7 +36,7 @@ public class Item {
 //    @JoinColumn(name = "account")
     private Account enrolledBy;
 
-    private LocalDateTime enrolledDateTime;
+    private LocalDateTime enrolledDate;
 
     @OneToOne(fetch = LAZY)
     private Delivery delivery;

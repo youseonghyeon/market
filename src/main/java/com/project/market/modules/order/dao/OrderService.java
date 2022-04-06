@@ -37,7 +37,7 @@ public class OrderService {
 
     private Order newOrderBuild(Account account, OrderForm orderForm, Item item) {
         return Order.builder()
-                .orderDateTime(LocalDateTime.now())
+                .orderDate(LocalDateTime.now())
                 .orderStatus(OrderStatus.WAITING)
                 .paymentMethod(orderForm.getPaymentMethod())
                 .shippingRequests(orderForm.getShippingRequests())
@@ -56,9 +56,9 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<Order> findOrders(Account account, String orderType) {
         if (orderType != null && orderType.equals("DELIVERY")) {
-            return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateTimeDesc(account, OrderStatus.DELIVERY);
+            return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateDesc(account, OrderStatus.DELIVERY);
         } else {
-            return orderRepository.findByCustomerOrderByOrderDateTimeDesc(account);
+            return orderRepository.findByCustomerOrderByOrderDateDesc(account);
         }
     }
 

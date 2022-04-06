@@ -13,11 +13,13 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
-    List<Order> findByCustomerAndOrderStatusIsOrderByOrderDateTimeDesc(Account account, OrderStatus orderStatus);
+    List<Order> findByCustomerAndOrderStatusIsOrderByOrderDateDesc(Account account, OrderStatus orderStatus);
 
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
-    List<Order> findByCustomerOrderByOrderDateTimeDesc(Account account);
+    List<Order> findByCustomerOrderByOrderDateDesc(Account account);
 
     @EntityGraph(attributePaths = {"customer"}, type = EntityGraph.EntityGraphType.FETCH)
     Order findOrderWithDeliveryById(Long orderId);
+
+    List<Order> findOrdersByOrderStatusAndPaymentMethodOrderByOrderDateAsc(OrderStatus orderStatus, String method);
 }

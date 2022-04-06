@@ -93,7 +93,7 @@ class OrderControllerTest {
         Item findItem = itemRepository.findByName("mockItem");
         Account customer = accountRepository.findByLoginId("testUser");
 
-        List<Order> orders = orderRepository.findByCustomerOrderByOrderDateTimeDesc(customer);
+        List<Order> orders = orderRepository.findByCustomerOrderByOrderDateDesc(customer);
         Order order = orders.get(0);
         assertEquals(order.getOrderStatus(), OrderStatus.PAYMENT);
         assertEquals(order.getOrderedItem(), findItem);

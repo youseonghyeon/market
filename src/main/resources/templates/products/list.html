@@ -41,8 +41,8 @@
                 </button>
             </div>
         </div>
-        <div class="col row row-cols-4">
-            <div class="col border border-dark container" th:each="item : ${itemList}">
+        <ul class="col row row-cols-4">
+            <li class="col border border-dark container" th:each="item : ${itemList}">
                 <a style="margin: 1px;" th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                     <div class="border border-danger" style="height: 150px;">이미지 영역</div>
                     <div>
@@ -55,11 +55,11 @@
                     </div>
                     <div>
                         등록일자 :
-                        <span th:text="${#temporals.format(item.enrolledDateTime , 'yyyy-MM-dd')}"></span>
+                        <span th:text="${#temporals.format(item.getEnrolledDate , 'yyyy-MM-dd')}"></span>
                     </div>
                 </a>
-            </div>
-        </div>
+            </li>
+        </ul>
     </div>
 </div>
 <footer th:replace="fragments/footer::footer"></footer>

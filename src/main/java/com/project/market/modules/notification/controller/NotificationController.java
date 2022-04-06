@@ -11,15 +11,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class NotificationController {
 
@@ -28,15 +27,14 @@ public class NotificationController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/notification")
-    @ResponseBody
     public Result notificationListForm(@CurrentAccount Account account) {
         List<NotificationResponseDto> dtoList = new ArrayList<>();
         int unconfirmedTotal = 0;
 
         List<Notification> notifications = notificationRepository.findByRecipientOrderByCreatedAtDesc(account);
-        for (Notification notification : notifications) {
-            dtoList.add(modelMapper.map(notification, NotificationResponseDto.class));
-            if (!notification.isConfirmed()) unconfirmedTotal++;
+        for (Notification n : notifications) {
+            dtoList.add(new NotificationResponseDto(n.getItemId(), n.getSubject(), n.getContent(), n.getCreatedAt(), n.isConfirmed()));
+            if (!n.isConfirmed()) unconfirmedTotal++;
         }
         return new Result(unconfirmedTotal, dtoList);
     }
@@ -48,11 +46,10 @@ public class NotificationController {
         private List<T> data;
     }
 
-    @GetMapping("/notification/total")
-    @ResponseBody
-    public String notificationTotal(@CurrentAccount Account account) {
-        long total = notificationRepository.countByRecipientAndConfirmedFalse(account);
-        return String.valueOf(total);
+    @GetMapping("/notification/confirm")
+    public void notificationConfirm(@CurrentAccount Account account) {
+        List<Notification> notifications = notificationRepository.findByRecipient(account);
+        notificationService.confirm(notifications);
     }
 
 }

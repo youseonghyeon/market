@@ -18,7 +18,7 @@
         <!--            <div>상품 번호 : <span th:text="${order.getId()}">00</span>번</div>-->
         <div style="width: 20em;">
             <div class="" th:text="${order.orderStatus}">배송상태</div>
-            <div>주문일<span th:text="${#temporals.format(order.getOrderDateTime(), 'yyyy년 M월 d일')}"></span></div>
+            <div>주문일<span th:text="${#temporals.format(order.getOrderDate(), 'yyyy년 M월 d일')}"></span></div>
             <div>결제금액<span th:text="${order.getTotalPrice()}">15000</span>원</div>
             <a th:href="@{/order/{orderId}(orderId = ${order.getId()})}">주문 상세보기</a>
         </div>
@@ -33,8 +33,8 @@
                     <div class="text-danger">
                         <span th:text="${order.getOrderStatusKo()}"></span>
                     </div>
-                    <div th:if="${order.getArrivalDateTime()}">
-                        <span th:text="${order.getArrivalDateTime()}">3/16(수)</span>
+                    <div th:if="${order.getArrivalDate()}">
+                        <span th:text="${order.getArrivalDate()}">3/16(수)</span>
                         도착
                     </div>
                     <div th:if="${order.getOrderStatus()} != ${T(com.project.market.modules.order.entity.OrderStatus).WAITING}">

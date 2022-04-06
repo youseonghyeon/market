@@ -17,7 +17,6 @@
 
 </script>
 <div class="container" th:object="${orderForm}">
-
     <h3 class="col-12 mt-5">주문 결제</h3>
     <form th:action="@{/purchase}" th:method="post">
         <div class="row justify-content-md-center mt-3">
@@ -40,7 +39,8 @@
 
                     <div>주소</div>
                     <div class="input-group ">
-                        <input id="zonecode" class="form-control col-5" type="text" name="destinationZoneCode" readonly>
+                        <input id="zonecode" class="form-control col-5" type="text" th:field="*{destinationZoneCode}"
+                               readonly>
                         <div class="col-4"></div>
                         <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">배송지
                             변경
@@ -48,11 +48,13 @@
                     </div>
                     <br>
                     <div class="input-group ">
-                        <input id="roadAddress" class="form-control col-5" type="text" name="destinationAddress" placeholder="주소검색결과" readonly>
+                        <input id="roadAddress" class="form-control col-5" type="text" th:field="*{destinationAddress}"
+                               placeholder="주소검색결과" readonly>
                     </div>
                     <br>
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" name="destinationAddressDetail" placeholder="상세주소">
+                        <input class="form-control col-5" type="text" th:field="*{destinationAddressDetail}"
+                               placeholder="상세주소">
                     </div>
 
 

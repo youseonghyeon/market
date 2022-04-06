@@ -60,16 +60,16 @@ public class ItemRepositoryImpl implements CustomItemRepository {
 
     private OrderSpecifier<?> itemSort(String criteria) {
         if (criteria == null) {
-            return item.enrolledDateTime.desc();
+            return item.enrolledDate.desc();
         }
         switch (criteria) {
             case "popular":
                 return item.rating.desc();
             case "recent":
-                return item.enrolledDateTime.desc();
+                return item.enrolledDate.desc();
             // case 추가 예정
             default:
-                return item.enrolledDateTime.desc();
+                return item.enrolledDate.desc();
         }
     }
 

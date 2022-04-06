@@ -12,7 +12,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRep
 
     Item findByName(String itemName);
 
-    List<Item> findAllByEnrolledByOrderByEnrolledDateTimeDesc(Account account);
+    List<Item> findAllByEnrolledByOrderByEnrolledDateDesc(Account account);
 
     boolean existsByName(String name);
 

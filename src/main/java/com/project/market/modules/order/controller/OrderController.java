@@ -45,7 +45,7 @@ public class OrderController {
             attributes.addFlashAttribute("errorMassage", errorMassage);
             return "redirect:/product/" + item.getId();
         }
-        model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod()));
+        model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod(), account));
         model.addAttribute("item", item);
         return "order/purchase";
     }

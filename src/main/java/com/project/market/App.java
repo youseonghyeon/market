@@ -77,7 +77,7 @@ public class App {
                         .photo("사진 없음")
                         .originAddress("은평구 신사동")
                         .description("mockItem" + i + " 설명")
-                        .enrolledDateTime(LocalDateTime.now())
+                        .enrolledDate(LocalDateTime.now())
                         .enrolledBy(account)
                         .shippingFee(2500)
                         .deleted(false)

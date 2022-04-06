@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<nav th:replace="fragments/nav::admin-nav"></nav>
+<body>
+<div class="container">
+    <h3>결제 관리</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>주문일자</th>
+            <th>결제 방식</th>
+            <th>주문일자</th>
+            <th>입금 확인</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orderList}">
+            <th th:text="${order.getId()}">111</th>
+
+            <th th:text="${order.getPaymentMethod()}">결제 방식</th>
+
+            <th th:text="${order.getOrderStatus()}">주문상태</th>
+            <th th:text="${#temporals.format(order.getOrderDate(), 'yyyy년 M월 d일')}"></th>
+            <th><a href="#">입금 확인</a></th>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+</body>
+</html>

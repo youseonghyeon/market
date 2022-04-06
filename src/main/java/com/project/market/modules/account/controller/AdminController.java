@@ -4,6 +4,9 @@ import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.order.dao.OrderRepository;
+import com.project.market.modules.order.entity.Order;
+import com.project.market.modules.order.entity.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +26,7 @@ public class AdminController {
 
     private final AccountRepository accountRepository;
     private final AccountService accountService;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/manage")
     public String roleManagement(@CurrentAccount Account account, Model model) {
@@ -65,4 +69,10 @@ public class AdminController {
         return "admin/delivery-manage";
     }
 
+    @GetMapping("/payment")
+    public String paymentManageForm(Model model) {
+        List<Order> orders = orderRepository.findOrdersByOrderStatusAndPaymentMethodOrderByOrderDateAsc(OrderStatus.WAITING, "nobank");
+        model.addAttribute("orderList", orders);
+        return "admin/payment-manage";
+    }
 }

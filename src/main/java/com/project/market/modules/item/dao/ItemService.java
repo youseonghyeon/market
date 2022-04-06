@@ -45,7 +45,7 @@ public class ItemService {
                 .photo(itemForm.getPhoto())
                 .originAddress(itemForm.getOriginAddress())
                 .description(itemForm.getDescription())
-                .enrolledDateTime(LocalDateTime.now())
+                .enrolledDate(LocalDateTime.now())
                 .enrolledBy(account)
                 .shippingFee(DEFAULT_SHIPPING_FEE)
                 .deleted(false)

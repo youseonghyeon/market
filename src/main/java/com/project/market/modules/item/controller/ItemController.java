@@ -107,7 +107,7 @@ public class ItemController {
 
     @GetMapping("/product/my-list")
     public String myProductList(@CurrentAccount Account account, Model model) {
-        List<Item> itemList = itemRepository.findAllByEnrolledByOrderByEnrolledDateTimeDesc(account);
+        List<Item> itemList = itemRepository.findAllByEnrolledByOrderByEnrolledDateDesc(account);
         model.addAttribute("itemList", itemList);
         return "products/my-list";
     }

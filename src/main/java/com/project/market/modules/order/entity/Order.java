@@ -26,7 +26,7 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    private LocalDateTime orderDateTime;
+    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -39,7 +39,7 @@ public class Order {
 
     private int shippingFee;
 
-    private LocalDateTime arrivalDateTime;
+    private LocalDateTime arrivalDate;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
