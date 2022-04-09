@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @Transactional
 @SpringBootTest
@@ -64,8 +65,8 @@ public class TestUtils {
         itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
         itemForm.setPost(true);
-        itemForm.setDirect(false);
-        itemService.createNewItem(account, itemForm, new ArrayList<>());
+        itemForm.setDirect(true);
+        itemService.createNewItem(account, itemForm, new HashSet<>());
         return itemRepository.findByName(itemName);
     }
 

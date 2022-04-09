@@ -17,6 +17,9 @@ import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -82,7 +85,11 @@ public class SettingController {
         }
         // PasswordFormValidator 실행
         accountService.modifyPassword(account, passwordForm.getNewPassword());
-        accountService.logout(request, response);
+        // 로그 아웃
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
         return "redirect:/login";
     }
 
@@ -98,7 +105,7 @@ public class SettingController {
     @PostMapping("/profile/tag")
     @ResponseBody
     public void tagSetting(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
-        Tag findTag = tagService.findOrCreateTag(tagDto.getNewTag());
+        Tag findTag = tagService.createOrFindTag(tagDto.getNewTag());
         accountService.saveNewTag(account, findTag);
     }
 

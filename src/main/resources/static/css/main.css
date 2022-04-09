@@ -2,3 +2,7 @@ ul{
   list-style:none;
   padding-left:0px;
 }
+
+.border-gray {
+  border-color: #BDBDBD;
+}

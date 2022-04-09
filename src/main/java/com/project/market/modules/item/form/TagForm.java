@@ -1,13 +1,12 @@
 package com.project.market.modules.item.form;
 
-import com.project.market.modules.item.entity.Tag;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class TagForm {
 
-    List<String> tags = new ArrayList<>();
+    Set<String> tags = new HashSet<>();
 }

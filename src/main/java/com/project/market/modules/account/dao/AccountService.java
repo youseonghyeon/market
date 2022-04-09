@@ -67,13 +67,6 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-    }
-
     @Transactional(readOnly = true)
     public List<Tag> findTags(Account account) {
         Account findAccount = accountRepository.findAccountWithTagsById(account.getId());

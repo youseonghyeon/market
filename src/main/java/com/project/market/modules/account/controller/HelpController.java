@@ -85,7 +85,7 @@ public class HelpController {
     }
 
     @PostMapping("/help/modify/password")
-    public String modifyPassword(@CookieValue(value = "temp_loginId") Cookie idCookie,
+    public String modifyPassword(@CookieValue("temp_loginId") Cookie idCookie,
                                  @RequestParam("new-password") String password, HttpServletResponse response) {
         Account account = accountRepository.findByLoginId(idCookie.getValue());
         if (account == null || !account.isValidPasswordToken(account.getPasswordToken())) {

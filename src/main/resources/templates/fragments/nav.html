@@ -6,116 +6,131 @@
     <title>Title</title>
 </head>
 <body>
-<nav th:fragment="main-nav" class="navbar navbar-expand-sm navbar-dark bg-dark" style="padding: 10px;">
-    <script th:inline="javascript">
-        const openModal = () => {
-            let noticeModal = document.getElementById('notice');
-            let currDisplay = noticeModal.style.display;
-            if (currDisplay === 'none') {
-                noticeModal.style.display = 'block';
-                // 알림을 확인하면  확인 완료 전송
-                let token = $("meta[name='_csrf']").attr("content");
-                let header = $("meta[name='_csrf_header']").attr("content");
-                $.ajax({
-                    type: "GET",
-                    url: "/notification/confirm",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(header, token)
-                    }
-                })
-            } else {
-                noticeModal.style.display = 'none'
+<nav th:fragment="main-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom"
+     style="border-color: #BDBDBD;">
+    <div class="container-fluid">
+        <script th:inline="javascript">
+            const openModal = () => {
+                let noticeModal = document.getElementById('notice');
+                let currDisplay = noticeModal.style.display;
+                if (currDisplay === 'none') {
+                    noticeModal.style.display = 'block';
+                    // 알림을 확인하면  확인 완료 전송
+                    let token = $("meta[name='_csrf']").attr("content");
+                    let header = $("meta[name='_csrf_header']").attr("content");
+                    $.ajax({
+                        type: "GET",
+                        url: "/notification/confirm",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token)
+                        }
+                    })
+                } else {
+                    noticeModal.style.display = 'none'
+                }
             }
-        }
-    </script>
-    <a class="navbar-brand" href="/" th:href="@{/}">
-        홈으로
-    </a>
+        </script>
+        <a class="navbar-brand" href="/" th:href="@{/}">
+            HOME
+        </a>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/list}">전체 상품</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/order/list}">주문목록</a>
+                </li>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav justify-content-end">
-            <li class="nav-item" sec:authorize="isAnonymous()">
-                <a class="nav-link" th:href="@{/login}">로그인</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAnonymous()">
-                <a class="nav-link" th:href="@{/sign-up}">가입</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{/profile}">프로필</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{/logout}">로그아웃</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/my-list}">내상품</a>
+                </li>
 
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{/order/list}">주문목록/배송조회</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/product/list}">상품 목록</a>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/product/my-list}">내상품</a>
-            </li>
-            <li class="nav-item position-relative" sec:authorize="isAuthenticated()">
-                <script th:inline="javascript">
-                    window.onload = function () {
-                        // 알림 개수 query 작성
-                        $.ajax({
-                            url: "/notification",
-                            type: "GET",
-                            success: function (data) {
-                                if (data.unconfirmedTotal > 0) {
-                                    let element = document.getElementById('total')
-                                    element.hidden = false;
-                                    element.innerText = data.unconfirmedTotal;
-                                }
-                                let str = ""
-                                for (const notice of data.data) {
-                                    let unconfirmedClass = ""
-                                    if (!notice.confirmed) {
-                                        unconfirmedClass = "border border-danger border-2";
+            </ul>
+
+            <ul class="navbar-nav">
+                <!-- 관리자 페이지-->
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" th:href="@{/admin/manage}">
+                        <span class="material-icons-outlined">admin_panel_settings</span>
+                    </a>
+                </li>
+                <!-- 택배 페이지-->
+                <li class="nav-item" sec:authorize="hasRole('ROLE_COURIER')">
+                    <a class="nav-link" th:href="@{/delivery/list}">
+                        <span class="material-icons-outlined">local_shipping</span>
+                    </a>
+                </li>
+                <!-- 알림-->
+                <li class="nav-item position-relative" sec:authorize="isAuthenticated()">
+                    <script th:inline="javascript">
+                        window.onload = function () {
+                            // 알림 개수 query 작성
+                            $.ajax({
+                                url: "/notification",
+                                type: "GET",
+                                success: function (data) {
+                                    if (data.unconfirmedTotal > 0) {
+                                        let element = document.getElementById('total')
+                                        element.hidden = false;
+                                        element.innerText = data.unconfirmedTotal;
                                     }
-                                    str += "<div class='mt-3'>"
-                                    str += "<a href='/product/" + notice.itemId + "'>"
-                                    str += "<div class='" + unconfirmedClass + "'>"
-                                    str += "<div>" + notice.subject + "</div>";
-                                    str += "<div>" + notice.content + "</div>";
-                                    str += "<div>" + notice.createdAt + "</div>";
-                                    str += "</div>"
-                                    str += "</a>"
-                                    str += "</div>"
+                                    let str = ""
+                                    for (const notice of data.data) {
+                                        let unconfirmedClass = ""
+                                        if (!notice.confirmed) {
+                                            unconfirmedClass = "border border-danger border-2";
+                                        }
+                                        str += "<div class='mt-3'>"
+                                        str += "<a href='/product/" + notice.itemId + "'>"
+                                        str += "<div class='" + unconfirmedClass + "'>"
+                                        str += "<div>" + notice.subject + "</div>";
+                                        str += "<div>" + notice.content + "</div>";
+                                        str += "<div>" + notice.createdAt + "</div>";
+                                        str += "</div>"
+                                        str += "</a>"
+                                        str += "</div>"
+                                    }
+                                    $("#noticeLine").append(str)
+
                                 }
-                                $("#noticeLine").append(str)
+                            })
+                        }
+                    </script>
+                    <a class="nav-link position-relative" onclick="openModal()">
 
-                            }
-                        })
-                    }
-                </script>
-                <a class="nav-link position-relative" onclick="openModal()">알림
-                    <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                         id="total" hidden="hidden"></div>
-                </a>
-                <div id="notice" class="position-absolute bg-white border border-dark"
-                     style="display: none; width: 250px; height: 400px;">
-                    <h3>알림목록</h3>
-                    <div id="noticeLine"></div>
-                </div>
-            </li>
+                        <span class="material-icons-outlined">notifications</span>
 
+                        <div class="position-absolute top-0 start-100 translate-middle-x badge rounded-pill bg-danger"
+                             id="total" hidden="hidden"></div>
+                    </a>
+                    <div id="notice" class="position-absolute bg-white border border-dark"
+                         style="display: none; width: 250px; height: 400px; right: -80px;">
+                        <h3>알림목록</h3>
+                        <div id="noticeLine"></div>
+                    </div>
+                </li>
 
-            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                <a class="nav-link" th:href="@{/admin/manage}">관리자</a>
-            </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/login}">로그인</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/sign-up}">가입</a>
+                </li>
 
-            <li class="nav-item" sec:authorize="hasRole('ROLE_COURIER')">
-                <a class="nav-link" th:href="@{/delivery/list}">택배사</a>
-            </li>
-        </ul>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/profile}">프로필</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/logout}">로그아웃</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
-
-<nav th:fragment="admin-nav" class="navbar navbar-expand-sm navbar-dark bg-dark" style="padding: 10px;">
+<nav th:fragment="admin-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom"
+     style="border-color: #BDBDBD;">
     <a class="navbar-brand" href="/" th:href="@{/}">
         홈으로
     </a>
@@ -137,8 +152,8 @@
         </ul>
     </div>
 </nav>
-
-<nav th:fragment="delivery-nav" class="navbar navbar-expand-sm navbar-dark bg-dark" style="padding: 10px;">
+<nav th:fragment="delivery-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom"
+     style="border-color: #BDBDBD;">
     <a class="navbar-brand" href="/" th:href="@{/}">
         홈으로
     </a>

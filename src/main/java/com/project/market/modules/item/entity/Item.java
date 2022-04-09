@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -55,7 +56,7 @@ public class Item {
 
     private Boolean deleted;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Tag> tags;
 
     // 배송/직거래
@@ -84,6 +85,30 @@ public class Item {
 
     public boolean isMyItem(Account account) {
         return enrolledBy.getId().equals(account.getId());
+    }
+
+    public boolean isAccessible() {
+        return !deleted;
+    }
+
+    public String getBetweenDate() {
+        long betweenDay = ChronoUnit.DAYS.between(enrolledDate, LocalDateTime.now());
+        if (betweenDay > 0) {
+            return betweenDay + "일 전";
+        }
+        long betweenHour = ChronoUnit.HOURS.between(enrolledDate, LocalDateTime.now());
+        if (betweenHour > 0) {
+            return betweenHour + "시간 전";
+        }
+        long betweenMinute = ChronoUnit.MINUTES.between(enrolledDate, LocalDateTime.now());
+        if (betweenMinute >= 5) {
+            return betweenMinute + "분 전";
+        }
+        return "방금전";
+    }
+
+    public void delete() {
+        deleted = true;
     }
 
 }

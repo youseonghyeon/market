@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
+
 @Entity
 @Getter
 @Builder
@@ -67,8 +69,6 @@ public class Account {
     private boolean itemEnrollAlertByWeb = true;
     private boolean itemEnrollAlertByMail = false;
 
-    @ManyToMany
-    private List<Zone> zones = new ArrayList<>();
 
     @OneToMany(mappedBy = "enrolledBy")
     private List<Item> enrolledItem = new ArrayList<>();
@@ -76,7 +76,10 @@ public class Account {
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = PERSIST)
+    private List<Zone> zones = new ArrayList<>();
+
+    @ManyToMany(cascade = PERSIST)
     private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipient")

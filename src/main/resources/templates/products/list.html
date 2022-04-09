@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="row border border-dark mt-3">
-        <div class="col-2">
+        <div class="col-2" style="border-right: black 1px solid">
             <span>태그 목록</span>
             <div th:each="tag : ${tagList}">
                 <button class="badge" th:onclick="|location.href='@{/product/list(tag=${tag.getTitle()})}'|"
@@ -41,8 +41,11 @@
                 </button>
             </div>
         </div>
-        <ul class="col row row-cols-4">
-            <li class="col border border-dark container" th:each="item : ${itemList}">
+
+
+
+        <ul th:if="${!itemList.isEmpty()}" class="col-10 row row-cols-4" style="min-height: 600px;">
+            <li class="col border border-dark" style="height: 280px;" th:each="item : ${itemList}">
                 <a style="margin: 1px;" th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                     <div class="border border-danger" style="height: 150px;">이미지 영역</div>
                     <div>
@@ -55,11 +58,20 @@
                     </div>
                     <div>
                         등록일자 :
-                        <span th:text="${#temporals.format(item.getEnrolledDate , 'yyyy-MM-dd')}"></span>
+                        <span th:text="${item.getBetweenDate()}"></span>
                     </div>
                 </a>
             </li>
         </ul>
+
+        <div class="col-10 d-flex justify-content-center align-items-center" th:if="${itemList.isEmpty()}" style="min-height: 600px;">
+            <div class="border border-dark w-25 h-25" >
+                찾으시는 상품이 없습니다.(사진으로 대체)
+            </div>
+        </div>
+
+
+
     </div>
 </div>
 <footer th:replace="fragments/footer::footer"></footer>

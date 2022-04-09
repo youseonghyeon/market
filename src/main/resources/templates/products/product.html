@@ -3,56 +3,69 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div class="container">
-    <div class="container" th:object="${item}">
-        <div>
-            <span>상품 번호 :</span>
-            <span th:text="*{id}"></span>
-        </div>
-        <div>
-            <span>상품 이름 :</span>
-            <span th:text="*{name}"></span>
-        </div>
-        <div>
-            <span>가격 :</span>
-            <span th:text="*{price}"></span>
-        </div>
-        <div>
-            <span>등록 일자 :</span>
-            <span th:text="*{getEnrolledDate}"></span>
-        </div>
-        <div>
-            <span>상품 이미지(미리보기) :</span>
-            <span th:text="*{coverPhoto}"></span>
-        </div>
-        <div>
-            <span>상품 이미지(상세) :</span>
+<div class="container" style="width: 1000px;">
+    <div class=" d-flex justify-content-between mt-4" th:object="${item}">
+
+        <div style="width: 400px; height: 400px;"
+             class="justify-content-center d-flex align-items-center border border-dark">
             <span th:text="*{photo}"></span>
         </div>
-        <div>
-            <span>상품 설명 :</span>
-            <span th:text="*{description}"></span>
-        </div>
-        <div>
-            <span>태그(추가 예정)</span>
-        </div>
-        <form th:action="@{/purchase}" th:method="get">
-            <input type="hidden" name="itemId" th:value="*{id}">
-            <select class="" name="method">
-                <option th:if="*{post}" value="post">택배배송</option>
-                <option th:if="*{direct}" value="direct">직거래</option>
-            </select>
+
+
+        <div style="width: 500px;" class="border border-dark p-3">
+            <!--            <div>-->
+            <!--                <span>상품 번호 :</span>-->
+            <!--                <span th:text="*{id}"></span>-->
+            <!--            </div>-->
             <div>
-                <button type="submit" class="btn btn-primary">구매하기</button>
+                <!--                상품 이름-->
+                <span class="fs-2" th:text="*{name}"></span>
             </div>
-        </form>
-        <div th:if="${errorMassage}">
-            <span class="text-danger" th:text="${errorMassage}">flash massage</span>
+            <div class="d-flex">
+                <div th:each="tag : *{tags}" style="margin-right: 4px;">
+                    <!-- 태그 목록-->
+                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;" th:text="${tag.getTitle()}">tag</div>
+                </div>
+            </div>
+
+
+            <div>
+                <span th:text="*{#numbers.formatInteger(price, 0, 'COMMA')}"></span>
+                <span>원</span>
+            </div>
+
+            <div>
+                <span>등록 일자 :</span>
+                <span th:text="*{getBetweenDate()}"></span>
+            </div>
+
+
+            <form th:action="@{/purchase}" th:method="get">
+                <input type="hidden" name="itemId" th:value="*{id}">
+                <select class="form-select mt-2" style="width: 200px;" name="method">
+                    <option th:if="*{post}" value="post">택배배송</option>
+                    <option th:if="*{direct}" value="direct">직거래</option>
+                </select>
+                <div>
+                    <button type="submit" class="btn btn-primary mt-2">구매하기</button>
+                </div>
+            </form>
+            <div th:if="${errorMassage}">
+                <span class="text-danger" th:text="${errorMassage}">flash massage</span>
+            </div>
+            <!--        <div th:if="*{sold()}">-->
+            <!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->
+            <!--        </div>-->
+
         </div>
-        <!--        <div th:if="*{sold()}">-->
-        <!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->
-        <!--        </div>-->
+    </div>
+
+
+    <div class="border-dark border p-5 mt-3" style="min-height: 500px;">
+        <!--        상품 설명-->
+        <span th:text="${item.getDescription()}"></span>
     </div>
 </div>
+<div th:replace="fragments/footer::footer"></div>
 </body>
 </html>

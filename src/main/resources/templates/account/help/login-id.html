@@ -4,8 +4,15 @@
 </head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div class="container">
-    <div>아이디 :<span th:text="${id}"></span></div>
+<div class="d-flex justify-content-center">
+    <table class="table" style="margin-top: 140px; width: 250px;">
+        <tbody>
+        <tr>
+            <td >아이디</td>
+            <td th:text="${id}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

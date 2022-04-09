@@ -12,7 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.project.market.modules.item.entity.QItem.item;
 import static com.project.market.modules.item.entity.QTag.tag;
@@ -25,13 +28,15 @@ public class ItemRepositoryImpl implements CustomItemRepository {
 
     public Page<Item> findItemList(String tagName, String orderCondition, Pageable pageable) {
         List<Item> content = getItems(orderCondition, pageable, tagName);
+//        Set<Item> content = new HashSet<>(getItems(orderCondition, pageable, tagName));
+//        List<Item> content2 = new ArrayList<>(content);
         int total = getItemsTotal(tagName);
 
         return new PageImpl<>(content, pageable, total);
     }
 
     private List<Item> getItems(String orderCondition, Pageable pageable, String tagName) {
-        return queryFactory.selectFrom(item)
+        return queryFactory.selectFrom(item).distinct()
                 .leftJoin(item.tags, tag)
                 .where(
                         item.expired.isFalse(),
@@ -54,6 +59,7 @@ public class ItemRepositoryImpl implements CustomItemRepository {
                 )
                 .fetch().size();
     }
+
     private Predicate tagNameEq(String tagName) {
         return StringUtils.hasText(tagName) ? tag.title.eq(tagName) : null;
     }

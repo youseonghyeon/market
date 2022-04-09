@@ -6,14 +6,14 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,10 +38,10 @@ class ItemServiceTest {
         // given
         Account account = accountRepository.findByLoginId("testUser");
         ItemForm itemForm = createItemForm();
-        List<String> tagList = new ArrayList<>();
+        Set<String> tagList = new HashSet<>();
         tagList.add("태그1");
         tagList.add("태그2");
-        tagService.createOrCountingTags(tagList);
+        tagService.createOrCountingTag(tagList);
         //when
         itemService.createNewItem(account, itemForm, tagList);
         //then
@@ -68,7 +68,7 @@ class ItemServiceTest {
         //given
         Account account = accountRepository.findByLoginId("testUser");
         ItemForm itemForm1 = createItemForm();
-        Item item = itemService.createNewItem(account, itemForm1, new ArrayList<>());
+        Item item = itemService.createNewItem(account, itemForm1, new HashSet<>());
         //when
         ItemForm itemForm2 = new ItemForm();
         itemForm2.setName("상품2");

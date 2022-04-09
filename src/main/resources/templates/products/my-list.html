@@ -3,27 +3,39 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div class="container">
+<div class="container" style="width: 800px;">
     <h3>내가 등록한 상품 목록</h3>
-    <div class="border-dark border" th:each="item : ${itemList}">
+    <div th:each="item : ${itemList}" class="border-dark border mt-4" style="height: 270px;">
         <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
-            <div>
-                상품명 :
-                <span th:text="${item.getName()}"></span>
+            <div class="d-flex">
+                <div class="border border-danger" style="width: 200px; height: 200px;">사진</div>
+                <div class="border-bottom border-dark" style="width: 80%;">
+                    <div>
+                        상품명 :
+                        <span th:text="${item.getName()}"></span>
+                    </div>
+                    <div>
+                        가격 :
+                        <span th:text="${item.getPrice()}"></span>
+                    </div>
+                    <div>
+                        등록일자 :
+                        <span th:text="${#temporals.format(item.getEnrolledDate(), 'yyyy년 M월 d일 h시 m분')}"></span>
+                    </div>
+                </div>
             </div>
-            <div>
-                가격 :
-                <span th:text="${item.getPrice()}"></span>
-            </div>
-            <div>
-                등록일자 :
-                <span th:text="${#temporals.format(item.getEnrolledDate(), 'yyyy년 M월 d일 h시 m분')}"></span>
-            </div>
+
         </a>
 
-        <div>
-<!--            <a th:href="@{/product/edit/{itemId}(itemId = ${item.getId()})}"></a>-->
-            <button th:onclick="|location.href='@{/product/edit/{itemId}(itemId = ${item.getId()})}'|">수정하기</button>
+        <div class="d-flex justify-content-end">
+            <!--            <a th:href="@{/product/edit/{itemId}(itemId = ${item.getId()})}"></a>-->
+            <button class="btn btn-dark"
+                    th:onclick="|location.href='@{/product/edit/{itemId}(itemId = ${item.getId()})}'|">수정
+            </button>
+            <form th:action="@{/product/delete}" th:method="post">
+                <input type="hidden" name="itemId" th:value="${item.getId()}">
+                <button class="btn btn-danger" type="submit">삭제</button>
+            </form>
         </div>
     </div>
 </div>

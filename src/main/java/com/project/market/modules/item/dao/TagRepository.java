@@ -5,13 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Transactional(readOnly = true)
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
     Tag findByTitle(String title);
 
-    List<Tag> findAllByTitleIn(List<String> titles);
+    Set<Tag> findAllByTitleIn(Set<String> titles);
 
     // white list에 사용될 메서드
     List<Tag> findTop100ByOrderByCountDesc();

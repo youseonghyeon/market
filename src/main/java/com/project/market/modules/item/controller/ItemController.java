@@ -15,8 +15,6 @@ import com.project.market.modules.notification.dao.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -24,8 +22,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -70,7 +69,7 @@ public class ItemController {
         tagForm.getTags().add("C");
         tagForm.getTags().add("D");
 
-        tagService.createOrCountingTags(tagForm.getTags());
+        tagService.createOrCountingTag(tagForm.getTags());
         Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
 
         /**
@@ -82,33 +81,6 @@ public class ItemController {
          */
         notificationService.noticeByEmailItemEnrollment(item);
         return "redirect:/product/" + item.getId();
-    }
-
-    @GetMapping("/product/{itemId}")
-    public String productForm(@PathVariable("itemId") Item item, Model model) {
-        model.addAttribute("item", item);
-        return "products/product";
-    }
-
-    @GetMapping("/product/list")
-    public String productListForm(Pageable pageable,
-                                  @RequestParam(value = "tag", required = false) String tag,
-                                  @RequestParam(value = "order", required = false) String orderBy, Model model) {
-
-        Page<Item> itemPage = itemRepository.findItemList(tag, orderBy, pageable);
-        List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
-
-        model.addAttribute("itemPage", itemPage);
-        model.addAttribute("itemList", itemPage.getContent());
-        model.addAttribute("tagList", tagList);
-        return "products/list";
-    }
-
-    @GetMapping("/product/my-list")
-    public String myProductList(@CurrentAccount Account account, Model model) {
-        List<Item> itemList = itemRepository.findAllByEnrolledByOrderByEnrolledDateDesc(account);
-        model.addAttribute("itemList", itemList);
-        return "products/my-list";
     }
 
     @GetMapping("/product/edit/{itemId}")
@@ -136,12 +108,24 @@ public class ItemController {
         return "redirect:/product/" + itemForm.getId();
     }
 
+    @PostMapping("/product/delete")
+    public String deleteProduct( @CurrentAccount Account account, @RequestParam("itemId") Item item) throws IllegalAccessException {
+        if (!item.isMyItem(account)) {
+            throw new IllegalAccessException("접근 권한이 없습니다.");
+        }
+        if (item.isReserved()) {
+//            errors.rejectValue();
+        }
+        itemService.deleteItem(item);
+        return "redirect:/product/my-list";
+    }
+
     // 테스트용
     @PostMapping("/product/tag")
     public String addNewTag(@CurrentAccount Account account, @RequestParam("itemId") Item item, @RequestParam("tag") String tag) {
-        List<String> tags = new ArrayList<>();
+        Set<String> tags = new HashSet<>();
         tags.add(tag);
-        tagService.createOrCountingTags(tags);
+        tagService.createOrCountingTag(tags);
         itemService.joinItemWithTags(item, tags);
         return "redirect:/product/edit/" + item.getId();
     }

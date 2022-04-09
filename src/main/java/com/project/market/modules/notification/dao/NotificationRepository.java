@@ -15,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     long countByRecipientAndConfirmedFalse(Account recipient);
 
     List<Notification> findByRecipient(Account recipient);
+
+    void deleteByItemId(Long itemId);
 }

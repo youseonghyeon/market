@@ -4,6 +4,8 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
+import com.project.market.modules.notification.dao.NotificationRepository;
+import com.project.market.modules.notification.dao.NotificationService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -23,8 +26,9 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
     private final JPAQueryFactory queryFactory;
+    private final NotificationRepository notificationRepository;
 
-    public Item createNewItem(Account account, ItemForm itemForm, List<String> tags) {
+    public Item createNewItem(Account account, ItemForm itemForm, Set<String> tags) {
         Item item = newItemBuild(account, itemForm);
         if (!tags.isEmpty()) {
             joinItemWithTags(item, tags);
@@ -56,11 +60,15 @@ public class ItemService {
                 .build();
     }
 
-    public void joinItemWithTags(Item item, List<String> tags) {
-        List<Tag> findTags = tagRepository.findAllByTitleIn(tags);
+    public void joinItemWithTags(Item item, Set<String> tags) {
+        Set<Tag> findTags = tagRepository.findAllByTitleIn(tags);
         for (Tag t : findTags) {
             item.getTags().add(t);
         }
     }
 
+    public void deleteItem(Item item) {
+        notificationRepository.deleteByItemId(item.getId());
+        item.delete();
+    }
 }

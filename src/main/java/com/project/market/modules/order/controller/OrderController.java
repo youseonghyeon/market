@@ -64,10 +64,10 @@ public class OrderController {
         orderService.join(order, delivery);
 
         if (orderForm.getPaymentMethod().equals("card")) {
-            return "redirect:/purchase/pay/" + order.getId();
+            return "redirect:/purchase/card/" + order.getId();
         }
         if (orderForm.getPaymentMethod().equals("nobank")) {
-            return "redirect:/purchase/card/" + order.getId();
+            return "redirect:/purchase/pay/" + order.getId();
         }
         throw new IllegalStateException("결제 방식이 선택되지 않았습니다.");
     }
