@@ -46,6 +46,7 @@ public class AccountService {
                 .nickname(signupForm.getLoginId())
                 .password(passwordEncoder.encode(signupForm.getPassword()))
                 .joinedAt(LocalDateTime.now())
+                .creditScore(0)
                 .role("ROLE_USER")
                 .orders(new ArrayList<>())
                 .enrolledItem(new ArrayList<>())

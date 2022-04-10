@@ -66,6 +66,8 @@ public class Account {
     private String roadAddress;
     private String addressDetail;
 
+    private int creditScore;
+
     private boolean itemEnrollAlertByWeb = true;
     private boolean itemEnrollAlertByMail = false;
 

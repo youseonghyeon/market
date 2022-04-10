@@ -21,7 +21,7 @@
     <form th:action="@{/purchase}" th:method="post">
         <div class="row justify-content-md-center mt-3">
             <div class="col-8">
-                <div class="row container pt-4 pb-4 border-dark border">
+                <div class="row container pt-4 pb-4 border-dark border bg-white">
 
                     <div>
                         <h3>배송지 정보</h3>
@@ -39,19 +39,22 @@
 
                     <div>주소</div>
                     <div class="input-group ">
-                        <input id="zonecode" class="form-control col-5" type="text" th:field="*{destinationZoneCode}"
+                        <input id="zonecode" class="form-control col-5 bg-white" type="text" th:field="*{destinationZoneCode}"
                                readonly>
                         <div class="col-4"></div>
                         <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">배송지
                             변경
                         </button>
                     </div>
-                    <br>
+
+
                     <div class="input-group ">
-                        <input id="roadAddress" class="form-control col-5" type="text" th:field="*{destinationAddress}"
+                        <input id="roadAddress" class="form-control col-5 bg-white" type="text" th:field="*{destinationAddress}"
                                placeholder="주소검색결과" readonly>
                     </div>
-                    <br>
+
+
+
                     <div class="input-group ">
                         <input class="form-control col-5" type="text" th:field="*{destinationAddressDetail}"
                                placeholder="상세주소">
@@ -60,11 +63,11 @@
 
                     <div>배송 요청사항(200자 이내)</div>
                     <div class="input-group ">
-                        <textarea class="form-control col-5" type="text" name="shippingRequests"></textarea>
+                        <textarea rows="3" style="resize: none" class="form-control col-5" type="text" name="shippingRequests"></textarea>
                     </div>
                 </div>
 
-                <div class="row container border-dark border pt-4 mt-4 pb-4">
+                <div class="row container border-dark border pt-4 mt-4 pb-4 bg-white">
                     결제 방식
                     <input type="radio" name="paymentMethod" value="card" checked>
                     <label>카드</label>
@@ -73,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="col-4 border-dark border">
+            <div class="col-4 border-dark border bg-white">
                 <input type="hidden" th:field="*{itemId}">
                 <div class="fw-bold" style="font-size: 22px;">주문상품</div>
                 <div class="row container">
@@ -105,6 +108,7 @@
     </form>
 
 </div>
+<footer th:replace="fragments/footer::footer"></footer>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </body>
 </html>

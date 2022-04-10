@@ -16,30 +16,40 @@
     }
 
 </script>
-<div class="container">
-
-    <h3 class="col-12 mt-5">주소 등록</h3>
+<div class="container pt-5" style="padding-left: 340px; padding-right: 340px;">
     <form th:action="@{/profile/address}" th:method="post" th:object="${addressForm}">
-        <div>주소</div>
-        <div class="input-group ">
-            <input id="zonecode" class="form-control col-5" type="text" th:field="*{zoneCode}" readonly>
-            <div class="col-4"></div>
-            <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">주소
-                변경
-            </button>
-        </div>
-        <br>
-        <div class="input-group ">
-            <input class="form-control col-5" type="text" th:field="*{roadAddress}"
-                   placeholder="주소검색결과" readonly>
-        </div>
-        <br>
-        <div class="input-group ">
-            <input class="form-control col-5" type="text" th:field="*{addressDetail}" placeholder="상세주소">
-        </div>
 
-        <button class="btn btn-primary" type="submit">저장</button>
+        <div class="container pt-5 pb-5 d-flex flex-column align-items-center border border-gray shadow-sm bg-white">
 
+            <span class="font-title">edit address</span>
+
+            <div class="mt-2 w-450">
+                <span>우편번호</span>
+                <div class="d-flex justify-content-between">
+                    <input id="zonecode" type="text" class="form-control bg-white" style="width: 330px;" th:field="*{zoneCode}"
+                           readonly>
+                    <button type="button" onclick="openPopup()" id="modify" class="btn btn-custom-outline">주소
+                        검색
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="mt-2">
+                <span>주소</span>
+                <input id="roadAddress" type="text" class="form-control w-450 bg-white" th:field="*{roadAddress}"
+                       placeholder="주소검색결과" readonly>
+            </div>
+
+
+            <div class="mt-2">
+                <span>상세</span>
+                <input type="text" class="form-control w-450" th:field="*{addressDetail}" placeholder="상세주소">
+            </div>
+
+
+            <button class="btn btn-custom w-450 mt-4" type="submit">저장</button>
+        </div>
 
     </form>
 

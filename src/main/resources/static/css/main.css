@@ -1,3 +1,7 @@
+h1 h2 h3 h4 h5 h6 {
+  margin: 0;
+}
+
 ul {
   list-style: none;
   padding-left: 0px;
@@ -40,7 +44,20 @@ a:hover, a:active {
   border-radius: 0;
 }
 
+.btn-custom-outline {
+  border: solid 1px #56cfff;
+  color: #003f52;
+  background-color: white;
+}
 button {
   border: none;
   background-color: rgba(255, 255, 255, 0);
+}
+
+body {
+  background-color: #F7F7F7;
+}
+
+.bg-gray {
+  background-color: #F7F7F7;
 }

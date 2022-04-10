@@ -6,8 +6,11 @@
 <div class="container pt-5" style="padding-left: 340px; padding-right: 340px;" th:object="${profileForm}">
     <form th:action="@{/profile/edit}" method="post">
 
-        <div class="container pt-5 pb-5 d-flex flex-column align-items-center border border-gray shadow-sm">
+        <div class="container pt-5 pb-5 d-flex flex-column align-items-center border border-gray shadow-sm bg-white">
             <span class="font-title">edit profile</span>
+
+
+
             <div class="mt-2">
                 <span>별명</span>
                 <input type="text" class="form-control" style="width: 450px;" th:field="*{nickname}" required>

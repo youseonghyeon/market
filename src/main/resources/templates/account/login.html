@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
-<body>
+<body class="bg-gray">
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="d-flex justify-content-center" style="margin-top: 130px;">
-    <div class="border border-gray shadow-sm rounded" style="padding: 40px;">
+    <div class="border border-gray shadow-sm rounded bg-white" style="padding: 40px;">
         <form th:action="@{/perform_login}" class="form-signin" method="post">
             <h2 class="w-100 text-center font-serif">Login</h2>
 
