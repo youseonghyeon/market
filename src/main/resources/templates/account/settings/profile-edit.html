@@ -3,51 +3,44 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div class="container" th:object="${profileForm}">
-    <div class="mt-3"></div>
+<div class="container pt-5" style="padding-left: 340px; padding-right: 340px;" th:object="${profileForm}">
     <form th:action="@{/profile/edit}" method="post">
-        <h3>프로필 수정</h3>
-        <div>
-            <div>
-                <span>별명: </span>
-                <input type="text" class="form-control" th:field="*{nickname}" required>
+
+        <div class="container pt-5 pb-5 d-flex flex-column align-items-center border border-gray shadow-sm">
+            <span class="font-title">edit profile</span>
+            <div class="mt-2">
+                <span>별명</span>
+                <input type="text" class="form-control" style="width: 450px;" th:field="*{nickname}" required>
             </div>
-            <div>
-                <small class="text-danger" th:if="${#fields.hasErrors('nickname')}"
-                       th:errors="*{nickname}"></small>
+
+
+            <div class="mt-2">
+                <span>전화번호</span>
+                <input type="text" class="form-control" style="width: 450px;" th:field="*{phone}">
             </div>
+
+            <div class="mt-2">
+                <span>이메일</span>
+                <input type="text" class="form-control" style="width: 450px;" th:field="*{email}" required>
+            </div>
+
+
+            <div class="mt-2" style="width: 450px;">
+                <div>
+                    <input type="checkbox" th:field="*{itemEnrollAlertByWeb}">
+                    <label>웹으로 알림 받기</label>
+                </div>
+                <div>
+                    <input type="checkbox" th:field="*{itemEnrollAlertByMail}">
+                    <label>메일로 알림 받기</label>
+                </div>
+            </div>
+
+
+            <button type="submit" style="width: 450px;" class="btn btn-custom mt-4">저장</button>
         </div>
-
-        <div class="mt-3"></div>
-        <h3>연락처 및 알림</h3>
-        <div>
-            <div>
-                <span>전화번호: </span>
-                <input type="text" class="form-control" th:field="*{phone}">
-            </div>
-        </div>
-        <div>
-            <div>
-                <span>이메일: </span>
-                <input type="text" class="form-control" th:field="*{email}" required>
-            </div>
-        </div>
-
-
-        <div>
-            <div>
-                <input type="checkbox" th:field="*{itemEnrollAlertByWeb}">
-                <label>웹으로 알림 받기</label>
-            </div>
-            <div>
-                <input type="checkbox" th:field="*{itemEnrollAlertByMail}">
-                <label>메일로 알림 받기</label>
-            </div>
-        </div>
-
-
-        <button type="submit" class="btn btn-primary">저장</button>
     </form>
+
 </div>
 </body>
 </html>

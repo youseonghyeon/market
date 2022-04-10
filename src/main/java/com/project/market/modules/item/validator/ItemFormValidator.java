@@ -21,8 +21,7 @@ public class ItemFormValidator implements Validator {
 
         // 직거래/배송거래 모두 선택을 안할 시 error 리턴
         if (!(itemForm.isPost() || itemForm.isDirect())) {
-            log.warn("직거래 또는 배송거래 중 하나는 선택해야 합니다.");
-            errors.rejectValue("method", "", "직거래 또는 배송거래 중 하나는 선택해야 합니다.");
+            errors.rejectValue("errorMessage", "method.nessesary", "직거래 또는 배송거래 중 하나는 선택해야 합니다.");
         }
     }
 }

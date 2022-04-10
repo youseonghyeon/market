@@ -4,19 +4,19 @@
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="d-flex justify-content-center" style="margin-top: 130px;">
-    <div class="border border-dark pt-4" style="padding: 40px;">
+    <div class="border border-gray shadow-sm rounded" style="padding: 40px;">
         <form th:action="@{/perform_login}" class="form-signin" method="post">
-            <h2 class="w-100 text-center">Login</h2>
+            <h2 class="w-100 text-center font-serif">Login</h2>
 
             <div class="form-group mt-3" style="width: 350px;">
-                <div>아이디</div>
+                <div class="font-sub-title">ID</div>
                 <input type="text" class="form-control" name="loginId" placeholder="아이디" required="required"
                        autofocus="autofocus">
             </div>
 
 
             <div class="form-group mt-3" style="width: 350px;">
-                <div>비밀번호</div>
+                <div class="font-sub-title">PW</div>
                 <input type="password" class="form-control" name="password" placeholder="비밀번호" required="required">
             </div>
 
@@ -28,9 +28,14 @@
 
 
             <div class="w-100 mt-3">
-                <button type="submit" class="w-100 btn btn-lg btn-block text-light" style="background-color: #01a1dd;">로그인</button>
+                <button type="submit" class="w-100 btn btn-custom">로그인</button>
             </div>
 
+            <div class="mt-1">
+                <a th:href="@{/help/find-id}">아이디 찾기</a>
+                <span>|</span>
+                <a th:href="@{/help/find-password}">비밀번호 찾기</a>
+            </div>
 
             <div th:if="${param.error}" class="alert alert-danger mt-2" role="alert">
                 <span>아이디 또는 비밀번호를 잘못 입력했습니다.</span>
@@ -40,10 +45,6 @@
         </form>
 
 
-        <div class="mt-1">
-            <a th:href="@{/help/find-id}">아이디 찾기</a>
-            <a th:href="@{/help/find-password}">비밀번호 찾기</a>
-        </div>
     </div>
 </div>
 </body>

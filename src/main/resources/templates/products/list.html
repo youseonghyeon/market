@@ -20,15 +20,25 @@
     <button onclick="show()">페이징 로그</button>
 </div>
 <div class="container mt-3">
-    <div style="display: flex; justify-content: space-between">
-        <h3>상품 목록</h3>
+    <div style="justify-content: space-between; height: 130px;" class="d-flex align-items-center">
+        <h2>Market</h2>
+        <form th:action="@{/product/list}" th:method="GET">
+            <div class="d-flex position-relative">
+                <input type="text" name="search" class="form-control rounded-pill shadow-sm"
+                       th:placeholder="${tagList.get(0).getTitle()}"
+                       style="width: 470px; height: 50px; padding-left: 20px;">
+                <button style="right: 48px; z-index: 1"
+                        class="position-relative material-icons md-36">search
+                </button>
+            </div>
+        </form>
         <div>
             <div style="display: flex; justify-content: space-between;">
-                <input class="form-check-input" type="radio" id="sorter-latestAsc" name="sorter">
-                <label for="sorter-latestAsc">최신순</label>
-                <input class="form-check-input" type="radio" id="sorter-popularDesc" name="sorter">
-                <label for="sorter-latestAsc">평점순</label>
-                <a class="btn btn-primary" th:href="@{/product/enroll}">상품 등록</a>
+<!--                <input class="form-check-input" type="radio" id="sorter-latestAsc" name="sorter">-->
+<!--                <label for="sorter-latestAsc">최신순</label>-->
+<!--                <input class="form-check-input" type="radio" id="sorter-popularDesc" name="sorter">-->
+<!--                <label for="sorter-latestAsc">평점순</label>-->
+                <a class="btn btn-custom" th:href="@{/product/enroll}">상품 등록</a>
             </div>
         </div>
     </div>
@@ -36,40 +46,44 @@
         <div class="col-2" style="border-right: black 1px solid">
             <span>태그 목록</span>
             <div th:each="tag : ${tagList}">
-                <button class="badge" th:onclick="|location.href='@{/product/list(tag=${tag.getTitle()})}'|"
+                <button class="badge bg-secondary"
+                        th:onclick="|location.href='@{/product/list(tag=${tag.getTitle()})}'|"
                         th:text="${tag.getTitle()}">태그
                 </button>
             </div>
         </div>
 
 
-
         <ul th:if="${!itemList.isEmpty()}" class="col-10 row row-cols-4" style="min-height: 600px;">
-            <li class="col border border-dark" style="height: 280px;" th:each="item : ${itemList}">
-                <a style="margin: 1px;" th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
-                    <div class="border border-danger" style="height: 150px;">이미지 영역</div>
+            <li class="col border border-gray d-flex justify-content-center align-items-center pt-2 pb-4"
+                th:each="item : ${itemList}">
+                <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
+                    <div class="border border-danger" style="height: 240px; width: 240px;"></div>
                     <div>
-                        상품명 :
-                        <span th:text="${item.getName()}"></span>
+                        <h5 class="m-0" th:text="${item.getName()}"></h5>
                     </div>
                     <div>
-                        가격 :
-                        <span th:text="${item.getPrice()}"></span>
+                        <span class="fs-6" th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></span>
                     </div>
                     <div>
-                        등록일자 :
-                        <span th:text="${item.getBetweenDate()}"></span>
+                        <span style="font-size: 14px;" th:text="${item.getBetweenDate()}"></span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="badge bg-secondary" th:if="${item.isPost()}" style="margin-right: 5px;">배송</div>
+                        <div class="badge bg-secondary" th:if="${item.isDirect()}" style="margin-right: 5px;">직거래</div>
+                        <div class="material-icons-outlined md-24" style="color: #ffd329; margin-right: 5px;">verified
+                        </div>
                     </div>
                 </a>
             </li>
         </ul>
 
-        <div class="col-10 d-flex justify-content-center align-items-center" th:if="${itemList.isEmpty()}" style="min-height: 600px;">
-            <div class="border border-dark w-25 h-25" >
+        <div class="col-10 d-flex justify-content-center align-items-center" th:if="${itemList.isEmpty()}"
+             style="min-height: 600px;">
+            <div class="border border-dark w-25 h-25">
                 찾으시는 상품이 없습니다.(사진으로 대체)
             </div>
         </div>
-
 
 
     </div>

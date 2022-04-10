@@ -6,7 +6,7 @@
     <title>Title</title>
 </head>
 <body>
-<nav th:fragment="main-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom"
+<nav th:fragment="main-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom shadow-sm"
      style="border-color: #BDBDBD;">
     <div class="container-fluid">
         <script th:inline="javascript">
@@ -31,7 +31,7 @@
             }
         </script>
         <a class="navbar-brand" href="/" th:href="@{/}">
-            HOME
+            Market
         </a>
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav justify-content-end">
@@ -43,7 +43,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/product/my-list}">내상품</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/product/my-list}">내상품</a>
                 </li>
 
 

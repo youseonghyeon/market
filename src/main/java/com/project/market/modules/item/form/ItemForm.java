@@ -18,18 +18,19 @@ public class ItemForm {
     @Positive
     private Integer price;
 
-    @NotEmpty
     private String coverPhoto;
 
-    @NotEmpty
     private String photo;
 
     private String originAddress;
 
+    @NotEmpty
     private String description;
 
     private boolean post;
     private boolean direct;
+
+    private String errorMessage;
 
     // private List<Tag> tags;
 //

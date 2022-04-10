@@ -60,14 +60,17 @@ public class ItemController {
     }
 
     @PostMapping("/product/enroll")
-    public String productEnroll(@CurrentAccount Account account, @Valid ItemForm itemForm, @ModelAttribute TagForm tagForm, Errors errors) {
+    public String productEnroll(@CurrentAccount Account account, @Valid ItemForm itemForm, Errors errors) {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
+        // TODO 태그 추가 기능을 넣어야 함
+        TagForm tagForm = new TagForm();
         tagForm.getTags().add("A");
         tagForm.getTags().add("B");
         tagForm.getTags().add("C");
         tagForm.getTags().add("D");
+        log.info("========================");
 
         tagService.createOrCountingTag(tagForm.getTags());
         Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
@@ -109,7 +112,7 @@ public class ItemController {
     }
 
     @PostMapping("/product/delete")
-    public String deleteProduct( @CurrentAccount Account account, @RequestParam("itemId") Item item) throws IllegalAccessException {
+    public String deleteProduct(@CurrentAccount Account account, @RequestParam("itemId") Item item) throws IllegalAccessException {
         if (!item.isMyItem(account)) {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
