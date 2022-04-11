@@ -47,8 +47,14 @@ a:hover, a:active {
 .btn-custom-outline {
   border: solid 1px #56cfff;
   color: #003f52;
+  border-radius: 0;
   background-color: white;
 }
+.btn-custom-outline:hover {
+  background-color: #c3eeff;
+  color: white;
+}
+
 button {
   border: none;
   background-color: rgba(255, 255, 255, 0);
@@ -60,4 +66,8 @@ body {
 
 .bg-gray {
   background-color: #F7F7F7;
+}
+
+.edit-btn:hover {
+  color: #2886ab;
 }

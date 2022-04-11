@@ -14,7 +14,17 @@
   color: #383838;
 }
 
+.font-title-ko {
+  font-family: sans-serif;
+  font-size: 40px;
+  color: #383838;
+}
+
 .font-sub-title {
   font-family: sans-serif;
   color: #383838;
+}
+
+body {
+  font-family: sans-serif;
 }

@@ -18,6 +18,11 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@NamedEntityGraph(name = "Item.withTagAndEnrolledBy", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("enrolledBy")
+})
+
 public class Item {
 
     @Id

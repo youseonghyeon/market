@@ -3,8 +3,8 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div class="container" style="width: 1000px;">
-    <div class=" d-flex justify-content-between mt-4" th:object="${item}">
+<div class="container bg-white" style="width: 1000px;">
+    <div class=" d-flex justify-content-between pt-4" th:object="${item}">
 
         <div style="width: 400px; height: 400px;"
              class="justify-content-center d-flex align-items-center border border-dark">
@@ -12,42 +12,53 @@
         </div>
 
 
-        <div style="width: 500px;" class="border border-dark p-3">
-            <!--            <div>-->
-            <!--                <span>상품 번호 :</span>-->
-            <!--                <span th:text="*{id}"></span>-->
-            <!--            </div>-->
-            <div>
+        <div style="width: 500px;" class="">
+            <div class="d-flex justify-content-between">
                 <!--                상품 이름-->
-                <span class="fs-2" th:text="*{name}"></span>
+                <div>
+                    <span class="fs-4" th:text="*{name}"></span>
+                    <div class="d-flex aic">
+                        <div th:text="'판매자: ' + ${item.getEnrolledBy().nickname}"></div>
+                        <div class="material-icons-outlined md-24" style="color: #ffd329; margin-right: 5px;">verified
+                        </div>
+                    </div>
+                </div>
+                <button class="border border-gray border-2 rounded-circle d-flex jcc aic"
+                        style="width: 46px; height: 46px;">
+                    <span class="material-icons md-36" style="color: gray;">favorite_border</span>
+                </button>
+            </div>
+            <div class="d-flex">
+                <div class="badge bg-secondary" th:if="${item.isPost()}" style="margin-right: 5px;">배송</div>
+                <div class="badge bg-secondary" th:if="${item.isDirect()}" style="margin-right: 5px;">직거래</div>
             </div>
             <div class="d-flex">
                 <div th:each="tag : *{tags}" style="margin-right: 4px;">
                     <!-- 태그 목록-->
-                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;" th:text="${tag.getTitle()}">tag</div>
+                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;" th:text="${tag.getTitle()}">
+                        tag
+                    </div>
                 </div>
             </div>
 
 
             <div>
-                <span th:text="*{#numbers.formatInteger(price, 0, 'COMMA')}"></span>
-                <span>원</span>
+                <span class="fs-4" th:text="*{#numbers.formatInteger(price, 0, 'COMMA')} + ' 원'"></span>
             </div>
 
             <div>
-                <span>등록 일자 :</span>
-                <span th:text="*{getBetweenDate()}"></span>
+                <span th:text="'등록 일자: ' + *{getBetweenDate()}"></span>
             </div>
 
 
             <form th:action="@{/purchase}" th:method="get">
                 <input type="hidden" name="itemId" th:value="*{id}">
-                <select class="form-select mt-2" style="width: 200px;" name="method">
+                <select class="form-select mt-2 rounded-0" style="width: 200px; border-color: #56cfff" name="method">
                     <option th:if="*{post}" value="post">택배배송</option>
                     <option th:if="*{direct}" value="direct">직거래</option>
                 </select>
                 <div>
-                    <button type="submit" class="btn btn-primary mt-2">구매하기</button>
+                    <button type="submit" class="btn btn-custom mt-2 w-100">구매하기</button>
                 </div>
             </form>
             <div th:if="${errorMassage}">
@@ -63,6 +74,7 @@
 
     <div class="border-dark border p-5 mt-3" style="min-height: 500px;">
         <!--        상품 설명-->
+        <div class="font-title-ko">상품설명</div>
         <span th:text="${item.getDescription()}"></span>
     </div>
 </div>

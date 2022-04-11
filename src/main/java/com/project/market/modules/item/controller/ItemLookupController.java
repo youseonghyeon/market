@@ -29,7 +29,7 @@ public class ItemLookupController {
 
     @GetMapping("/product/{itemId}")
     public String productForm(@PathVariable("itemId") Long itemId, Model model) {
-        Item item = itemRepository.findItemWithTagsById(itemId);
+        Item item = itemRepository.findItemWithTagsAndSellerById(itemId);
         if (!item.isAccessible()) {
             //404 에러
             throw new IllegalStateException("삭제된 상품입니다.");
