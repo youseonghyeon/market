@@ -1,5 +1,6 @@
 package com.project.market.modules.item.dao;
 
+import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.entity.Tag;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

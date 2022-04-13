@@ -1,14 +1,16 @@
 package com.project.market.modules.item.dao;
 
+import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.entity.Tag;
+import com.project.market.modules.item.dao.repository.FavoriteRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.entity.*;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.notification.dao.NotificationRepository;
-import com.project.market.modules.notification.dao.NotificationService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.project.market.modules.item.entity.QFavorite.*;
+import static com.project.market.modules.item.entity.QItem.*;
+
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,6 +33,8 @@ public class ItemService {
     private final TagRepository tagRepository;
     private final JPAQueryFactory queryFactory;
     private final NotificationRepository notificationRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final AccountRepository accountRepository;
 
     public Item createNewItem(Account account, ItemForm itemForm, Set<String> tags) {
         Item item = newItemBuild(account, itemForm);
@@ -70,5 +78,29 @@ public class ItemService {
     public void deleteItem(Item item) {
         notificationRepository.deleteByItemId(item.getId());
         item.delete();
+    }
+
+    public void addFavorite(Account account, Item item) {
+        Favorite favorite = new Favorite(account, item);
+        favoriteRepository.save(favorite);
+    }
+
+
+    public void deleteFavorite(Account account, Item item) {
+        Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
+        if (favorite != null) {
+            favoriteRepository.delete(favorite);
+        } else {
+            log.info("Favorite을 찾을 수 없습니다. AccountId={} itemId={}", account.getId(), item.getId());
+        }
+    }
+
+    public List<Item> findFavoriteItems(Account account) {
+        List<Item> favoriteItems = queryFactory.select(item)
+                .from(favorite)
+                .join(favorite.item, item)
+                .where(favorite.account.id.eq(account.getId()))
+                .fetch();
+        return favoriteItems;
     }
 }

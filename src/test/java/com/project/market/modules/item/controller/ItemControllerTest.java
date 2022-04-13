@@ -4,7 +4,7 @@ import com.project.market.WithAccount;
 import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
 import com.project.market.modules.item.entity.Item;
 import org.junit.jupiter.api.AfterEach;
@@ -86,39 +86,6 @@ class ItemControllerTest {
         assertEquals(item.getPhoto(), "B.jpg");
         assertEquals(item.getOriginAddress(), "은평구 신사동");
         assertEquals(item.getShippingFee(), ItemService.DEFAULT_SHIPPING_FEE);
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("단일 상품 조회 폼")
-    void productForm() throws Exception {
-        Item item = itemRepository.findByName("test상품");
-        mockMvc.perform(get("/product/" + item.getId()))
-                .andExpect(model().attributeExists("item"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("products/product"));
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("전체 상품 리스트 조회 폼")
-    void productList() throws Exception {
-        mockMvc.perform(get("/product/list"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("itemList"))
-                .andExpect(model().attributeExists("itemPage"))
-                .andExpect(model().attributeExists("tagList"))
-                .andExpect(view().name("products/list"));
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("내 상품 리스트 폼")
-    void myProductListForm() throws Exception {
-        mockMvc.perform(get("/product/list"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("itemList"))
-                .andExpect(view().name("products/list"));
     }
 
     @Test

@@ -12,7 +12,7 @@
         <form th:action="@{/sign-up}" th:object="${signupForm}" method="post">
             <div class="">
                 <div class="font-sub-title">ID</div>
-                <input type="text" class="form-control w-400" th:field="*{loginId}" placeholder="아이디" required>
+                <input type="text" class="form-control w-450" th:field="*{loginId}" placeholder="아이디" required>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('loginId')}"
                        th:errors="*{loginId}"></small>
             </div>
@@ -20,7 +20,7 @@
 
             <div class="mt-4">
                 <div class="font-sub-title">PW</div>
-                <input type="password" class="form-control w-400" th:field="*{password}"
+                <input type="password" class="form-control w-450" th:field="*{password}"
                        placeholder="비밀번호" data-minlength="6" required>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}"
                        th:errors="*{password}"></small>
@@ -29,7 +29,7 @@
 
             <div class="mt-4">
                 <div class="font-sub-title">Name</div>
-                <input type="text" class="form-control w-400" th:field="*{username}" placeholder="이름" required>
+                <input type="text" class="form-control w-450" th:field="*{username}" placeholder="이름" required>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('username')}"
                        th:errors="*{username}"></small>
             </div>
@@ -37,7 +37,7 @@
 
             <div class="mt-4">
                 <div class="font-sub-title">Phone</div>
-                <input type="tel" class="form-control w-400" th:field="*{phone}" placeholder="전화번호" required>
+                <input type="tel" class="form-control w-450" th:field="*{phone}" placeholder="전화번호" required>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}"
                        th:errors="*{phone}"></small>
             </div>
@@ -45,14 +45,14 @@
 
             <div class="mt-4">
                 <div class="font-sub-title">Email</div>
-                <input type="email" class="form-control w-400" th:field="*{email}" placeholder="이메일" required>
+                <input type="email" class="form-control w-450" th:field="*{email}" placeholder="이메일" required>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}"
                        th:errors="*{email}"></small>
             </div>
 
 
             <div style="margin-top: 60px;">
-                <button type="submit" class="btn btn-custom w-400">가입하기</button>
+                <button type="submit" class="btn btn-custom w-450">가입하기</button>
             </div>
         </form>
     </div>

@@ -23,23 +23,25 @@
 
 
             <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <div class="border border-dark" style="width: 110px; height:110px; margin-right: 20px;"></div>
+                <a th:href="@{/product/{itemId} (itemId=${order.getOrderedItem().getId()})}">
+                    <div class="d-flex">
+                        <div class="border border-dark" style="width: 110px; height:110px; margin-right: 20px;"></div>
 
-                    <div>
-                        <div class="fs-5" th:text="${order.getOrderedItem().getName()}">제품명</div>
-                        <span class="fs-6" style="color: #434343;"
-                              th:text="${#numbers.formatInteger(order.getTotalPrice(), '0', 'COMMA')}">0000</span>원
+                        <div>
+                            <div class="fs-5" th:text="${order.getOrderedItem().getName()}">제품명</div>
+                            <span class="fs-6" style="color: #434343;"
+                                  th:text="${#numbers.formatInteger(order.getTotalPrice(), '0', 'COMMA')}">0000</span>원
+                        </div>
+                        <!--                <div th:if="${order.getArrivalDate()}">-->
+                        <!--                    <span th:text="${order.getArrivalDate()}">3/16(수)</span>-->
+                        <!--                    도착-->
+                        <!--                </div>-->
+                        <!--                <div th:if="${order.getOrderStatus()} != ${T(com.project.market.modules.order.entity.OrderStatus).WAITING}">-->
+                        <!--                    <span th:text="${order.getOrderDelivery().getExpectedArrivalFrom()}">3/16(수)</span>-->
+                        <!--                    도착예정-->
+                        <!--                </div>-->
                     </div>
-                    <!--                <div th:if="${order.getArrivalDate()}">-->
-                    <!--                    <span th:text="${order.getArrivalDate()}">3/16(수)</span>-->
-                    <!--                    도착-->
-                    <!--                </div>-->
-                    <!--                <div th:if="${order.getOrderStatus()} != ${T(com.project.market.modules.order.entity.OrderStatus).WAITING}">-->
-                    <!--                    <span th:text="${order.getOrderDelivery().getExpectedArrivalFrom()}">3/16(수)</span>-->
-                    <!--                    도착예정-->
-                    <!--                </div>-->
-                </div>
+                </a>
                 <div class="d-flex flex-column justify-content-around" style="margin-right: 20px;">
                     <div>
                         <a class="btn btn-outline-primary "

@@ -2,9 +2,9 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.dao.TagRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
@@ -117,9 +117,12 @@ public class ItemController {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
         if (item.isReserved()) {
-//            errors.rejectValue();
+            log.info("상품을 삭제할 수 없습니다.");
+            // TODO 에러 메시지를 Json으로 보낼지 ErrorMsg를 보낼지 결정해야 함
         }
-        itemService.deleteItem(item);
+        if (item.deletable()) {
+            itemService.deleteItem(item);
+        }
         return "redirect:/product/my-list";
     }
 
@@ -131,5 +134,18 @@ public class ItemController {
         tagService.createOrCountingTag(tags);
         itemService.joinItemWithTags(item, tags);
         return "redirect:/product/edit/" + item.getId();
+    }
+
+
+    @PostMapping("/favorite/add")
+    @ResponseBody
+    public void addFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+        itemService.addFavorite(account, item);
+    }
+
+    @PostMapping("/favorite/delete")
+    @ResponseBody
+    public void deleteFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+        itemService.deleteFavorite(account, item);
     }
 }

@@ -6,13 +6,12 @@ import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.SignupForm;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;

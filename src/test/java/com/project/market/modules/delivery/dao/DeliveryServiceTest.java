@@ -2,20 +2,13 @@ package com.project.market.modules.delivery.dao;
 
 import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.order.form.OrderForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest

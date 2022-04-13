@@ -1,4 +1,4 @@
-package com.project.market.modules.item.dao;
+package com.project.market.modules.item.dao.repository;
 
 import com.project.market.modules.item.entity.Item;
 import org.springframework.data.domain.Page;

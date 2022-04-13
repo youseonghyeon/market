@@ -9,23 +9,24 @@
         <div style="padding-left: 10px; padding-right: 15px;" class="d-flex justify-content-between mt-2 mb-2">
 
 
+            <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
+                <div class="d-flex">
+                    <div class="border border-dark" style="width: 150px; height:150px; margin-right: 20px;">
 
-            <div class="d-flex">
-                <div class="border border-dark" style="width: 150px; height:150px; margin-right: 20px;">
-
-                </div>
-                <div>
-                    <div class="fs-5" th:text="${item.getName()}">상품 이름</div>
-                    <div>
-                        <div th:if="${item.isPost()}" th:replace="fragments/badge::badge-post">배송</div>
-                        <div th:if="${item.isDirect()}" th:replace="fragments/badge::badge-direct">직거래</div>
                     </div>
-                    <div th:text="${#temporals.format(item.enrolledDate, 'yy. M. d')}">2022년 10월 1일</div>
-                    <span class="fs-6" style="color: #434343;"
-                          th:text="${#numbers.formatInteger(item.getPrice(), '0', 'COMMA')} + ' 원'">0000
+                    <div>
+                        <div class="fs-5" th:text="${item.getName()}">상품 이름</div>
+                        <div>
+                            <div th:if="${item.isPost()}" th:replace="fragments/badge::badge-post">배송</div>
+                            <div th:if="${item.isDirect()}" th:replace="fragments/badge::badge-direct">직거래</div>
+                        </div>
+                        <div th:text="${#temporals.format(item.enrolledDate, 'yy. M. d')}">2022년 10월 1일</div>
+                        <span class="fs-6" style="color: #434343;"
+                              th:text="${#numbers.formatInteger(item.getPrice(), '0', 'COMMA')} + ' 원'">0000
                     </span>
+                    </div>
                 </div>
-            </div>
+            </a>
 
 
             <div class="d-flex flex-column" style="margin-right: 20px;">
@@ -37,7 +38,6 @@
                     <button class="btn btn-danger shadow-sm" style="width: 100px;" type="submit">삭제</button>
                 </form>
             </div>
-
 
 
         </div>

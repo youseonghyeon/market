@@ -2,6 +2,7 @@ package com.project.market.modules.account.entity;
 
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
+import com.project.market.modules.item.entity.Favorite;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
@@ -71,12 +72,17 @@ public class Account {
     private boolean itemEnrollAlertByWeb = true;
     private boolean itemEnrollAlertByMail = false;
 
-
     @OneToMany(mappedBy = "enrolledBy")
     private List<Item> enrolledItem = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipient")
+    private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
+    private List<Favorite> favorites = new ArrayList<>();
 
     @ManyToMany(cascade = PERSIST)
     private List<Zone> zones = new ArrayList<>();
@@ -84,8 +90,6 @@ public class Account {
     @ManyToMany(cascade = PERSIST)
     private List<Tag> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "recipient")
-    private List<Notification> notifications = new ArrayList<>();
 
     public void modifyProfile(ProfileForm profileForm) {
         nickname = profileForm.getNickname();

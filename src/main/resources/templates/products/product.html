@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
+<script th:inline="javascript">
+    const addFavorite = () => {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+        const itemId = [[${item.getId()}]]
+        $.ajax({
+            url: "/favorite/add",
+            method: "POST",
+            data: {
+              itemId: itemId
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            }
+        })
+    }
+
+    const deleteFavorite = () => {
+
+    }
+</script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container bg-white" style="width: 1000px;">
@@ -23,7 +44,13 @@
                         </div>
                     </div>
                 </div>
-                <button class="border border-gray border-2 rounded-circle d-flex jcc aic"
+                <!--                -->
+                <!--                -->
+                <!--                -->
+                <!--                -->
+                <!--                -->
+                <!--                -->
+                <button onclick="addFavorite()" class="border border-gray border-2 rounded-circle d-flex jcc aic"
                         style="width: 46px; height: 46px;">
                     <span class="material-icons md-36" style="color: gray;">favorite_border</span>
                 </button>
@@ -61,8 +88,8 @@
                     <button type="submit" class="btn btn-custom mt-2 w-100">구매하기</button>
                 </div>
             </form>
-            <div th:if="${errorMassage}">
-                <span class="text-danger" th:text="${errorMassage}">flash massage</span>
+            <div th:if="${errorMessage}">
+                <span class="text-danger" th:text="${errorMessage}">flash massage</span>
             </div>
             <!--        <div th:if="*{sold()}">-->
             <!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->

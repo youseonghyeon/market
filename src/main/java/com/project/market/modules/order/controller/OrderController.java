@@ -4,7 +4,7 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.dao.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.PurchaseForm;
 import com.project.market.modules.order.dao.OrderRepository;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,23 +31,31 @@ public class OrderController {
     private final ItemRepository itemRepository;
     private final DeliveryService deliveryService;
     private final OrderRepository orderRepository;
+//    private final OrderFormValidator orderFormValidator;
 
 
     @GetMapping("/purchase")
     public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model, RedirectAttributes attributes) {
         Item item = itemRepository.findItemReadOnlyById(purchaseForm.getItemId());
-        if (!item.canPurchase(account)) {
-            String errorMassage = "구매할 수 없는 상품입니다.";
-            if (item.isMyItem(account)) {
-                errorMassage = "내 상품은 구매할 수 없습니다.";
-            }
-            attributes.addFlashAttribute("errorMassage", errorMassage);
+        // ===================================== 리팩토링
+        if (item.getDeleted()) {
+            throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
+        }
+        if (item.isReserved()) {
+            attributes.addFlashAttribute("errorMessage", "예약된 상품입니다.");
             return "redirect:/product/" + item.getId();
         }
+        if (item.isMyItem(account)) {
+            attributes.addFlashAttribute("errorMessage", "내 상품은 구매할 수 없습니다.");
+            return "redirect:/product/" + item.getId();
+        }
+        // ===================================== 리팩토링
         model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod(), account));
         model.addAttribute("item", item);
+        model.addAttribute("account", account);
         return "order/purchase";
     }
+
 
     @PostMapping("/purchase")
     public String purchase(@CurrentAccount Account account, @Valid OrderForm orderForm, Errors errors) {

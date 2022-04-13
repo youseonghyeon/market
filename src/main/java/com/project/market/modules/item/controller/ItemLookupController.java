@@ -2,8 +2,9 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.dao.ItemRepository;
-import com.project.market.modules.item.dao.TagRepository;
+import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class ItemLookupController {
 
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
+    private final ItemService itemService;
 
     @GetMapping("/product/{itemId}")
     public String productForm(@PathVariable("itemId") Long itemId, Model model) {
@@ -57,5 +59,14 @@ public class ItemLookupController {
         List<Item> itemList = itemRepository.findAllByEnrolledByAndDeletedFalseOrderByEnrolledDateDesc(account);
         model.addAttribute("itemList", itemList);
         return "products/my-list";
+    }
+
+    @GetMapping("/favorite/list")
+    public String favoriteListForm(@CurrentAccount Account account) {
+        List<Item> favoriteItems = itemService.findFavoriteItems(account);
+        for (Item favoriteItem : favoriteItems) {
+            log.info("favoriteItemId={}", favoriteItem.getName());
+        }
+        return "redirect:/";
     }
 }

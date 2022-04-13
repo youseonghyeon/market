@@ -1,4 +1,4 @@
-package com.project.market.modules.item.dao;
+package com.project.market.modules.item.dao.repository;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;

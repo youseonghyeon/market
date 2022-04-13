@@ -1,4 +1,4 @@
-package com.project.market.modules.item.dao;
+package com.project.market.modules.item.dao.repository;
 
 import com.project.market.modules.item.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -116,4 +116,7 @@ public class Item {
         deleted = true;
     }
 
+    public boolean deletable() {
+        return !reserved && !deleted && !expired;
+    }
 }

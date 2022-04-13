@@ -2,12 +2,11 @@ package com.project.market.modules.order.dao;
 
 import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.entity.OrderStatus;
 import com.project.market.modules.order.form.OrderForm;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,8 @@ package com.project.market.modules.item.dao;
 import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;

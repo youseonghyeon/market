@@ -4,7 +4,7 @@ import com.project.market.WithAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.TagRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.project.market.modules.item.dao;
 
+import com.project.market.modules.item.dao.repository.CustomItemRepository;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.entity.QTag;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.project.market.modules.item.entity.QItem.item;
 import static com.project.market.modules.item.entity.QTag.tag;
@@ -28,8 +25,6 @@ public class ItemRepositoryImpl implements CustomItemRepository {
 
     public Page<Item> findItemList(String tagName, String orderCondition, Pageable pageable) {
         List<Item> content = getItems(orderCondition, pageable, tagName);
-//        Set<Item> content = new HashSet<>(getItems(orderCondition, pageable, tagName));
-//        List<Item> content2 = new ArrayList<>(content);
         int total = getItemsTotal(tagName);
 
         return new PageImpl<>(content, pageable, total);

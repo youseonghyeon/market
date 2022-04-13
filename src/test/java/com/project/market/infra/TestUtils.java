@@ -7,7 +7,7 @@ import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.delivery.dao.DeliveryRepository;
 import com.project.market.modules.delivery.dao.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.item.dao.ItemRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
@@ -20,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 @Transactional

@@ -6,9 +6,7 @@ import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
-import com.project.market.modules.account.form.AddressForm;
-import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.dao.TagRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.dto.TagDto;
 import com.project.market.modules.item.entity.Tag;
 import org.junit.jupiter.api.AfterEach;
@@ -22,17 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.Cookie;
-import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

@@ -34,4 +34,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @EntityGraph(attributePaths = {"notifications"}, type = EntityGraph.EntityGraphType.FETCH)
     Account findAccountWithNotificationById(Long id);
+
+    Account findWithFavoritesById(Long id);
 }
