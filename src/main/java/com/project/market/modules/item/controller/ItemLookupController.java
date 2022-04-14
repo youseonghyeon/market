@@ -42,10 +42,11 @@ public class ItemLookupController {
 
     @GetMapping("/product/list")
     public String productListForm(Pageable pageable,
+                                  @RequestParam(value = "search", required = false) String search,
                                   @RequestParam(value = "tag", required = false) String tag,
                                   @RequestParam(value = "order", required = false) String orderBy, Model model) {
 
-        Page<Item> itemPage = itemRepository.findItemList(tag, orderBy, pageable);
+        Page<Item> itemPage = itemRepository.findItemList(search, tag, orderBy, pageable);
         List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
 
         model.addAttribute("itemPage", itemPage);
@@ -62,11 +63,10 @@ public class ItemLookupController {
     }
 
     @GetMapping("/favorite/list")
-    public String favoriteListForm(@CurrentAccount Account account) {
+    public String favoriteListForm(@CurrentAccount Account account, Model model) {
         List<Item> favoriteItems = itemService.findFavoriteItems(account);
-        for (Item favoriteItem : favoriteItems) {
-            log.info("favoriteItemId={}", favoriteItem.getName());
-        }
-        return "redirect:/";
+        model.addAttribute("favoriteList", favoriteItems);
+        model.addAttribute("account", account);
+        return "products/favorite-list";
     }
 }

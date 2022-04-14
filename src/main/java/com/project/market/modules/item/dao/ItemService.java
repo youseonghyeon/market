@@ -36,8 +36,9 @@ public class ItemService {
     private final FavoriteRepository favoriteRepository;
     private final AccountRepository accountRepository;
 
-    public Item createNewItem(Account account, ItemForm itemForm, Set<String> tags) {
+    public Item createNewItem(Account account, ItemForm itemForm) {
         Item item = newItemBuild(account, itemForm);
+        Set<String> tags = itemForm.getTags();
         if (!tags.isEmpty()) {
             joinItemWithTags(item, tags);
         }
@@ -53,8 +54,10 @@ public class ItemService {
         return Item.builder()
                 .name(itemForm.getName())
                 .price(itemForm.getPrice())
-                .coverPhoto(itemForm.getCoverPhoto())
-                .photo(itemForm.getPhoto())
+//                .coverPhoto(itemForm.getCoverPhoto())
+                .coverPhoto("")
+//                .photo(itemForm.getPhoto())
+                .photo("")
                 .originAddress(itemForm.getOriginAddress())
                 .description(itemForm.getDescription())
                 .enrolledDate(LocalDateTime.now())
@@ -81,8 +84,12 @@ public class ItemService {
     }
 
     public void addFavorite(Account account, Item item) {
-        Favorite favorite = new Favorite(account, item);
-        favoriteRepository.save(favorite);
+        if (!favoriteRepository.existsByAccountAndItem(account, item)) {
+            Favorite favorite = new Favorite(account, item);
+            favoriteRepository.save(favorite);
+        } else {
+            log.info("FavoriteItem이 이미 존재합니다. accountId={} itemId={}", account.getId(), item.getId());
+        }
     }
 
 
@@ -91,16 +98,15 @@ public class ItemService {
         if (favorite != null) {
             favoriteRepository.delete(favorite);
         } else {
-            log.info("Favorite을 찾을 수 없습니다. AccountId={} itemId={}", account.getId(), item.getId());
+            log.info("Favorite을 찾을 수 없습니다. accountId={} itemId={}", account.getId(), item.getId());
         }
     }
 
     public List<Item> findFavoriteItems(Account account) {
-        List<Item> favoriteItems = queryFactory.select(item)
+        return queryFactory.select(item)
                 .from(favorite)
                 .join(favorite.item, item)
                 .where(favorite.account.id.eq(account.getId()))
                 .fetch();
-        return favoriteItems;
     }
 }

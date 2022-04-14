@@ -2,14 +2,14 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.dao.TagService;
+import com.project.market.modules.item.dao.repository.FavoriteRepository;
+import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.item.form.TagForm;
 import com.project.market.modules.item.validator.ItemFormValidator;
 import com.project.market.modules.notification.dao.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ public class ItemController {
     private final TagService tagService;
     private final ItemFormValidator itemFormValidator;
     private final NotificationService notificationService;
+    private final FavoriteRepository favoriteRepository;
 
 
     @ExceptionHandler(IllegalAccessException.class)
@@ -64,24 +66,13 @@ public class ItemController {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
-        // TODO 태그 추가 기능을 넣어야 함
-        TagForm tagForm = new TagForm();
-        tagForm.getTags().add("A");
-        tagForm.getTags().add("B");
-        tagForm.getTags().add("C");
-        tagForm.getTags().add("D");
-        log.info("========================");
 
-        tagService.createOrCountingTag(tagForm.getTags());
-        Item item = itemService.createNewItem(account, itemForm, tagForm.getTags());
+        tagService.createOrCountingTag(itemForm.getTags());
+        Item item = itemService.createNewItem(account, itemForm);
 
-        /**
-         * item에 있는 태그들을 관심태그로 등록한 회원에게 Web알림 전송
-         */
+        // 알람 전송(비동기)
         notificationService.noticeItemEnrollment(item);
-        /**
-         * item에 있는 태그들을 관심태그로 등록한 회원에게 메일 전송
-         */
+        // 메일 전송(비동기)
         notificationService.noticeByEmailItemEnrollment(item);
         return "redirect:/product/" + item.getId();
     }
@@ -92,7 +83,6 @@ public class ItemController {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
         List<Tag> tagList = item.getTags();
-
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
         model.addAttribute("tagList", tagList);
         return "products/edit";

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<script th:inline="javascript">
+</script>
+<body>
+<a th:href="@{/}">Market</a>
+<form th:action="@{/test}" enctype="multipart/form-data" method="post">
+    <input type="text" name="name" class="form-control">
+    <input type="file" name="file" class="form-control">
+    <button type="submit">전송</button>
+</form>
+</body>
+</html>

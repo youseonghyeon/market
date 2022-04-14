@@ -1,11 +1,11 @@
 package com.project.market.modules.item.form;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
+import java.util.Set;
 
 @Data
 public class ItemForm {
@@ -18,9 +18,9 @@ public class ItemForm {
     @Positive
     private Integer price;
 
-    private String coverPhoto;
+    private MultipartFile coverPhoto;
 
-    private String photo;
+    private MultipartFile photo;
 
     private String originAddress;
 
@@ -31,6 +31,8 @@ public class ItemForm {
     private boolean direct;
 
     private String errorMessage;
+
+    private Set<String> tags;
 
     // private List<Tag> tags;
 //

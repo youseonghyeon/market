@@ -23,34 +23,40 @@ public class ItemRepositoryImpl implements CustomItemRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public Page<Item> findItemList(String tagName, String orderCondition, Pageable pageable) {
-        List<Item> content = getItems(orderCondition, pageable, tagName);
-        int total = getItemsTotal(tagName);
+    public Page<Item> findItemList(String search, String tagName, String order, Pageable pageable) {
+        List<Item> content = getItems(search, order, pageable, tagName);
+        int total = getItemsTotal(search, tagName);
 
         return new PageImpl<>(content, pageable, total);
     }
 
-    private List<Item> getItems(String orderCondition, Pageable pageable, String tagName) {
+    private List<Item> getItems(String search, String order, Pageable pageable, String tagName) {
         return queryFactory.selectFrom(item).distinct()
                 .leftJoin(item.tags, tag)
                 .where(
                         item.expired.isFalse(),
                         item.deleted.isFalse(),
-                        tagNameEq(tagName)
+                        tagNameEq(tagName),
+                        searchEq(search)
                 )
-                .orderBy(itemSort(orderCondition))
+                .orderBy(itemSort(order))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
-    private int getItemsTotal(String tagName) {
+    private Predicate searchEq(String search) {
+        return search != null ? item.name.contains(search) : null;
+    }
+
+    private int getItemsTotal(String search, String tagName) {
         return queryFactory.selectFrom(item)
                 .leftJoin(item.tags, tag)
                 .where(
                         item.expired.isFalse(),
                         item.deleted.isFalse(),
-                        tagNameEq(tagName)
+                        tagNameEq(tagName),
+                        searchEq(search)
                 )
                 .fetch().size();
     }

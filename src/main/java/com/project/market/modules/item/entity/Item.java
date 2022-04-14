@@ -80,8 +80,11 @@ public class Item {
     public void editItem(ItemForm itemForm) {
         name = itemForm.getName();
         price = itemForm.getPrice();
-        coverPhoto = itemForm.getCoverPhoto();
-        photo = itemForm.getPhoto();
+        // TODO 해결해야 함
+//        coverPhoto = itemForm.getCoverPhoto();
+        coverPhoto = null;
+//        photo = itemForm.getPhoto();
+        photo = null;
         description = itemForm.getDescription();
         originAddress = itemForm.getOriginAddress();
         post = itemForm.isPost();

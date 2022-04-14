@@ -6,9 +6,8 @@
     <title>Title</title>
 </head>
 <body>
-
-<div th:fragment="badge-post" class="badge bg-secondary" title="이 상품은 배송이 가능합니다." style="margin-right: 5px;">배송</div>
-<div th:fragment="badge-direct" class="badge bg-secondary" title="이 상품은 직거래가 가능합니다." style="margin-right: 5px;">직거래</div>
-
+<div th:fragment="badge-post" th:if="${item.isPost()}" class="badge bg-primary" title="이 상품은 배송이 가능합니다." style="margin-right: 5px;">배송</div>
+<div th:fragment="badge-direct" th:if="${item.isDirect()}" class="badge bg-primary" title="이 상품은 직거래가 가능합니다." style="margin-right: 5px;">직거래</div>
+<div th:fragment="badge" class="badge bg-primary" style="margin-right: 5px;">뱃지</div>
 </body>
 </html>

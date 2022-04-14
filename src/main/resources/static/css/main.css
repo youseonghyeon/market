@@ -2,6 +2,14 @@ h1 h2 h3 h4 h5 h6 {
   margin: 0;
 }
 
+.main-color {
+  color: #56cfff;
+}
+
+.main-color-bg {
+  background-color: #56cfff;
+}
+
 ul {
   list-style: none;
   padding-left: 0px;
@@ -50,6 +58,7 @@ a:hover, a:active {
   border-radius: 0;
   background-color: white;
 }
+
 .btn-custom-outline:hover {
   background-color: #c3eeff;
   color: white;
@@ -70,4 +79,8 @@ body {
 
 .edit-btn:hover {
   color: #2886ab;
+}
+
+.hover-shadow:hover {
+  box-shadow:0 .5rem 1rem rgba(0,0,0,.15)!important;
 }

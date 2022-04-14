@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div class="container" style="padding-right: 200px; padding-left: 200px;">
+
+    <div th:each="item : ${favoriteList}">
+        <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
+            <div th:text="${item.getName()}"></div>
+        </a>
+
+    </div>
+
+</div>
+<footer th:replace="fragments/footer::footer"></footer>
+</body>
+</html>

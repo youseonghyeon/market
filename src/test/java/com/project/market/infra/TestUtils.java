@@ -60,12 +60,13 @@ public class TestUtils {
         ItemForm itemForm = new ItemForm();
         itemForm.setName(itemName);
         itemForm.setPrice(10000);
-        itemForm.setCoverPhoto("test.jpg");
-        itemForm.setPhoto("test.jpg");
+        // TODO 사진
+//        itemForm.setCoverPhoto("test.jpg");
+//        itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
         itemForm.setPost(true);
         itemForm.setDirect(true);
-        itemService.createNewItem(account, itemForm, new HashSet<>());
+        itemService.createNewItem(account, itemForm);
         return itemRepository.findByName(itemName);
     }
 

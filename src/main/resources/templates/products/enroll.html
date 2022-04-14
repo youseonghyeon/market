@@ -1,19 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
+<script th:inline="javascript">
+    const log = () => {
+        const input = document.getElementById("tag-input");
+        const tag = input.value.trim();
+        if (tag.length < 2) {
+            return
+        }
+        let str = ""
+        input.value = ""
+        str += "<label id='" + tag + "' class='badge main-color-bg position-relative shadow-sm hover-shadow' style='margin-right: 4px; padding-right: 20px;'> # " + tag
+        str += "<span onclick='deleteTag(" + tag + ")' class='material-icons position-absolute' style='font-size: 14px; color: black; bottom: 4px; right: 3px;'>close</span>"
+        str += "<input type='checkbox' name='tags' value='" + tag + "' style='display: none' checked>"
+        str += "</label>"
+        $("#tag-area").append(str)
+    }
+
+    const deleteTag = (tagName) => {
+        tagName.remove()
+    }
+</script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container" style="padding-right: 200px; padding-left: 200px;">
     <div th:object="${itemForm}" class=" mt-5">
         <h2 class="m-0">상품등록</h2>
-        <form th:action="@{/product/enroll}" method="post">
+        <form th:action="@{/product/enroll}" method="post" onkeydown="return event.key != 'Enter';"
+              enctype="multipart/form-data">
 
 
             <div class="mt-3">상품 이름</div>
             <input type="text" class="form-control w-100" th:field="*{name}" placeholder="상품 이름" required>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}"
                    th:errors="*{name}"></small>
-            <input type="text" class="form-control w-100 mt-3" placeholder="Tags.">
+            <input id="tag-input" type="text" onkeydown="if(event.keyCode === 13) log()" class="form-control w-100 mt-1"
+                   placeholder="Tags.">
+            <div id="tag-area" class="mt-2" style="min-height: 10px;"></div>
 
             <div class="mt-3">상품 가격</div>
             <input type="number" class="form-control w-100" th:field="*{price}" placeholder="가격" required>
@@ -21,11 +44,10 @@
                    th:errors="*{price}"></small>
 
             <div class="mt-3">미리보기 이미지</div>
-            <input type="text" class="form-control w-100" th:field="*{coverPhoto}" placeholder="배경 이미지">
-
+            <input type="file" class="form-control w-100" th:field="*{coverPhoto}" placeholder="배경 이미지">
 
             <div class="mt-3">상세 이미지</div>
-            <input type="text" class="form-control w-100" th:field="*{photo}" placeholder="상세 이미지">
+            <input type="file" class="form-control w-100" th:field="*{photo}" placeholder="상세 이미지">
 
 
             <div class="mt-3">상품 설명</div>

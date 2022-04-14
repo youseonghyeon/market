@@ -56,13 +56,13 @@
                 </button>
             </div>
             <div class="d-flex">
-                <div class="badge bg-secondary" th:if="${item.isPost()}" style="margin-right: 5px;">배송</div>
-                <div class="badge bg-secondary" th:if="${item.isDirect()}" style="margin-right: 5px;">직거래</div>
+                <div th:replace="fragments/badge::badge-post">배송 뱃지</div>
+                <div th:replace="fragments/badge::badge-direct">직거래 뱃지</div>
             </div>
             <div class="d-flex">
                 <div th:each="tag : *{tags}" style="margin-right: 4px;">
                     <!-- 태그 목록-->
-                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;" th:text="${tag.getTitle()}">
+                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;" th:text="'# ' + ${tag.getTitle()}">
                         tag
                     </div>
                 </div>

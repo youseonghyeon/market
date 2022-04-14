@@ -25,6 +25,7 @@
         <form th:action="@{/product/list}" th:method="GET">
             <div class="d-flex position-relative">
                 <input type="text" name="search" class="form-control rounded-pill shadow-sm"
+                       th:value="${param.search != null ? param.search : ''}"
                        th:placeholder="${tagList.isEmpty() ? '' : tagList.get(0).getTitle()}"
                        style="width: 470px; height: 50px; padding-left: 20px;">
                 <button style="right: 48px; z-index: 1"
@@ -70,8 +71,8 @@
                         <span style="font-size: 14px;" th:text="${item.getBetweenDate()}"></span>
                     </div>
                     <div class="d-flex align-items-center">
-                        <div class="badge bg-secondary" th:if="${item.isPost()}" style="margin-right: 5px;">배송</div>
-                        <div class="badge bg-secondary" th:if="${item.isDirect()}" style="margin-right: 5px;">직거래</div>
+                        <div th:replace="fragments/badge::badge-post">배송 뱃지</div>
+                        <div th:replace="fragments/badge::badge-direct">직거래 뱃지</div>
                         <div class="material-icons-outlined md-24" style="color: #ffd329; margin-right: 5px;">verified
                         </div>
                     </div>

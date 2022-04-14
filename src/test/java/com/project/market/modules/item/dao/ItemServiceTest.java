@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,9 +44,11 @@ class ItemServiceTest {
         Set<String> tagList = new HashSet<>();
         tagList.add("태그1");
         tagList.add("태그2");
+        itemForm.getTags().add("태그1");
+        itemForm.getTags().add("태그2");
         tagService.createOrCountingTag(tagList);
         //when
-        itemService.createNewItem(account, itemForm, tagList);
+        itemService.createNewItem(account, itemForm);
         //then
         Item item = itemRepository.findByName("상품");
         assertEquals(item.getPrice(), 1000);
@@ -70,13 +73,13 @@ class ItemServiceTest {
         //given
         Account account = accountRepository.findByLoginId("testUser");
         ItemForm itemForm1 = createItemForm();
-        Item item = itemService.createNewItem(account, itemForm1, new HashSet<>());
+        Item item = itemService.createNewItem(account, itemForm1);
         //when
         ItemForm itemForm2 = new ItemForm();
         itemForm2.setName("상품2");
         itemForm2.setPrice(2000);
-        itemForm2.setCoverPhoto("없음");
-        itemForm2.setPhoto("없음");
+//        itemForm2.setCoverPhoto("없음");
+//        itemForm2.setPhoto("없음");
         itemForm2.setOriginAddress("서울");
         itemForm2.setPost(false);
         itemForm2.setDirect(true);
@@ -97,8 +100,8 @@ class ItemServiceTest {
         ItemForm itemForm = new ItemForm();
         itemForm.setName("상품");
         itemForm.setPrice(1000);
-        itemForm.setCoverPhoto("test.jpg");
-        itemForm.setPhoto("test.jpg");
+//        itemForm.setCoverPhoto("test.jpg");
+//        itemForm.setPhoto("test.jpg");
         itemForm.setOriginAddress("서울시 은평구");
         itemForm.setPost(true);
         itemForm.setDirect(false);
