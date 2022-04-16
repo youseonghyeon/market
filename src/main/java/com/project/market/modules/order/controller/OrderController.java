@@ -16,7 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -68,7 +71,7 @@ public class OrderController {
         }
         Order order = orderService.createOrder(account, orderForm, item);
         Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
-        orderService.join(order, delivery);
+        orderService.mapping(order, delivery);
 
         if (orderForm.getPaymentMethod().equals("card")) {
             return "redirect:/purchase/card/" + order.getId();
@@ -101,8 +104,8 @@ public class OrderController {
     public String payment(@RequestParam("order-id") Long orderId) {
         Order order = orderRepository.findOrderWithDeliveryById(orderId);
         Delivery delivery = order.getOrderDelivery();
-        orderService.payment(order);
-        deliveryService.startDelivery(delivery);
+        orderService.paymentComplete(order);
+        deliveryService.departure(delivery);
 
         return "redirect:/order/" + order.getId();
     }
@@ -118,14 +121,18 @@ public class OrderController {
 
     @GetMapping("/order/list")
     public String orderListForm(@CurrentAccount Account account, @RequestParam(name = "orderType", required = false) String orderType, Model model) {
-        List<Order> orderList;
-        if (orderType != null) {
-            orderList = orderService.findOrders(account, orderType);
-        } else {
-            orderList = orderService.findOrders(account);
-        }
+        List<Order> orderList = orderService.findOrders(account, orderType);
         model.addAttribute("orderList", orderList);
         return "order/list";
+    }
+
+    @PostMapping("/order/cancel")
+    public String orderCancel(@CurrentAccount Account account, @RequestParam("orderId") Order order) throws IllegalAccessException {
+        if (!order.getCustomer().equals(account)) {
+            throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
+        }
+        orderService.cancelOrder(order);
+        return "redirect:/order/list";
     }
 
 }

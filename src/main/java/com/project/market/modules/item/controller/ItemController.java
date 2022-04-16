@@ -23,9 +23,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Controller
@@ -115,17 +113,6 @@ public class ItemController {
         }
         return "redirect:/product/my-list";
     }
-
-    // 테스트용
-    @PostMapping("/product/tag")
-    public String addNewTag(@CurrentAccount Account account, @RequestParam("itemId") Item item, @RequestParam("tag") String tag) {
-        Set<String> tags = new HashSet<>();
-        tags.add(tag);
-        tagService.createOrCountingTag(tags);
-        itemService.joinItemWithTags(item, tags);
-        return "redirect:/product/edit/" + item.getId();
-    }
-
 
     @PostMapping("/favorite/add")
     @ResponseBody

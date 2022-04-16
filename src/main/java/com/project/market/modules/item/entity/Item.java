@@ -122,4 +122,9 @@ public class Item {
     public boolean deletable() {
         return !reserved && !deleted && !expired;
     }
+
+    public void orderCancel() {
+        reserved = false;
+        expired = false;
+    }
 }

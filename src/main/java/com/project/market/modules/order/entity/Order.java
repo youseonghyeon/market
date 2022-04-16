@@ -3,10 +3,8 @@ package com.project.market.modules.order.entity;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.entity.Item;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.project.market.modules.order.form.OrderForm;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity(name = "orders")
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Order {
 
@@ -53,16 +51,28 @@ public class Order {
     @JoinColumn(name = "account_id")
     private Account customer;
 
+    public static Order createNewOrder(Account customer, OrderForm orderForm, Item item) {
+        Order order = new Order();
+        order.orderDate = LocalDateTime.now();
+        order.orderStatus = OrderStatus.WAITING;
+        order.paymentMethod = orderForm.getPaymentMethod();
+        order.shippingRequests = orderForm.getShippingRequests();
+        order.totalPrice = item.getPrice() + item.getShippingFee();
+        order.orderedItem = item;
+        order.customer = customer;
+        return order;
+    }
+
     public boolean isOwner(Account account) {
         // 객체 비교 시 Select account문이 실행되므로 ID값으로 비교함
         return this.customer.getId().equals(account.getId());
     }
 
-    public void setOrderDelivery(Delivery orderDelivery) {
+    public void mappingDelivery(Delivery orderDelivery) {
         this.orderDelivery = orderDelivery;
     }
 
-    public void payment() {
+    public void paymentComplete() {
         orderStatus = OrderStatus.PAYMENT;
     }
 
@@ -79,5 +89,13 @@ public class Order {
             default:
                 return "";
         }
+    }
+
+    public void cancelOrder() {
+        orderStatus = OrderStatus.CANCEL;
+    }
+
+    public void cancelOrderWithRefund() {
+        orderStatus = OrderStatus.REFUND;
     }
 }

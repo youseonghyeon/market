@@ -49,7 +49,10 @@
                             조회</a>
                     </div>
                     <div>
-                        <button class="btn btn-outline-secondary">주문 취소</button>
+                        <form th:action="@{/order/cancel}" th:method="post">
+                            <input type="hidden" name="orderId" th:value="${order.getId()}">
+                            <button class="btn btn-outline-secondary">주문 취소</button>
+                        </form>
                     </div>
                 </div>
             </div>

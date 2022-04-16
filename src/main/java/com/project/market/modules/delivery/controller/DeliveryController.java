@@ -38,7 +38,7 @@ public class DeliveryController {
         if (delivery.isShipped()) {
             throw new IllegalStateException("배송이 이미 완료되었습니다.");
         }
-        deliveryService.competeDelivery(delivery);
+        deliveryService.arrival(delivery);
         log.info("complete 성공");
         return "ok";
     }

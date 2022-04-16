@@ -1,6 +1,8 @@
 package com.project.market.modules.delivery.entity;
 
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.order.form.OrderForm;
 import lombok.*;
 
 import javax.persistence.*;
@@ -53,6 +55,29 @@ public class Delivery {
 
     private String trackingUrl;
 
+    public static Delivery createNewDelivery(Account account, OrderForm orderForm, Item item) {
+        Delivery d = new Delivery();
+        d.fee = item.getShippingFee();
+        d.recipient = orderForm.getRecipient();
+        d.accountId = account.getId();
+        d.recipientPhone = orderForm.getRecipientPhone();
+        d.destinationZoneCode = orderForm.getDestinationZoneCode();
+        d.destinationAddress = orderForm.getDestinationAddress();
+        d.destinationAddressDetail = orderForm.getDestinationAddressDetail();
+//        d.originZoneCode = null;
+//        d.originAddress = null;
+//        d.originAddressDetail = null;
+//        d.expectedArrivalFrom = null;
+//        d.expectedArrivalUntil = null;
+        d.deliveryMethod = orderForm.getDeliveryMethod();
+        d.deliveryStatus = DeliveryStatus.WAITING;
+        d.shippingCompany = "test-company";
+        d.shippingCode = "test-code";
+        d.trackingNumber = "test-number";
+        d.trackingUrl = "test-url";
+        return d;
+    }
+
 
     public boolean isShipped() {
         return this.deliveryStatus.equals(DeliveryStatus.COMPLETE);
@@ -78,5 +103,9 @@ public class Delivery {
         this.expectedArrivalFrom = expectedArrivalFrom;
         this.expectedArrivalUntil = expectedArrivalUntil;
 
+    }
+
+    public void cancel() {
+        deliveryStatus = DeliveryStatus.CANCEL;
     }
 }
