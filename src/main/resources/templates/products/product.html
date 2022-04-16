@@ -19,7 +19,19 @@
     }
 
     const deleteFavorite = () => {
-
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+        const itemId = [[${item.getId()}]]
+        $.ajax({
+            url: "/favorite/delete",
+            method: "POST",
+            data: {
+                itemId: itemId
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            }
+        })
     }
 </script>
 <body>
@@ -50,9 +62,14 @@
                 <!--                -->
                 <!--                -->
                 <!--                -->
-                <button onclick="addFavorite()" class="border border-gray border-2 rounded-circle d-flex jcc aic"
+
+                <button th:if="${!favorite}" onclick="addFavorite()" class="border border-gray border-2 rounded-circle d-flex jcc aic"
                         style="width: 46px; height: 46px;">
                     <span class="material-icons md-36" style="color: gray;">favorite_border</span>
+                </button>
+                <button th:if="${favorite}" onclick="deleteFavorite()" class="border border-2 rounded-circle d-flex jcc aic"
+                        style="width: 46px; height: 46px; border-color: pink !important;">
+                    <span class="material-icons md-36" style="color: pink;">favorite_border</span>
                 </button>
             </div>
             <div class="d-flex">

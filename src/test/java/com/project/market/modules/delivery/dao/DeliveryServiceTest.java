@@ -44,8 +44,7 @@ class DeliveryServiceTest {
         ItemForm itemForm = new ItemForm();
         itemForm.setName("상품");
         itemForm.setPrice(1000);
-        itemForm.setCoverPhoto("test.jpg");
-        itemForm.setPhoto("test.jpg");
+
         itemForm.setOriginAddress("서울시 은평구");
         itemForm.setPost(true);
         itemForm.setDirect(false);

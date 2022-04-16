@@ -107,16 +107,6 @@ class AccountServiceTest {
 
     @Test
     @WithAccount("testUser")
-    @DisplayName("로그아웃")
-    void logout() {
-        // TODO 작성해야 함
-        /**
-         * void logout(HttpServletRequest request, HttpServletResponse response);
-         */
-    }
-
-    @Test
-    @WithAccount("testUser")
     @DisplayName("태그 추가")
     void saveNewTag() {
         //given

@@ -3,6 +3,7 @@ package com.project.market.modules.item.controller;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.item.dao.repository.FavoriteRepository;
 import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.repository.TagRepository;
 import com.project.market.modules.item.entity.Item;
@@ -28,14 +29,22 @@ public class ItemLookupController {
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
     private final ItemService itemService;
+    private final FavoriteRepository favoriteRepository;
 
     @GetMapping("/product/{itemId}")
-    public String productForm(@PathVariable("itemId") Long itemId, Model model) {
+    public String productForm(@CurrentAccount Account account, @PathVariable("itemId") Long itemId, Model model) {
         Item item = itemRepository.findItemWithTagsAndSellerById(itemId);
         if (!item.isAccessible()) {
             //404 에러
             throw new IllegalStateException("삭제된 상품입니다.");
         }
+
+        if (account != null && favoriteRepository.existsByAccountAndItem(account, item)) {
+            model.addAttribute("favorite", true);
+        } else {
+            model.addAttribute("favorite", false);
+        }
+
         model.addAttribute("item", item);
         return "products/product";
     }

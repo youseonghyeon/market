@@ -84,22 +84,12 @@ public class ItemService {
     }
 
     public void addFavorite(Account account, Item item) {
-        if (!favoriteRepository.existsByAccountAndItem(account, item)) {
-            Favorite favorite = new Favorite(account, item);
-            favoriteRepository.save(favorite);
-        } else {
-            log.info("FavoriteItem이 이미 존재합니다. accountId={} itemId={}", account.getId(), item.getId());
-        }
+        Favorite favorite = new Favorite(account, item);
+        favoriteRepository.save(favorite);
     }
 
-
-    public void deleteFavorite(Account account, Item item) {
-        Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
-        if (favorite != null) {
-            favoriteRepository.delete(favorite);
-        } else {
-            log.info("Favorite을 찾을 수 없습니다. accountId={} itemId={}", account.getId(), item.getId());
-        }
+    public void deleteFavorite(Favorite favorite) {
+        favoriteRepository.delete(favorite);
     }
 
     public List<Item> findFavoriteItems(Account account) {
@@ -109,4 +99,5 @@ public class ItemService {
                 .where(favorite.account.id.eq(account.getId()))
                 .fetch();
     }
+
 }

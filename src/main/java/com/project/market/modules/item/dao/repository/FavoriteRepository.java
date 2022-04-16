@@ -18,4 +18,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     List<Favorite> findFavoritesByAccount(Account account);
 
     boolean existsByAccountAndItem(Account account, Item item);
+
+    void deleteByAccountAndItem(Account account, Item item);
 }

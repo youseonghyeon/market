@@ -5,20 +5,23 @@
     const log = () => {
         const input = document.getElementById("tag-input");
         const tag = input.value.trim();
-        if (tag.length < 2) {
+        let duple = document.getElementById(tag);
+
+        if (tag.length < 2 || duple != null || !(/^[ㄱ-ㅎ|가-힣a-zA-Z]+$/).test(tag)) {
             return
         }
         let str = ""
         input.value = ""
         str += "<label id='" + tag + "' class='badge main-color-bg position-relative shadow-sm hover-shadow' style='margin-right: 4px; padding-right: 20px;'> # " + tag
-        str += "<span onclick='deleteTag(" + tag + ")' class='material-icons position-absolute' style='font-size: 14px; color: black; bottom: 4px; right: 3px;'>close</span>"
-        str += "<input type='checkbox' name='tags' value='" + tag + "' style='display: none' checked>"
+            str += "<span onclick='deleteTag(" + tag + ")' class='material-icons position-absolute' style='font-size: 14px; color: black; bottom: 4px; right: 3px;'>close</span>"
+            str += "<input type='checkbox' name='tags' value='" + tag + "' style='display: none' checked>"
         str += "</label>"
         $("#tag-area").append(str)
     }
 
-    const deleteTag = (tagName) => {
-        tagName.remove()
+    const deleteTag = (elem) => {
+        let tag = document.getElementById(elem.id);
+        tag.remove();
     }
 </script>
 <body>
@@ -57,10 +60,14 @@
                    th:errors="*{description}"></small>
 
             <div>
-                <input type="checkbox" th:field="*{post}" value="true">
-                <label>택배배송</label>
-                <input type="checkbox" th:field="*{direct}" value="true">
-                <label>직거래</label>
+                <div>
+                    <input type="checkbox" class="form-check-input" th:field="*{post}" value="true">
+                    <label>택배배송</label>
+                </div>
+                <div>
+                    <input type="checkbox" class="form-check-input" th:field="*{direct}" value="true">
+                    <label>직거래</label>
+                </div>
             </div>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('errorMessage')}"
                    th:errors="*{errorMessage}"></small>

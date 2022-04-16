@@ -30,9 +30,8 @@ public class AdminController {
 
     @GetMapping("/manage")
     public String roleManagement(@CurrentAccount Account account, Model model) {
-        // TODO 인가 관리 .hasRole("admin" or "manager")
         List<Account> accounts = accountRepository.findAll();
-        // TODO 페이징 적용
+        // TODO 페이징
         model.addAttribute("accountList", accounts);
         return "admin/management";
     }

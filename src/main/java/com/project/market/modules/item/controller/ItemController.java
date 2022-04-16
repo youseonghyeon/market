@@ -7,6 +7,7 @@ import com.project.market.modules.item.dao.TagService;
 import com.project.market.modules.item.dao.repository.FavoriteRepository;
 import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.entity.Favorite;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
@@ -20,7 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -130,12 +130,24 @@ public class ItemController {
     @PostMapping("/favorite/add")
     @ResponseBody
     public void addFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+        if (favoriteRepository.existsByAccountAndItem(account, item)) {
+            // 이미 등록됨
+            return;
+        }
+        if (item.getEnrolledBy().equals(account)) {
+            // 본인 상품
+            return;
+        }
         itemService.addFavorite(account, item);
     }
 
     @PostMapping("/favorite/delete")
     @ResponseBody
     public void deleteFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
-        itemService.deleteFavorite(account, item);
+
+        Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
+        if (favorite != null) {
+            itemService.deleteFavorite(favorite);
+        }
     }
 }
