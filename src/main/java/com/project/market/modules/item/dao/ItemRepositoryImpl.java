@@ -1,5 +1,6 @@
 package com.project.market.modules.item.dao;
 
+import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.dao.repository.CustomItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.querydsl.core.types.OrderSpecifier;
@@ -10,15 +11,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.project.market.modules.item.entity.QFavorite.favorite;
 import static com.project.market.modules.item.entity.QItem.item;
 import static com.project.market.modules.item.entity.QTag.tag;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemRepositoryImpl implements CustomItemRepository {
 
     private final JPAQueryFactory queryFactory;
@@ -80,4 +84,13 @@ public class ItemRepositoryImpl implements CustomItemRepository {
         }
     }
 
+
+    @Override
+    public List<Item> findFavoriteItems(Account account) {
+        return queryFactory.select(item)
+                .from(favorite)
+                .join(favorite.item, item)
+                .where(favorite.account.id.eq(account.getId()))
+                .fetch();
+    }
 }

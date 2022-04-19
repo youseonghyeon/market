@@ -80,9 +80,7 @@ public class ItemController {
         if (!item.isMyItem(account)) {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
-        List<Tag> tagList = item.getTags();
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
-        model.addAttribute("tagList", tagList);
         return "products/edit";
     }
 

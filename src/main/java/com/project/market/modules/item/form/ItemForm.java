@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -32,7 +33,7 @@ public class ItemForm {
 
     private String errorMessage;
 
-    private Set<String> tags;
+    private Set<String> tags = new HashSet<>();
 
     // private List<Tag> tags;
 //

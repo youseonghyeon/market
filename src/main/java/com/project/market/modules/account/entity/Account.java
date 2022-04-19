@@ -21,6 +21,8 @@ import static javax.persistence.CascadeType.PERSIST;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(indexes = @Index(name = "i_account", columnList = "loginId"))
+
 @EqualsAndHashCode(of = "id")
 @NamedEntityGraph(name = "Account.withTags", attributeNodes = {
         @NamedAttributeNode("tags")})
@@ -117,12 +119,6 @@ public class Account {
             // 토큰 생성
             passwordTokenCreatedAt = LocalDateTime.now();
         }
-    }
-
-    public boolean isValidPasswordToken(String token) {
-        return passwordToken != null &&
-                passwordToken.equals(token) &&
-                passwordTokenCreatedAt.isAfter(LocalDateTime.now().minusSeconds(600));
     }
 
     public void modifyAddress(AddressForm addressForm) {

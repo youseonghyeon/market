@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Transactional
 @SpringBootTest
@@ -63,8 +64,9 @@ public class TestUtils {
         itemForm.setOriginAddress("서울시 은평구");
         itemForm.setPost(true);
         itemForm.setDirect(true);
-        itemService.createNewItem(account, itemForm);
-        return itemRepository.findByName(itemName);
+        itemForm.getTags().add("태그1");
+        itemForm.getTags().add("태그2");
+        return itemService.createNewItem(account, itemForm);
     }
 
     public Order createMockOrder(Account account, Long itemId) {

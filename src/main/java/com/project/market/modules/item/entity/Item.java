@@ -8,7 +8,10 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -62,11 +65,30 @@ public class Item {
     private Boolean deleted;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    private List<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     // 배송/직거래
     private boolean post;
     private boolean direct;
+
+    public static Item createNewItem(Account seller, ItemForm itemForm) {
+        Item item = new Item();
+        item.name = itemForm.getName();
+        item.price = itemForm.getPrice();
+//        item.photo = itemForm.getPhoto();
+//        item.coverPhoto = itemForm.getCoverPhoto();
+        item.originAddress = itemForm.getOriginAddress();
+        item.description = itemForm.getDescription();
+        item.enrolledDate = LocalDateTime.now();
+        item.enrolledBy = seller;
+        item.shippingFee = 1000; // TODO 수정해야 함
+        item.deleted = false;
+        item.expired = false;
+        item.post = itemForm.isPost();
+        item.direct = itemForm.isDirect();
+
+        return item;
+    }
 
     public void sold() {
         expired = true;

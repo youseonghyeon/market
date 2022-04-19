@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,7 +193,7 @@ class AccountServiceTest {
         String token = accountService.createPasswordToken(account);
         //then
         assertEquals(account.getPasswordToken(), token);
-        assertTrue(account.isValidPasswordToken(token));
+        assertTrue(tokenValidation(account, token));
     }
 
     private void 회원가입(String loginId, String password) {
@@ -205,23 +206,18 @@ class AccountServiceTest {
         accountService.saveNewAccount(signupForm);
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("토큰 폐기")
-    void destroyPasswordToken() {
-        //given
-        Account account = accountRepository.findByLoginId("testUser");
-        String token = accountService.createPasswordToken(account);
-        //when
-        accountService.destroyPasswordToken(account);
-        //then
-        assertNull(account.getPasswordToken());
-        assertFalse(account.isValidPasswordToken(token));
-    }
 
     private Account getCurrentAccount() {
         AccountContext accountContext = (AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return accountRepository.findById(accountContext.getAccount().getId()).orElseThrow();
+    }
+
+    private boolean tokenValidation(Account account, String token) {
+        return account != null &&
+                account.getPasswordToken().equals(token) &&
+                account.getPasswordTokenCreatedAt()
+                        .isAfter(LocalDateTime.now().minusSeconds(600));
+
     }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @EnableAsync
 @SpringBootApplication
@@ -83,7 +84,7 @@ public class App {
                         .expired(false)
                         .direct(true)
                         .post(true)
-                        .tags(new ArrayList<>())
+                        .tags(new HashSet<>())
                         .build();
                 itemRepository.save(item);
 

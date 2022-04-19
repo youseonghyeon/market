@@ -62,8 +62,7 @@ class HelpControllerTest {
                         .param("loginId", "admin")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/help/send-token"))
-                .andExpect(cookie().value("temp_loginId", "admin"));
+                .andExpect(redirectedUrl("/help/send-token"));
     }
 
     @Test
@@ -107,8 +106,8 @@ class HelpControllerTest {
         Account account = accountRepository.findByLoginId("testUser");
         String token = accountService.createPasswordToken(account);
         mockMvc.perform(post("/help/modify/password")
-                        .cookie(new Cookie("temp_loginId", account.getLoginId()))
-                        .cookie(new Cookie("temp_token", token))
+                        .param("loginId", "testUser")
+                        .param("token", token)
                         .param("new-password", "newpassword")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())

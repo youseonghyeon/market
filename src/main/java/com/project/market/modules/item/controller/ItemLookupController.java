@@ -73,7 +73,7 @@ public class ItemLookupController {
 
     @GetMapping("/favorite/list")
     public String favoriteListForm(@CurrentAccount Account account, Model model) {
-        List<Item> favoriteItems = itemService.findFavoriteItems(account);
+        List<Item> favoriteItems = itemRepository.findFavoriteItems(account);
         model.addAttribute("favoriteList", favoriteItems);
         model.addAttribute("account", account);
         return "products/favorite-list";

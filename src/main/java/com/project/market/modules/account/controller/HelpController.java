@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Controller
@@ -49,7 +50,7 @@ public class HelpController {
     }
 
     @PostMapping("/help/find-password") // 비밀번호 찾기 -> 이메일 인증 -> 토큰 메일 전송
-    public String sendMail(@RequestParam("loginId") String loginId, HttpServletResponse response, Model model) {
+    public String sendMail(@RequestParam("loginId") String loginId, Model model) {
         Account account = accountRepository.findByLoginId(loginId);
         if (account == null) {
             model.addAttribute("message", "error");
@@ -57,17 +58,7 @@ public class HelpController {
         }
         String token = accountService.createPasswordToken(account);
         mailSender.sendTokenMail(account, token);
-
-        createCookie("temp_loginId", loginId, response);
-        // TODO(DANGER)  post("/help/modify/password")에 바로 접근할 경우 인증을 거치지 않은채 바로 비밀번호가 변경됨.
-        // -> 검증 로직 생성
         return "redirect:/help/send-token";
-    }
-
-    private void createCookie(String name, String value, HttpServletResponse response) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setMaxAge(600);
-        response.addCookie(cookie);
     }
 
     @GetMapping("/help/send-token")
@@ -76,31 +67,35 @@ public class HelpController {
     }
 
     @GetMapping("/help/confirm")
-    public String tokenCertification(@RequestParam("token") String token) {
+    public String tokenCertification(@RequestParam("token") String token, Model model) {
         Account account = accountRepository.findByPasswordToken(token);
-        if (account == null || !account.isValidPasswordToken(token)) {
+        if (!tokenValidation(account, token)) {
             return "account/help/fail";
         }
+        model.addAttribute("loginId", account.getLoginId());
+        model.addAttribute("token", token);
         return "account/help/modify-password";
     }
 
     @PostMapping("/help/modify/password")
-    public String modifyPassword(@CookieValue("temp_loginId") Cookie idCookie,
-                                 @RequestParam("new-password") String password, HttpServletResponse response) {
-        Account account = accountRepository.findByLoginId(idCookie.getValue());
-        if (account == null || !account.isValidPasswordToken(account.getPasswordToken())) {
+    public String modifyPassword(@RequestParam("token") String token,
+                                 @RequestParam("loginId") String loginId,
+                                 @RequestParam("new-password") String password) {
+        Account account = accountRepository.findByLoginId(loginId);
+        if (!tokenValidation(account, token)) {
             return "account/help/fail";
         }
 
         accountService.modifyPassword(account, password);
         accountService.destroyPasswordToken(account);
-        destroyCookie(idCookie, response);
         return "redirect:/login";
     }
 
-    private void destroyCookie(Cookie cookie, HttpServletResponse response) {
-        cookie.setValue(null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+    private boolean tokenValidation(Account account, String token) {
+        return account != null &&
+                account.getPasswordToken().equals(token) &&
+                account.getPasswordTokenCreatedAt()
+                        .isAfter(LocalDateTime.now().minusSeconds(600));
+
     }
 }

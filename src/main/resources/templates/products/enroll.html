@@ -7,7 +7,7 @@
         const tag = input.value.trim();
         let duple = document.getElementById(tag);
 
-        if (tag.length < 2 || duple != null || !(/^[ㄱ-ㅎ|가-힣a-zA-Z]+$/).test(tag)) {
+        if (tag.length < 2 || duple != null || !(/^[0-9|ㄱ-ㅎ|가-힣a-zA-Z]+$/).test(tag)) {
             return
         }
         let str = ""
