@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,21 +38,28 @@ public class ItemService {
 
     public Item createNewItem(Account seller, ItemForm itemForm) {
         Item item = Item.createNewItem(seller, itemForm);
-        addTagsToItem(item, itemForm);
+        editTags(item, itemForm);
+
         itemRepository.save(item);
         return item;
     }
 
-    private void addTagsToItem(Item item, ItemForm itemForm) {
-        Set<String> tags = itemForm.getTags();
-        if (!tags.isEmpty()) {
-            Set<Tag> findTags = tagRepository.findAllByTitleIn(tags);
-            item.getTags().addAll(findTags);
+    private void editTags(Item item, ItemForm itemForm) {
+        Set<Tag> tagsInItem = item.getTags();
+        tagsInItem.clear();
+
+        Set<String> newTags = itemForm.getTags();
+        if (!newTags.isEmpty()) {
+            Set<Tag> findTags = tagRepository.findAllByTitleIn(newTags);
+            tagsInItem.addAll(findTags);
         }
     }
 
     public void modifyItem(Item item, ItemForm itemForm) {
         item.editItem(itemForm);
+        editTags(item, itemForm);
+
+        itemRepository.save(item);
     }
 
     public void deleteItem(Item item) {

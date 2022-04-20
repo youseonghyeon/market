@@ -1,5 +1,6 @@
 package com.project.market.modules.item.controller;
 
+import com.project.market.infra.aop.Trace;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemService;
@@ -81,6 +82,7 @@ public class ItemController {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
+        model.addAttribute("tagList", item.getTags());
         return "products/edit";
     }
 
@@ -89,12 +91,13 @@ public class ItemController {
         if (errors.hasErrors()) {
             return "products/edit";
         }
-        Item item = itemRepository.findById(itemForm.getId()).orElseThrow();
+        Item item = itemRepository.findItemWithTagsById(itemForm.getId());
+        tagService.createOrFindTags(itemForm.getTags());
         if (!item.isMyItem(account)) {
             throw new IllegalAccessException("접근 권한이 없습니다.");
         }
         itemService.modifyItem(item, itemForm);
-        return "redirect:/product/" + itemForm.getId();
+        return "redirect:/product/" + item.getId();
     }
 
     @PostMapping("/product/delete")

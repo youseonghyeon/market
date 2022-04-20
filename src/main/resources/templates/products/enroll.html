@@ -13,8 +13,8 @@
         let str = ""
         input.value = ""
         str += "<label id='" + tag + "' class='badge main-color-bg position-relative shadow-sm hover-shadow' style='margin-right: 4px; padding-right: 20px;'> # " + tag
-            str += "<span onclick='deleteTag(" + tag + ")' class='material-icons position-absolute' style='font-size: 14px; color: black; bottom: 4px; right: 3px;'>close</span>"
-            str += "<input type='checkbox' name='tags' value='" + tag + "' style='display: none' checked>"
+        str += "<span onclick='deleteTag(" + tag + ")' class='material-icons position-absolute' style='font-size: 14px; color: black; bottom: 4px; right: 3px;'>close</span>"
+        str += "<input type='checkbox' name='tags' value='" + tag + "' style='display: none' checked>"
         str += "</label>"
         $("#tag-area").append(str)
     }

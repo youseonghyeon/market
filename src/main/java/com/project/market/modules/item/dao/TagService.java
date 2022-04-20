@@ -70,4 +70,20 @@ public class TagService {
             return tagRepository.save(newTag);
         }
     }
+
+    public void createOrFindTags(Set<String> titles) {
+        Set<Tag> newTagList = new HashSet<>();
+        Set<Tag> findTags = tagRepository.findAllByTitleIn(titles);
+        // DB에 이미 존재하는 태그 이름들
+        List<String> titleList = findTags.stream().map(Tag::getTitle).collect(Collectors.toList());
+        // 존재하지 않는 태그 생성
+        for (String tagTitle : titles) {
+            if (!titleList.contains(tagTitle)) {
+                newTagList.add(new Tag(tagTitle, 1));
+            }
+        }
+        tagRepository.saveAll(newTagList);
+        em.flush();
+        em.clear();
+    }
 }
