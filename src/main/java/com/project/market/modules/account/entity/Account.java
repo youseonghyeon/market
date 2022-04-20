@@ -2,17 +2,22 @@ package com.project.market.modules.account.entity;
 
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
+import com.project.market.modules.account.form.SignupForm;
+import com.project.market.modules.account.util.PhoneUtils;
 import com.project.market.modules.item.entity.Favorite;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
 import com.project.market.modules.order.entity.Order;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
 
@@ -52,7 +57,8 @@ public class Account {
 
     private String password;
 
-    private LocalDateTime joinedAt;
+    private LocalDateTime joinedAt = LocalDateTime.now();
+    ;
 
     private String bio;
 
@@ -69,10 +75,12 @@ public class Account {
     private String roadAddress;
     private String addressDetail;
 
-    private int creditScore;
+    private int creditScore = 0;
 
     private boolean itemEnrollAlertByWeb = true;
     private boolean itemEnrollAlertByMail = false;
+
+    private boolean deleted = false;
 
     @OneToMany(mappedBy = "enrolledBy")
     private List<Item> enrolledItem = new ArrayList<>();
@@ -84,13 +92,31 @@ public class Account {
     private List<Notification> notifications = new ArrayList<>();
 
     @OneToMany(mappedBy = "account")
-    private List<Favorite> favorites = new ArrayList<>();
+    private Set<Favorite> favorites = new HashSet<>();
 
     @ManyToMany(cascade = PERSIST)
-    private List<Zone> zones = new ArrayList<>();
+    private Set<Zone> zones = new HashSet<>();
 
     @ManyToMany(cascade = PERSIST)
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
+
+    public static Account createNewAccount(SignupForm signupForm) {
+        Account account = new Account();
+        account.username = signupForm.getUsername();
+        account.loginId = signupForm.getLoginId();
+        account.phone = PhoneUtils.trim(signupForm.getPhone());
+        account.email = signupForm.getEmail();
+        account.nickname = signupForm.getLoginId();
+        // password는 Encoding해서 넣어야 함
+        account.joinedAt = LocalDateTime.now();
+        account.creditScore = 0;
+        account.role = "ROLE_USER";
+        account.itemEnrollAlertByWeb = true;
+        account.itemEnrollAlertByMail = false;
+        account.deleted = false;
+
+        return account;
+    }
 
 
     public void modifyProfile(ProfileForm profileForm) {
@@ -127,4 +153,7 @@ public class Account {
         addressDetail = addressForm.getAddressDetail();
     }
 
+    public void withdrawal() {
+        deleted = true;
+    }
 }

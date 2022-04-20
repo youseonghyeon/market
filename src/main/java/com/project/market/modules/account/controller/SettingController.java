@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -44,6 +47,7 @@ public class SettingController {
     private final AccountRepository accountRepository;
     private final PasswordFormValidator passwordFormValidator;
     private final ZoneRepository zoneRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) {
@@ -95,18 +99,28 @@ public class SettingController {
 
     @GetMapping("/profile/tag")
     public String tagSettingForm(@CurrentAccount Account account, Model model) {
-        List<Tag> tagList = accountService.findTags(account);
+        Set<Tag> tagList = accountService.findTags(account);
         List<Tag> whiteList = tagRepository.findTop20ByOrderByCountDesc();
         model.addAttribute("tagList", tagList);
         model.addAttribute("whiteList", whiteList);
         return "account/settings/tag";
     }
 
-    @PostMapping("/profile/tag")
+    @PostMapping("/profile/tag/add")
     @ResponseBody
     public void tagSetting(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
-        Tag findTag = tagService.createOrFindTag(tagDto.getNewTag());
-        accountService.saveNewTag(account, findTag);
+        Tag findTag = tagService.createOrFindTag(tagDto.getTag());
+
+        Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
+        accountService.saveNewTag(findAccount, findTag);
+    }
+
+    @PostMapping("/profile/tag/delete")
+    @ResponseBody
+    public void deleteTag(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
+        Tag tag = tagRepository.findByTitle(tagDto.getTag());
+        Account findAccount = accountRepository.findById(account.getId()).orElseThrow();
+        accountService.deleteTag(findAccount, tag);
     }
 
     @GetMapping("/profile/zone")
@@ -143,5 +157,19 @@ public class SettingController {
         accountService.modifyAddress(account, addressForm);
         attributes.addFlashAttribute("message", "주소 변경 완료!");
         return "redirect:/profile";
+    }
+
+    @GetMapping("/account/withdrawal")
+    public String accountWithdrawalForm() {
+        return "account/settings/withdrawal";
+    }
+
+    @PostMapping("/account/withdrawal")
+    public String accountWithdrawal(@CurrentAccount Account account, @RequestParam("pw-check") String password) {
+        if (!passwordEncoder.matches(password, account.getPassword())) {
+            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        }
+        accountService.deleteAccount(account);
+        return "redirect:/";
     }
 }

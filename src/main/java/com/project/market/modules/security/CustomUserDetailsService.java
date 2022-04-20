@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         Account account = accountRepository.findByLoginId(loginId);
 
-        if (account == null) {
+        if (account == null || account.isDeleted()) {
             throw new UsernameNotFoundException("회원을 찾지 못했습니다.");
         }
 

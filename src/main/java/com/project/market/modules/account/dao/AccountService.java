@@ -5,22 +5,15 @@ import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
-import com.project.market.modules.account.util.PhoneUtils;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.EntityManager;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -31,30 +24,18 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EntityManager em;
 
     public void saveNewAccount(SignupForm signupForm) {
-        Account account = newAccountBuild(signupForm);
+        Account account = Account.createNewAccount(signupForm);
+        passwordEncoding(account, signupForm.getPassword());
+
         accountRepository.save(account);
     }
 
-    private Account newAccountBuild(SignupForm signupForm) {
-        return Account.builder()
-                .username(signupForm.getUsername())
-                .loginId(signupForm.getLoginId())
-                .phone(PhoneUtils.trim(signupForm.getPhone()))
-                .email(signupForm.getEmail())
-                .nickname(signupForm.getLoginId())
-                .password(passwordEncoder.encode(signupForm.getPassword()))
-                .joinedAt(LocalDateTime.now())
-                .creditScore(0)
-                .role("ROLE_USER")
-                .orders(new ArrayList<>())
-                .enrolledItem(new ArrayList<>())
-                .tags(new ArrayList<>())
-                .zones(new ArrayList<>())
-                .itemEnrollAlertByWeb(true)
-                .itemEnrollAlertByMail(false)
-                .build();
+    private void passwordEncoding(Account account, String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        account.modifyPassword(encodedPassword);
     }
 
     public void editProfile(Account account, ProfileForm profileForm) {
@@ -69,21 +50,19 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public List<Tag> findTags(Account account) {
+    public Set<Tag> findTags(Account account) {
         Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
         return findAccount.getTags();
     }
 
     @Transactional(readOnly = true)
-    public List<Zone> findZones(Account account) {
+    public Set<Zone> findZones(Account account) {
         Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
         return findAccount.getZones();
     }
 
     public void saveNewTag(Account account, Tag tag) {
-        Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
-        // TODO ##ERROR## 의도하지 않은 delete쿼리문이 나감 && 중복제거 해야함
-        findAccount.getTags().add(tag);
+        account.getTags().add(tag);
     }
 
     public void saveNewZone(Account account, Zone zone) {
@@ -113,6 +92,15 @@ public class AccountService {
 
     public void modifyAddress(Account account, AddressForm addressForm) {
         account.modifyAddress(addressForm);
+        accountRepository.save(account);
+    }
+
+    public void deleteTag(Account account, Tag tag) {
+        account.getTags().remove(tag);
+    }
+
+    public void deleteAccount(Account account) {
+        account.withdrawal();
         accountRepository.save(account);
     }
 }

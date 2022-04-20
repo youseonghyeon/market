@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -137,7 +138,7 @@ class AccountServiceTest {
         accountService.saveNewTag(account, tag2);
         accountService.saveNewTag(account, tag3);
         //when
-        List<Tag> tags = accountService.findTags(account);
+        Set<Tag> tags = accountService.findTags(account);
         //then
         List<Tag> collection = new ArrayList<>();
         collection.add(tag1);
@@ -173,7 +174,7 @@ class AccountServiceTest {
         accountService.saveNewZone(account, all.get(1));
         accountService.saveNewZone(account, all.get(2));
         //when
-        List<Zone> zones = accountService.findZones(account);
+        Set<Zone> zones = accountService.findZones(account);
         //then
         List<Zone> collection = new ArrayList<>();
         collection.add(all.get(0));

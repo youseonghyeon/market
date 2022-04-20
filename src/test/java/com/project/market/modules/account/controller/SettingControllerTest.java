@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -130,7 +131,7 @@ class SettingControllerTest {
     @DisplayName("태그 추가")
     void tagSetting() throws Exception {
         TagDto tagDto = new TagDto();
-        tagDto.setNewTag("홈런볼");
+        tagDto.setTag("홈런볼");
         mockMvc.perform(post("/profile/tag")
                         .param("newTag", "홈런볼")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +140,7 @@ class SettingControllerTest {
                 .andExpect(status().isOk());
         Tag tag = tagRepository.findByTitle("홈런볼");
         Account account = accountRepository.findByLoginId("testUser");
-        List<Tag> tagContainer = account.getTags();
+        Set<Tag> tagContainer = account.getTags();
         assertTrue(tagContainer.contains(tag));
     }
 
@@ -170,7 +171,7 @@ class SettingControllerTest {
                 .andExpect(redirectedUrl("/profile/zone"));
 
         Account account = accountRepository.findByLoginId("testUser");
-        List<Zone> zoneContainer = account.getZones();
+        Set<Zone> zoneContainer = account.getZones();
         assertTrue(zoneContainer.contains(zone));
     }
 

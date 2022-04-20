@@ -1,5 +1,6 @@
 package com.project.market.modules.account.controller;
 
+import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
@@ -30,6 +31,7 @@ import javax.validation.Valid;
 public class AccountController {
 
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
     private final SignupFormValidator signupFormValidator;
 
     @InitBinder("signupForm")
@@ -70,7 +72,8 @@ public class AccountController {
 
     @GetMapping("/profile")
     public String profileForm(@CurrentAccount Account account, Model model) {
-        model.addAttribute("account", account);
+        Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
+        model.addAttribute("account", findAccount);
         return "account/profile";
     }
 
