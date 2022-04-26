@@ -13,6 +13,7 @@ import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.validator.ItemFormValidator;
+import com.project.market.modules.item.validator.ItemValidator;
 import com.project.market.modules.notification.dao.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,12 +40,13 @@ public class ItemController {
     private final ItemFormValidator itemFormValidator;
     private final NotificationService notificationService;
     private final FavoriteRepository favoriteRepository;
+    private final ItemValidator itemValidator;
 
 
-    @ExceptionHandler(IllegalAccessException.class)
-    public String AccessEx() {
-        log.warn("접근 권한 거부됨");
-        return "exception/access";
+    @ExceptionHandler(IllegalStateException.class)
+    public String ex(Exception e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "exception/item-ex";
     }
 
     @InitBinder("itemForm")
@@ -65,7 +67,6 @@ public class ItemController {
         if (errors.hasErrors()) {
             return "products/enroll";
         }
-
         tagService.createOrCountingTag(itemForm.getTags());
         Item item = itemService.createNewItem(account, itemForm);
 
@@ -77,41 +78,32 @@ public class ItemController {
     }
 
     @GetMapping("/product/edit/{itemId}")
-    public String editMyProduct(@CurrentAccount Account account, @PathVariable("itemId") Item item, Model model) throws IllegalAccessException {
-        if (!item.isMyItem(account)) {
-            throw new IllegalAccessException("접근 권한이 없습니다.");
-        }
+    public String editMyProduct(@CurrentAccount Account account, @PathVariable("itemId") Item item, Model model) {
+        itemValidator.modifyItemValidator(account, item);
+
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
         model.addAttribute("tagList", item.getTags());
         return "products/edit";
     }
 
     @PostMapping("/product/modify")
-    public String modifyProduct(@CurrentAccount Account account, @ModelAttribute ItemForm itemForm, Errors errors) throws IllegalAccessException {
+    public String modifyProduct(@CurrentAccount Account account, @ModelAttribute ItemForm itemForm, Errors errors) {
         if (errors.hasErrors()) {
             return "products/edit";
         }
         Item item = itemRepository.findItemWithTagsById(itemForm.getId());
+        itemValidator.modifyItemValidator(account, item);
+
         tagService.createOrFindTags(itemForm.getTags());
-        if (!item.isMyItem(account)) {
-            throw new IllegalAccessException("접근 권한이 없습니다.");
-        }
         itemService.modifyItem(item, itemForm);
         return "redirect:/product/" + item.getId();
     }
 
     @PostMapping("/product/delete")
-    public String deleteProduct(@CurrentAccount Account account, @RequestParam("itemId") Item item) throws IllegalAccessException {
-        if (!item.isMyItem(account)) {
-            throw new IllegalAccessException("접근 권한이 없습니다.");
-        }
-        if (item.isReserved()) {
-            log.info("상품을 삭제할 수 없습니다.");
-            // TODO 에러 메시지를 Json으로 보낼지 ErrorMsg를 보낼지 결정해야 함
-        }
-        if (item.deletable()) {
-            itemService.deleteItem(item);
-        }
+    public String deleteProduct(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+        itemValidator.deleteItemValidator(account, item);
+
+        itemService.deleteItem(item);
         return "redirect:/product/my-list";
     }
 
@@ -119,11 +111,11 @@ public class ItemController {
     @ResponseBody
     public void addFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
         if (favoriteRepository.existsByAccountAndItem(account, item)) {
-            // 이미 등록됨
+            log.info("이미 favorite에 등록된 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
             return;
         }
         if (item.getEnrolledBy().equals(account)) {
-            // 본인 상품
+            log.info("해당 상품은 본인의 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
             return;
         }
         itemService.addFavorite(account, item);

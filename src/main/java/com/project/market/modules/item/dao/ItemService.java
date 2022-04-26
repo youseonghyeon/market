@@ -70,10 +70,16 @@ public class ItemService {
     public void addFavorite(Account account, Item item) {
         Favorite favorite = new Favorite(account, item);
         favoriteRepository.save(favorite);
+
+        item.plusFavoriteCount();
     }
 
     public void deleteFavorite(Favorite favorite) {
         favoriteRepository.delete(favorite);
+
+        Item item = favorite.getItem();
+        item.minusFavoriteCount();
+        itemRepository.save(item);
     }
 
 }

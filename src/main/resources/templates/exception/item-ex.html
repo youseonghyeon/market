@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<div class="container" style="padding-left: 140px; padding-right: 140px;">
+    <div class="w-100 d-flex aic jcc" style="height: 500px;">
+        <span th:text="${error}" class="fs-5"></span>
+    </div>
+</div>
+<footer th:replace="fragments/footer::footer"></footer>
+</body>
+</html>

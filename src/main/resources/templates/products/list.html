@@ -57,25 +57,29 @@
         </div>
 
 
-        <ul th:if="${!itemList.isEmpty()}" class="col-10 row row-cols-auto" style="min-height: 600px;">
-            <li class="col border border-gray d-flex jcc aic pt-2 pb-4"
+        <ul th:if="${!itemList.isEmpty()}" class="col-10 row row-cols-4" style="min-height: 600px;">
+            <li class="col-3 border border-gray d-flex jcc aic pt-2 pb-4"
                 style="height: 400px;"
                 th:each="item : ${itemList}">
                 <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                     <div class="border border-gray" style="height: 240px; width: 240px;"></div>
-                    <div>
-                        <h5 class="m-0" th:text="${item.getName()}"></h5>
-                    </div>
+                    <h5 class="m-0" th:text="${item.getName()}"></h5>
                     <div>
                         <span class="fs-6" th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></span>
                     </div>
                     <div>
                         <span style="font-size: 14px;" th:text="${item.getBetweenDate()}"></span>
                     </div>
+
                     <div class="d-flex align-items-center">
                         <div th:replace="fragments/badge::badge-post">배송 뱃지</div>
                         <div th:replace="fragments/badge::badge-direct">직거래 뱃지</div>
-                        <div class="material-icons-outlined md-24" style="color: #ffd329; margin-right: 5px;">verified
+                        <div th:if="${item.getEnrolledBy().getCreditScore()} > 300"
+                             class="material-icons-outlined md-24" style="color: #ffd329; margin-right: 5px;">verified
+                        </div>
+                        <div th:if="${item.getFavoriteCount()} > 0" class="d-flex aic">
+                            <span class="material-icons md-18" style="color: #fb0006;">favorite</span>
+                            <span style="font-size: 14px;" th:text="${item.getFavoriteCount()}"></span>
                         </div>
                     </div>
                 </a>

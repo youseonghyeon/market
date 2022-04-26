@@ -3,7 +3,8 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <div class="container">
-    <h1>접근이 거부되었습니다.</h1>
+    <div th:text="${message}"></div>
+
     <a th:href="@{/}">홈으로</a>
 </div>
 </body>

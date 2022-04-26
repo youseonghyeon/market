@@ -155,7 +155,7 @@
             <div>
                 <h5 class="">관심 태그 추가</h5>
                 <input id="tag-input" type="text" onkeydown="if(event.keyCode === 13) addTag()"
-                       class="form-control w-100 mt-1"
+                       class="form-control w-75 mt-1"
                        placeholder="Tags.">
                 <div id="tag-area" class="mt-2" style="min-height: 10px;">
                     <label th:each="tag : ${account.getTags()}" th:id="${tag.title}"
@@ -166,17 +166,15 @@
                               style="font-size: 14px; color: black; bottom: 4px; right: 3px; z-index: 4">close</span>
                     </label>
                 </div>
-
-
             </div>
 
-            <div>
-                <h5 class="">관심 지역 추가</h5>
-                <input id="zone-input" type="text" onkeydown="if(event.keyCode === 13) addZone()"
-                       class="form-control w-100 mt-1"
-                       placeholder="Tags.">
-                <div id="zone-area" class="mt-2" style="min-height: 10px;"></div>
-            </div>
+<!--            <div>-->
+<!--                <h5 class="">관심 지역 추가</h5>-->
+<!--                <input id="zone-input" type="text" onkeydown="if(event.keyCode === 13) addZone()"-->
+<!--                       class="form-control w-75 mt-1"-->
+<!--                       placeholder="Tags.">-->
+<!--                <div id="zone-area" class="mt-2" style="min-height: 10px;"></div>-->
+<!--            </div>-->
         </div>
 
         <div class="container mt-4 ">

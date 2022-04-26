@@ -1,5 +1,6 @@
 package com.project.market.modules.order.controller;
 
+import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.dao.DeliveryService;
@@ -41,7 +42,7 @@ public class OrderController {
     public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model, RedirectAttributes attributes) {
         Item item = itemRepository.findItemReadOnlyById(purchaseForm.getItemId());
         // ===================================== 리팩토링
-        if (item.getDeleted()) {
+        if (item.isDeleted()) {
             throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
         }
         if (item.isReserved()) {
@@ -83,18 +84,18 @@ public class OrderController {
     }
 
     @GetMapping("/purchase/pay/{orderId}")
-    public String purchaseByNoBank(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) throws IllegalAccessException {
+    public String purchaseByNoBank(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
         if (!order.isOwner(account)) {
-            throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
+            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
         }
         model.addAttribute("orderId", order.getId());
         return "order/pay/nobank";
     }
 
     @GetMapping("/purchase/card/{orderId}")
-    public String purchaseByCard(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) throws IllegalAccessException {
+    public String purchaseByCard(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
         if (!order.isOwner(account)) {
-            throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
+            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
         }
         model.addAttribute("orderId", order.getId());
         return "order/pay/card";
@@ -111,9 +112,9 @@ public class OrderController {
     }
 
     @GetMapping("/order/{orderId}")
-    public String orderDetailForm(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) throws IllegalAccessException {
+    public String orderDetailForm(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
         if (!order.isOwner(account)) {
-            throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
+            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
         }
         model.addAttribute("order", order);
         return "order/detail";
@@ -127,9 +128,9 @@ public class OrderController {
     }
 
     @PostMapping("/order/cancel")
-    public String orderCancel(@CurrentAccount Account account, @RequestParam("orderId") Order order) throws IllegalAccessException {
+    public String orderCancel(@CurrentAccount Account account, @RequestParam("orderId") Order order) {
         if (!order.getCustomer().equals(account)) {
-            throw new IllegalAccessException("주문에 접근 권한이 없습니다.");
+            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
         }
         orderService.cancelOrder(order);
         return "redirect:/order/list";

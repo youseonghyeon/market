@@ -11,7 +11,7 @@ import java.util.UUID;
 @Slf4j
 @Aspect
 @Service
-public class SqlTraceAspect {
+public class TraceAspect {
 
     @Around("@annotation(com.project.market.infra.aop.Trace)")
     public Object doSqlTrace(ProceedingJoinPoint joinPoint) throws Throwable {

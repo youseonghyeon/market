@@ -62,10 +62,12 @@ public class Item {
 
     private int shippingFee;
 
-    private Boolean deleted;
+    private boolean deleted;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Tag> tags = new HashSet<>();
+
+    private int favoriteCount = 0;
 
     // 배송/직거래
     private boolean post;
@@ -141,12 +143,16 @@ public class Item {
         deleted = true;
     }
 
-    public boolean deletable() {
-        return !reserved && !deleted && !expired;
-    }
-
     public void orderCancel() {
         reserved = false;
         expired = false;
+    }
+
+    public void plusFavoriteCount() {
+        favoriteCount++;
+    }
+
+    public void minusFavoriteCount() {
+        favoriteCount--;
     }
 }

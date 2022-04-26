@@ -1,5 +1,6 @@
 package com.project.market.modules.account.controller;
 
+import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
@@ -44,9 +45,9 @@ public class AdminController {
 
     @PostMapping("/manage/edit")
     public String editRole(@CurrentAccount Account account, @RequestParam("targetId") Long targetId,
-                           @RequestParam("role") String role) throws IllegalAccessException {
+                           @RequestParam("role") String role) {
         if (!account.getRole().equals("ROLE_ADMIN")) {
-            throw new IllegalAccessException();
+            throw new UnAuthorizedException();
         }
         Account targetAccount = accountRepository.findById(targetId).orElseThrow();
         accountService.modifyRole(targetAccount, role);

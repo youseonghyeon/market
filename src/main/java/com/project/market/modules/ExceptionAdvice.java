@@ -1,5 +1,6 @@
 package com.project.market.modules;
 
+import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +21,22 @@ public class ExceptionAdvice {
         return "error/missing-path-variable-exception";
     }
 
-    @ExceptionHandler
-    public String exceptionHandler(@CurrentAccount Account account, HttpServletRequest request, RuntimeException e) {
-        if (account != null) {
-            log.info("'{}', requested '{}'", account.getNickname(), request.getRequestURI());
-        } else  {
-            log.info("requested '{}'", request.getRequestURI());
-        }
-        log.error("bad request", e);
-        return "error";
+    @ExceptionHandler(UnAuthorizedException.class)
+    public String unAuthorizedExceptionHandler(Model model, Exception e) {
+        String message = e.getMessage();
+        model.addAttribute(message);
+        return "error/missing-path-variable-exception";
     }
+
+
+//    @ExceptionHandler
+//    public String exceptionHandler(@CurrentAccount Account account, HttpServletRequest request, RuntimeException e) {
+//        if (account != null) {
+//            log.info("'{}', requested '{}'", account.getNickname(), request.getRequestURI());
+//        } else  {
+//            log.info("requested '{}'", request.getRequestURI());
+//        }
+//        log.error("bad request", e);
+//        return "error";
+//    }
 }

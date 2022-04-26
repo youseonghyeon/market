@@ -1,5 +1,6 @@
 package com.project.market.modules.delivery.controller;
 
+import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.dao.DeliveryRepository;
@@ -17,10 +18,9 @@ public class TrackingController {
     private final DeliveryRepository deliveryRepository;
 
     @GetMapping("/shiptrack/{deliveryId}")
-    public String shiptrackForm(@CurrentAccount Account account, @PathVariable("deliveryId") Delivery delivery,
-                                Model model) throws IllegalAccessException {
+    public String shiptrackForm(@CurrentAccount Account account, @PathVariable("deliveryId") Delivery delivery, Model model) {
         if (!delivery.isOwner(account)) {
-            throw new IllegalAccessException("잘못된 접근");
+            throw new UnAuthorizedException("잘못된 접근");
         }
         model.addAttribute(delivery);
         return "delivery/shiptrack";
