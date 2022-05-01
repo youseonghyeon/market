@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
 <body>
-<nav th:replace="fragments/nav::main-nav"></nav>
+<nav th:replace="fragments/nav::admin-nav"></nav>
 <div class="container" style="padding-right: 300px; padding-left: 300px;">
-    <h3 class="mt-3 mb-3" th:text="|내가 등록한 상품 ${itemList.size()}|">내가 등록한 상품</h3>
+    <h3 class="mt-3 mb-3" th:text="|등록한 상품 ${itemList.size()}|">내가 등록한 상품</h3>
     <div class="p-4 border border-gray bg-white rounded-3 shadow-sm mb-4" th:each="item : ${itemList}">
         <div style="padding-left: 10px; padding-right: 15px;" class="d-flex justify-content-between mt-2 mb-2">
 

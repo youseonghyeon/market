@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<body>
+<nav th:replace="fragments/nav::admin-nav"></nav>
+<div class="container" style="padding-right: 200px; padding-left: 200px;">
+    <div class="fs-3 mt-4 fw-bold">장바구니</div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>전체선택</td>
+                <td>상품정보</td>
+                <td>상품금액</td>
+                <td>배송비</td>
+            </tr>
+        </table>
+
+        <div>장바구니에 담은 상품이 없습니다.</div>
+        <div style="height: 500px;"></div>
+
+        <div class="btn btn-custom">구매하기</div>
+
+    </div>
+
+</div>
+<footer th:replace="fragments/footer::footer"></footer>
+</body>
+
+
+</html>

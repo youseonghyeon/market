@@ -17,6 +17,7 @@ public class InvoiceController {
     @PostMapping
     public String paymentConfirm(@CurrentAccount Account account, @RequestParam("invoiceId") String id) {
         adminCheck(account);
+
         return null;
     }
 

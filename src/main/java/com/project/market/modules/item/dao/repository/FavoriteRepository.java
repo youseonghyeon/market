@@ -14,6 +14,8 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     Favorite findByAccountAndItem(Account account, Item item);
 
+    Favorite findByAccountAndItemId(Account account, Long itemId);
+
     @EntityGraph(attributePaths = {"item"}, type = EntityGraph.EntityGraphType.FETCH)
     List<Favorite> findFavoritesByAccount(Account account);
 

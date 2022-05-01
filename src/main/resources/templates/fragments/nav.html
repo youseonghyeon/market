@@ -7,7 +7,7 @@
 </head>
 <body>
 <nav th:fragment="main-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom shadow-sm bg-white"
-     style="border-color: #BDBDBD;">
+     style="border-color: #BDBDBD; height: 64px;">
     <div class="container-fluid">
         <script th:inline="javascript">
             const openModal = () => {
@@ -43,10 +43,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/product/my-list}">내상품</a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/favorite/list}">찜목록</a>
                 </li>
 
@@ -63,6 +59,11 @@
                 <li class="nav-item" sec:authorize="hasRole('ROLE_COURIER')">
                     <a class="nav-link" th:href="@{/delivery/list}">
                         <span class="material-icons-outlined">local_shipping</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link position-relative" th:href="@{/cart}">
+                        <span>카트</span>
                     </a>
                 </li>
                 <!-- 알림-->
@@ -89,15 +90,15 @@
                                             unconfirmedClass = " border-danger";
                                         }
                                         str += "<div class='mt-3'>"
-                                            str += "<a href='/product/" + notice.itemId + "'>"
-                                                str += "<div class='d-flex p-2 justify-content-between aic border " + unconfirmedClass + "'>"
-                                                    str += "<div>"
-                                                        str += "<div>" + notice.subject + "</div>";
-                                                        str += "<div class='fs-6' style='width: 230px;'>" + notice.content + "</div>";
-                                                    str += "</div>"
-                                                    str += "<div>" + notice.createdAt + "</div>";
-                                                str += "</div>"
-                                            str += "</a>"
+                                        str += "<a href='/product/" + notice.itemId + "'>"
+                                        str += "<div class='d-flex p-2 justify-content-between aic border " + unconfirmedClass + "'>"
+                                        str += "<div>"
+                                        str += "<div>" + notice.subject + "</div>";
+                                        str += "<div class='fs-6' style='width: 230px;'>" + notice.content + "</div>";
+                                        str += "</div>"
+                                        str += "<div>" + notice.createdAt + "</div>";
+                                        str += "</div>"
+                                        str += "</a>"
                                         str += "</div>"
                                     }
                                     $("#noticeLine").append(str)
@@ -107,9 +108,7 @@
                         }
                     </script>
                     <a class="nav-link position-relative" onclick="openModal()">
-
                         <span class="material-icons-outlined">notifications</span>
-
                         <div class="position-absolute top-0 start-100 translate-middle-x badge rounded-pill bg-danger"
                              id="total" hidden="hidden"></div>
                     </a>
@@ -137,29 +136,44 @@
         </div>
     </div>
 </nav>
-<nav th:fragment="admin-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom shadow-sm bg-white"
-     style="border-color: #BDBDBD;">
-    <a class="navbar-brand" href="/" th:href="@{/}">
-        Market
-    </a>
 
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/admin/manage}">회원 관리</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/admin/payment}">결제 관리</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/admin/delivery/manage}">택배사 관리</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/admin/role}">권한 설정</a>
-            </li>
-        </ul>
+
+<nav th:fragment="admin-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom shadow-sm bg-white"
+     style="border-color: #BDBDBD; height: 64px;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/" th:href="@{/}">
+            Market
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/enroll}">상품 등록</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/product/my-list}">상품 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/manage}">회원 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/payment}">결제 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/delivery/manage}">택배사 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/role}">권한 설정</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">정산</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
+
+
+
 <nav th:fragment="delivery-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom shadow-sm bg-white"
      style="border-color: #BDBDBD;">
     <a class="navbar-brand" href="/" th:href="@{/}">

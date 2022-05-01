@@ -4,6 +4,7 @@ import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
+import com.project.market.modules.item.entity.Cart;
 import com.project.market.modules.item.entity.Favorite;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
@@ -81,6 +82,9 @@ public class Account {
     private boolean itemEnrollAlertByMail = false;
 
     private boolean deleted = false;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Cart> cart = new ArrayList<>();
 
     @OneToMany(mappedBy = "enrolledBy")
     private List<Item> enrolledItem = new ArrayList<>();

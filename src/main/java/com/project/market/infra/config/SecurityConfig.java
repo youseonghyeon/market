@@ -30,11 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/product/my-list", "/product/enroll").hasRole("USER")
+                .antMatchers("/admin", "/admin/**", "/product/my-list", "/product/enroll").hasRole("ADMIN")
                 .antMatchers("/", "/login", "/sign-up", "/login*", "/product/list/*", "/product/{itemId}", "/help/**").permitAll()
                 .antMatchers("/product/**").hasRole("USER")
                 .antMatchers("/delivery/**").hasRole("COURIER")
-                .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated();
 

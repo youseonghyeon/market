@@ -106,28 +106,41 @@ public class ItemController {
         itemService.deleteItem(item);
         return "redirect:/product/my-list";
     }
+//
+//    @PostMapping("/favorite/add")
+//    @ResponseBody
+//    public void addFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+//        if (favoriteRepository.existsByAccountAndItem(account, item)) {
+//            log.info("이미 favorite에 등록된 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
+//            return;
+//        }
+//        if (item.getEnrolledBy().equals(account)) {
+//            log.info("해당 상품은 본인의 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
+//            return;
+//        }
+//        itemService.addFavorite(account, item);
+//    }
+//
+//    @PostMapping("/favorite/delete")
+//    @ResponseBody
+//    public void deleteFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+//
+//        Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
+//        if (favorite != null) {
+//            itemService.deleteFavorite(favorite);
+//        }
+//    }
 
-    @PostMapping("/favorite/add")
+    @PostMapping("/favorite/toggle")
     @ResponseBody
-    public void addFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
-        if (favoriteRepository.existsByAccountAndItem(account, item)) {
-            log.info("이미 favorite에 등록된 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
-            return;
-        }
-        if (item.getEnrolledBy().equals(account)) {
-            log.info("해당 상품은 본인의 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
-            return;
-        }
-        itemService.addFavorite(account, item);
-    }
-
-    @PostMapping("/favorite/delete")
-    @ResponseBody
-    public void deleteFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
-
+    public String toggleFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
         Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
         if (favorite != null) {
             itemService.deleteFavorite(favorite);
+            return "delete";
+        } else {
+            itemService.addFavorite(account, item);
+            return "add";
         }
     }
 }

@@ -14,7 +14,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "index";
+        return "redirect:/product/list";
     }
 
     @GetMapping("/test")

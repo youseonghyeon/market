@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 public class ProfileForm {
 
     @NotEmpty
-    @Length(min = 2, max = 10, message = "별명은 2~10자 사이여야 합니다.")
+    @Length(min = 2, max = 20, message = "별명은 2~10자 사이여야 합니다.")
     private String nickname;
 
     private String phone;

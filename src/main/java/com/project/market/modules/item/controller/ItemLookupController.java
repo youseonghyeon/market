@@ -78,4 +78,11 @@ public class ItemLookupController {
         model.addAttribute("account", account);
         return "products/favorite-list";
     }
+
+    @GetMapping("/cart")
+    public String myCart(@CurrentAccount Account account, Model model) {
+
+        return "products/cart";
+
+    }
 }

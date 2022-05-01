@@ -2,34 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
 <script th:inline="javascript">
-    const addFavorite = () => {
+    const favoriteToggle = () => {
         let token = $("meta[name='_csrf']").attr("content");
         let header = $("meta[name='_csrf_header']").attr("content");
         const itemId = [[${item.getId()}]]
         $.ajax({
-            url: "/favorite/add",
-            method: "POST",
-            data: {
-              itemId: itemId
-            },
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token)
-            }
-        })
-    }
-
-    const deleteFavorite = () => {
-        let token = $("meta[name='_csrf']").attr("content");
-        let header = $("meta[name='_csrf_header']").attr("content");
-        const itemId = [[${item.getId()}]]
-        $.ajax({
-            url: "/favorite/delete",
+            url: "/favorite/toggle",
             method: "POST",
             data: {
                 itemId: itemId
             },
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token)
+            }
+        }).done(function (result, status, responseObj) {
+            let btn = document.getElementById("favorite-btn")
+            if (result === "add") {
+                btn.style.borderColor = '#DB0A1F'
+                btn.style.color = '#DB0A1F'
+            }
+            if (result === "delete") {
+                btn.style.borderColor = '#2d2d2d'
+                btn.style.color = '#2d2d2d'
             }
         })
     }
@@ -63,13 +57,10 @@
                 <!--                -->
                 <!--                -->
 
-                <button th:if="${!favorite}" onclick="addFavorite()" class="border border-gray border-2 rounded-circle d-flex jcc aic"
-                        style="width: 46px; height: 46px;">
-                    <span class="material-icons md-36" style="color: gray;">favorite_border</span>
-                </button>
-                <button th:if="${favorite}" onclick="deleteFavorite()" class="border border-2 rounded-circle d-flex jcc aic"
-                        style="width: 46px; height: 46px; border-color: pink !important;">
-                    <span class="material-icons md-36" style="color: pink;">favorite_border</span>
+                <button onclick="favoriteToggle()" id="favorite-btn"
+                        class="rounded-circle d-flex jcc aic"
+                        th:style="'width: 46px; height: 46px; border: solid 2px;' + ${favorite ? 'border-color: #DB0A1F; color: #DB0A1F' : 'border-color: #2d2d2d; color: #2d2d2d'}">
+                    <span id="favorite-icon" class="material-icons md-36">favorite_border</span>
                 </button>
             </div>
             <div class="d-flex">
@@ -79,7 +70,8 @@
             <div class="d-flex">
                 <div th:each="tag : *{tags}" style="margin-right: 4px;">
                     <!-- 태그 목록-->
-                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;" th:text="'# ' + ${tag.getTitle()}">
+                    <div class="badge bg-secondary rounded-pill" style="font-size: 11px;"
+                         th:text="'# ' + ${tag.getTitle()}">
                         tag
                     </div>
                 </div>
