@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+    const deleteFavorite = (itemId) => {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: "/favorite/toggle",
+            method: "POST",
+            data: {
+                itemId: itemId
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            }
+        }).done(function (result, status, responseObj) {
+            if (result === "delete") {
+                let item = document.getElementById("item" + itemId);
+                item.remove()
+            }
+        })
+    }
+</script>
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<div class="container" style="padding-right: 200px; padding-left: 200px;">
+<div id="wrapper" class="container" style="padding-right: 200px; padding-left: 200px;">
 
-    <div th:each="item : ${favoriteList}">
-        <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
-            <div th:text="${item.getName()}"></div>
-        </a>
+    <div class="fs-4">찜 리스트 <span th:text="${favoriteList.size()}">00</span></div>
+
+    <div th:id="'item' + ${item.getId()}" th:each="item : ${favoriteList}" class="border border-gray p-3 mt-4 bg-white">
+        <div class="d-flex justify-content-between aic">
+            <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
+                <div class="d-flex">
+                    <div class="border border-gray" style="width: 100px; height: 100px;">사진</div>
+                    <div style="width: 400px; margin-left: 20px; margin-top: 5px;">
+                        <div th:text="${item.getName()}">상품 이름</div>
+                        <div th:text="${item.getPrice()}">20,000원</div>
+                    </div>
+                </div>
+            </a>
+            <div>
+                <button th:onclick="deleteFavorite([[${item.getId()}]])" class="btn btn-custom mt-3 d-flex jcc aic"
+                        style="height: 30px; width: 100px;">
+                    <span>삭제</span>
+                </button>
+            </div>
+        </div>
+
 
     </div>
 
