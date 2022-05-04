@@ -4,7 +4,16 @@
 <body>
 <nav th:replace="fragments/nav::admin-nav"></nav>
 <div class="container" style="padding-right: 200px; padding-left: 200px;">
-
+    <div class="border border-gray p-3 bg-white position-relative" th:each="chat : ${chatList}">
+        <a href="#">
+            <div th:if="${chat.getConfirmed() == false}">
+                <div class="rounded-circle bg-danger position-absolute"
+                     style="width: 14px; height: 14px; top: 10px; left: 1px;"></div>
+            </div>
+            <div th:text="'발신: '+${chat.getSender().getId()}">발신: 123</div>
+            <div th:text="'수신: '+${chat.getReceiver().getId()}">수신: 110</div>
+        </a>
+    </div>
 </div>
 <footer th:replace="fragments/footer::footer"></footer>
 </body>

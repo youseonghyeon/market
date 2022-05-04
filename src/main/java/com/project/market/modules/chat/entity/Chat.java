@@ -20,6 +20,8 @@ public class Chat {
     @Column(name = "chat_id")
     private Long id;
 
+    private String content;
+
     private LocalDateTime sendDate;
 
     @ManyToOne(fetch = LAZY)
@@ -30,10 +32,21 @@ public class Chat {
 
     private Boolean confirmed = false;
 
-    public Chat(Account sender, Account receiver) {
+    public Chat(Account sender, Account receiver, String content) {
         sendDate = LocalDateTime.now();
         this.sender = sender;
         this.receiver = receiver;
+        this.content = content;
         confirmed = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", sendDate=" + sendDate +
+                ", confirmed=" + confirmed +
+                '}';
     }
 }

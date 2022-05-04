@@ -34,15 +34,14 @@ public class ChatHandler extends TextWebSocketHandler {
 
         Account receiver = accountRepository.findByLoginId("admin");
 
-        Chat chat = new Chat(sender, receiver);
+        // DB 저장
+        Chat chat = new Chat(sender, receiver, message.getPayload());
         chatRepository.save(chat);
 
+        session.sendMessage(message);
         WebSocketSession admin = map.get("admin");
-        if (admin != null) {
-            session.sendMessage(message);
-            if (!session.equals(admin)) {
-                admin.sendMessage(message);
-            }
+        if (!session.equals(admin) && admin != null) {
+            admin.sendMessage(message);
         }
     }
 
