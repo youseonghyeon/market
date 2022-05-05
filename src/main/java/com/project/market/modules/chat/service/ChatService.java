@@ -22,13 +22,6 @@ public class ChatService {
 
 
 
-    public List<Chat> findRecentChat() {
-        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
-        String rowNumBySendDateQuery = "select row_number() over (partition by sender_account_id order by send_date desc) as row, * from chat";
-        List<Chat> result = em.createNativeQuery("select *  from (" +
-                        rowNumBySendDateQuery + ") as c where c.row = 1 order by send_date desc",
-                Chat.class).getResultList();
-        return result;
-    }
+
 
 }
