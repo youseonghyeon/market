@@ -6,6 +6,9 @@
 
 
 <script th:inline="javascript">
+    let userId = [[${account.getLoginId()}]]
+
+    let mid = [[${mid}]];
     $(document).ready(function () {
         connectStomp();
 
@@ -15,10 +18,15 @@
 
             let msg = $('input#msg').val();
             console.log("message => ", msg)
-            if (isStomp)
+            if (isStomp) {
                 // 메시지를 msg.stringify로 바꿔주어 JSON을 전송하자
-                socket.send('/TTT', {}, msg);
-            else
+                const messageObj = {
+                    senderId: userId,
+                    receiverId: "admin",
+                    content: msg
+                }
+                socket.send('/inquiry/' + mid, {}, JSON.stringify(messageObj));
+            } else
                 socket.send(msg);
         })
     })
@@ -33,12 +41,8 @@
         socket = client;
 
         client.connect({}, function () {
-            console.log("Connected stompTest!");
-            // Controller's MessageMapping, header, message(자유형식)
-            client.send('/TTT', {}, "msg: Haha!!!");
-
             // 해당 토픽을 구독한다!
-            client.subscribe('/topic/message/33', function (event) {
+            client.subscribe('/topic/message/' + mid, function (event) {
                 console.log("EVENT => ", event)
             })
         })
