@@ -8,7 +8,7 @@
 <script th:inline="javascript">
     let userId = [[${account.getLoginId()}]]
 
-    let mid = [[${mid}]];
+    let roomId = [[${roomId}]];
     $(document).ready(function () {
         connectStomp();
 
@@ -19,13 +19,12 @@
             let msg = $('input#msg').val();
             console.log("message => ", msg)
             if (isStomp) {
-                // 메시지를 msg.stringify로 바꿔주어 JSON을 전송하자
                 const messageObj = {
                     senderId: userId,
-                    receiverId: "admin",
+                    roomId: roomId,
                     content: msg
                 }
-                socket.send('/inquiry/' + mid, {}, JSON.stringify(messageObj));
+                socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
             } else
                 socket.send(msg);
         })
@@ -42,7 +41,7 @@
 
         client.connect({}, function () {
             // 해당 토픽을 구독한다!
-            client.subscribe('/topic/message/' + mid, function (event) {
+            client.subscribe('/topic/message/' + roomId, function (event) {
                 console.log("EVENT => ", event)
             })
         })
@@ -68,6 +67,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div th:each="chat : ${chatRecord}">
+        <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()}"></div>
     </div>
 </div>
 

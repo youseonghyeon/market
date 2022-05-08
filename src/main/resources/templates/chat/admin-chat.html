@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header::header"></head>
+<script type="text/javascript" th:src="@{/js/sockjs.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/stomp.min.js}"></script>
+<script th:inline="javascript">
+    let userId = [[${account.getLoginId()}]]
+    let roomId = [[${roomId}]];
+
+    $(document).ready(function () {
+        connectStomp();
+
+        $('#button-send').on('click', function (evt) {
+            evt.preventDefault();
+            if (!isStomp && socket.readyState !== 1) return;
+
+            let msg = $('input#msg').val();
+            console.log("message => ", msg)
+            if (isStomp) {
+                const messageObj = {
+                    senderId: userId,
+                    roomId: roomId,
+                    content: msg
+                }
+                socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
+            } else
+                socket.send(msg);
+            document.getElementById("msg").value = '';
+        })
+    })
+
+    let socket = null;
+    let isStomp = false;
+
+    function connectStomp() {
+        let sock = new SockJS("/stompTest");
+        let client = Stomp.over(sock);
+        isStomp = true;
+        socket = client;
+
+        client.connect({}, function () {
+            // 해당 토픽을 구독한다!
+            client.subscribe('/topic/message/' + roomId, function (event) {
+                console.log("EVENT => ", event)
+            })
+        })
+
+    }
+</script>
+<nav th:replace="fragments/nav::admin-nav"></nav>
+<body>
+<!--<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">-->
+<!--    <th:block th:fragment="content">-->
+
+<div class="container">
+    <div class="col-6">
+        <label><b>채팅방</b></label>
+    </div>
+    <div>
+        <div id="msgArea" class="col"></div>
+        <div class="col-6">
+            <div class="input-group mb-3">
+                <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
+                       aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:each="chat : ${chatRecord}">
+        <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()} + '(' + ${chat.getSendDate()} + ')'"></div>
+    </div>
+</div>
+
+<!--    </th:block>-->
+<!--</th:block>-->
+</body>
+</html>

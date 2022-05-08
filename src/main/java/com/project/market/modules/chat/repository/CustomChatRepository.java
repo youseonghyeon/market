@@ -8,5 +8,6 @@ import java.util.List;
 public interface CustomChatRepository {
     List<Chat> findRecentChat();
 
-    List<Chat> getChatContentByAccount(Long customerId);
+    List<Chat> getChatContentsByRoomId(Long customerId);
+
 }

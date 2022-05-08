@@ -7,7 +7,7 @@ public class MessageDto {
 
     private String senderId;
 
-    private String receiverId;
+    private Long roomId;
 
     private String content;
 }

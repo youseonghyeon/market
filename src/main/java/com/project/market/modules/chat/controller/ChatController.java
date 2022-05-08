@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,26 +34,38 @@ public class ChatController {
         return "redirect:/chat/" + account.getId();
     }
 
-    @GetMapping("/chat/{mid}")
-    public String chatForm(@CurrentAccount Account account, @PathVariable("mid") Long mid, Model model) {
-        if (!account.getId().equals(mid)) {
+    @GetMapping("/chat/{roomId}")
+    public String chatForm(@CurrentAccount Account account, @PathVariable("roomId") Long roomId, Model model) {
+        if (!account.getId().equals(roomId)) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
-        List<Chat> previousChattingRecord = new ArrayList<>();
-        model.addAttribute(account);
-        model.addAttribute("mid", mid);
+        List<Chat> chatRecord = chatRepository.getChatContentsByRoomId(roomId);
+        model.addAttribute("chatRecord", chatRecord);
+        model.addAttribute("roomId", roomId);
+        model.addAttribute("account", account);
         return "chat/chat";
     }
 
-    @MessageMapping("/inquiry/{mid}")
-    public void receiveInquiry(@DestinationVariable("mid") Long mid, MessageDto message) {
+    @MessageMapping("/inquiry/{roomId}")
+    public void receiveInquiry(@DestinationVariable("roomId") Long roomId, MessageDto message) {
         chatService.saveChat(message);
-        template.convertAndSend("/topic/message/" + mid, message.getContent());
+        template.convertAndSend("/topic/message/" + roomId, message.getContent());
     }
 
-//    @MessageMapping("/answer/{mid}")
-//    public void sendAnswer(@DestinationVariable("mid") Long mid, MessageDto message) {
-//        chatService.saveChat(message);
-//        template.convertAndSend("/topic/message/" + mid, message.getContent());
-//    }
+
+    @GetMapping("/admin/chat-list")
+    public String chatList(Model model) {
+        List<Chat> chatList = chatRepository.findRecentChat();
+        model.addAttribute("chatList", chatList);
+        return "chat/chat-list";
+    }
+
+    @GetMapping("/admin/chat/{roomId}")
+    public String replyForm(@CurrentAccount Account account, @PathVariable("roomId") Long roomId, Model model) {
+        List<Chat> chatRecord = chatRepository.getChatContentsByRoomId(roomId);
+        model.addAttribute("chatRecord", chatRecord);
+        model.addAttribute("account", account);
+        model.addAttribute("roomId", roomId);
+        return "chat/admin-chat";
+    }
 }
