@@ -19,30 +19,19 @@ public class ItemForm {
     @Positive
     private Integer price;
 
+    private Integer quantity;
+
     private MultipartFile coverPhoto;
 
     private MultipartFile photo;
 
-    private String originAddress;
+    private Integer shippingFee;
 
     @NotEmpty
     private String description;
 
-    private boolean post;
-    private boolean direct;
-
     private String errorMessage;
 
     private Set<String> tags = new HashSet<>();
-
-    // private List<Tag> tags;
-//
-//    public boolean getPostMethod() {
-//        return post != null && post.equals("true");
-//    }
-//
-//    public boolean getDirectMethod() {
-//        return direct != null && direct.equals("true");
-//    }
 
 }

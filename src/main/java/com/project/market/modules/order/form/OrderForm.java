@@ -27,17 +27,12 @@ public class OrderForm {
 
     private String paymentMethod;
 
-    private String deliveryMethod;
-
-
-    public OrderForm(Long itemId, String deliveryMethod) {
+    public OrderForm(Long itemId) {
         this.itemId = itemId;
-        this.deliveryMethod = deliveryMethod;
     }
 
-    public OrderForm(Long itemId, String deliveryMethod, Account account) {
+    public OrderForm(Long itemId, Account account) {
         this.itemId = itemId;
-        this.deliveryMethod = deliveryMethod;
         destinationZoneCode = account.getZoneCode();
         destinationAddress = account.getRoadAddress();
         destinationAddressDetail = account.getAddressDetail();

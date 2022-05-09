@@ -69,7 +69,6 @@ public class Delivery {
 //        d.originAddressDetail = null;
 //        d.expectedArrivalFrom = null;
 //        d.expectedArrivalUntil = null;
-        d.deliveryMethod = orderForm.getDeliveryMethod();
         d.deliveryStatus = DeliveryStatus.WAITING;
         d.shippingCompany = "test-company";
         d.shippingCode = "test-code";

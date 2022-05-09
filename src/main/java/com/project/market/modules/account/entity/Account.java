@@ -4,14 +4,12 @@ import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
-import com.project.market.modules.item.entity.Cart;
+import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.item.entity.Favorite;
-import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
 import com.project.market.modules.order.entity.Order;
 import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,8 +30,6 @@ import static javax.persistence.CascadeType.PERSIST;
 @EqualsAndHashCode(of = "id")
 @NamedEntityGraph(name = "Account.withTags", attributeNodes = {
         @NamedAttributeNode("tags")})
-@NamedEntityGraph(name = "Account.withEnrolledItems", attributeNodes = {
-        @NamedAttributeNode("enrolledItem")})
 @NamedEntityGraph(name = "Account.withZones", attributeNodes = {
         @NamedAttributeNode("zones")})
 public class Account {
@@ -86,8 +82,6 @@ public class Account {
     @OneToMany(mappedBy = "customer")
     private List<Cart> cart = new ArrayList<>();
 
-    @OneToMany(mappedBy = "enrolledBy")
-    private List<Item> enrolledItem = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();

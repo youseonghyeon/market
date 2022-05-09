@@ -84,7 +84,6 @@ class ItemControllerTest {
         assertEquals(item.getPrice(), 6000);
         assertEquals(item.getCoverPhoto(), "A.jpg");
         assertEquals(item.getPhoto(), "B.jpg");
-        assertEquals(item.getOriginAddress(), "은평구 신사동");
         assertEquals(item.getShippingFee(), ItemService.DEFAULT_SHIPPING_FEE);
     }
 
@@ -123,10 +122,7 @@ class ItemControllerTest {
         assertEquals(modifiedItem.getPrice(), 4000);
         assertEquals(modifiedItem.getCoverPhoto(), "없음");
         assertEquals(modifiedItem.getPhoto(), "없음");
-        assertEquals(modifiedItem.getOriginAddress(), "잠실");
         assertEquals(modifiedItem.getDescription(), "상세 설명1");
-        assertFalse(modifiedItem.isPost());
-        assertTrue(modifiedItem.isDirect());
 
     }
 

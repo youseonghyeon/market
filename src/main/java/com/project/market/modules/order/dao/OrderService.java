@@ -23,10 +23,11 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final DeliveryService deliveryService;
 
-    public Order createOrder(Account account, OrderForm orderForm, Item item) {
-        Order order = Order.createNewOrder(account, orderForm, item);
+    public Order createOrder(Account account, OrderForm orderForm) {
+        Order order = Order.createNewOrder(account, orderForm);
         orderRepository.save(order);
-        item.sold();
+
+        // TODO CART로 받아서 주문 작성하고 Item 개수 빼줘야 함 & 취소 로직도 만들어야 함
         return order;
     }
 
@@ -75,7 +76,8 @@ public class OrderService {
         // 상품 ROLLBACK
         Item item = order.getOrderedItem();
         if (item != null) {
-            item.orderCancel();
+//            item.orderCancel();
+            //TODO
         } else {
             log.info("Item이 존재하지 않습니다. orderId={}", order.getId());
         }

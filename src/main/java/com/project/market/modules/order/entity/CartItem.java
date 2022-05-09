@@ -1,5 +1,6 @@
-package com.project.market.modules.item.entity;
+package com.project.market.modules.order.entity;
 
+import com.project.market.modules.item.entity.Item;
 import lombok.Getter;
 
 import javax.persistence.*;

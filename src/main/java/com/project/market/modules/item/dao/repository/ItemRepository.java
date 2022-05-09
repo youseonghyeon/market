@@ -1,6 +1,5 @@
 package com.project.market.modules.item.dao.repository;
 
-import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRep
 
     Item findByName(String itemName);
 
-    List<Item> findAllByEnrolledByAndDeletedFalseOrderByEnrolledDateDesc(Account account);
+    List<Item> findAllByDeletedFalseOrderByEnrolledDateDesc();
 
     boolean existsByName(String name);
 
@@ -22,6 +21,4 @@ public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRep
     @EntityGraph(attributePaths = {"tags"}, type = EntityGraph.EntityGraphType.FETCH)
     Item findItemWithTagsById(Long itemId);
 
-    @EntityGraph(value = "Item.withTagAndEnrolledBy", type = EntityGraph.EntityGraphType.FETCH)
-    Item findItemWithTagsAndSellerById(Long itemId);
 }

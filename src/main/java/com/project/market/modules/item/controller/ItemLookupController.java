@@ -1,5 +1,6 @@
 package com.project.market.modules.item.controller;
 
+import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemService;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 
@@ -33,10 +35,9 @@ public class ItemLookupController {
 
     @GetMapping("/product/{itemId}")
     public String productForm(@CurrentAccount Account account, @PathVariable("itemId") Long itemId, Model model) {
-        Item item = itemRepository.findItemWithTagsAndSellerById(itemId);
-        if (!item.isAccessible()) {
-            //404 에러
-            throw new IllegalStateException("삭제된 상품입니다.");
+        Item item = itemRepository.findItemWithTagsById(itemId);
+        if (item.isDeleted()) {
+            throw new CustomNotFoundException("삭제된 상품입니다.");
         }
 
         if (account != null && favoriteRepository.existsByAccountAndItem(account, item)) {
@@ -66,7 +67,7 @@ public class ItemLookupController {
 
     @GetMapping("/product/my-list")
     public String myProductList(@CurrentAccount Account account, Model model) {
-        List<Item> itemList = itemRepository.findAllByEnrolledByAndDeletedFalseOrderByEnrolledDateDesc(account);
+        List<Item> itemList = itemRepository.findAllByDeletedFalseOrderByEnrolledDateDesc();
         model.addAttribute("itemList", itemList);
         return "products/my-list";
     }

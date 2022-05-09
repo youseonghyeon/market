@@ -56,13 +56,11 @@ public class NotificationService {
     }
 
     private Set<Account> getAccountsHasTags(Item item, BooleanExpression condition) {
-        Account itemOwner = item.getEnrolledBy();
         Set<Tag> tags = item.getTags();
         List<Account> accounts = queryFactory.select(account)
                 .from(account)
                 .join(account.tags, tag)
                 .where(
-                        account.id.ne(itemOwner.getId()), // 상품 등록자 제외
                         condition, // 알림 거부자 제외
                         tag.in(tags)
                 )

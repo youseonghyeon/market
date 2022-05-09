@@ -12,7 +12,4 @@ public class PurchaseForm {
     @Positive
     private Long itemId;
 
-    @NotEmpty
-    private String method;
-
 }

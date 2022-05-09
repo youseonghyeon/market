@@ -21,9 +21,8 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@NamedEntityGraph(name = "Item.withTagAndEnrolledBy", attributeNodes = {
-        @NamedAttributeNode("tags"),
-        @NamedAttributeNode("enrolledBy")
+@NamedEntityGraph(name = "Item.withTag", attributeNodes = {
+        @NamedAttributeNode("tags")
 })
 
 public class Item {
@@ -37,90 +36,59 @@ public class Item {
 
     private int price;
 
+    private int quantity;
+
     private String description;
 
-    private float rating;
+    private float rating = 0;
 
-    @ManyToOne(fetch = LAZY)
-//    @JoinColumn(name = "account")
-    private Account enrolledBy;
-
-    private LocalDateTime enrolledDate;
-
-    @OneToOne(fetch = LAZY)
-    private Delivery delivery;
+    private LocalDateTime enrolledDate = LocalDateTime.now();
 
     private String coverPhoto;
 
     private String photo;
 
-    private String originAddress;
-
-    private boolean reserved;
-
-    private boolean expired;
-
     private int shippingFee;
 
-    private boolean deleted;
+    private boolean deleted = false;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Tag> tags = new HashSet<>();
 
     private int favoriteCount = 0;
 
-    // 배송/직거래
-    private boolean post;
-    private boolean direct;
-
-    public static Item createNewItem(Account seller, ItemForm itemForm) {
+    public static Item createNewItem(ItemForm itemForm) {
         Item item = new Item();
         item.name = itemForm.getName();
         item.price = itemForm.getPrice();
-//        item.photo = itemForm.getPhoto();
-//        item.coverPhoto = itemForm.getCoverPhoto();
-        item.originAddress = itemForm.getOriginAddress();
+        item.quantity = itemForm.getQuantity();
         item.description = itemForm.getDescription();
         item.enrolledDate = LocalDateTime.now();
-        item.enrolledBy = seller;
-        item.shippingFee = 1000; // TODO 수정해야 함
+        item.shippingFee = itemForm.getShippingFee();
         item.deleted = false;
-        item.expired = false;
-        item.post = itemForm.isPost();
-        item.direct = itemForm.isDirect();
 
         return item;
     }
 
-    public void sold() {
-        expired = true;
-        reserved = true;
+    public boolean isSoldOut() {
+        return quantity == 0;
     }
 
-    public boolean canPurchase(Account currentAccount) {
-        return !(enrolledBy.equals(currentAccount) || deleted || expired);
+    public boolean isPurchasable() {
+        return !deleted && !isSoldOut();
     }
 
     public void editItem(ItemForm itemForm) {
         name = itemForm.getName();
         price = itemForm.getPrice();
-        // TODO 해결해야 함
-//        coverPhoto = itemForm.getCoverPhoto();
-        coverPhoto = null;
-//        photo = itemForm.getPhoto();
-        photo = null;
+        quantity = itemForm.getQuantity();
         description = itemForm.getDescription();
-        originAddress = itemForm.getOriginAddress();
-        post = itemForm.isPost();
-        direct = itemForm.isDirect();
+        coverPhoto = null;
+        photo = null;
     }
 
-    public boolean isMyItem(Account account) {
-        return enrolledBy.getId().equals(account.getId());
-    }
-
-    public boolean isAccessible() {
-        return !deleted;
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public String getBetweenDate() {
@@ -141,11 +109,6 @@ public class Item {
 
     public void delete() {
         deleted = true;
-    }
-
-    public void orderCancel() {
-        reserved = false;
-        expired = false;
     }
 
     public void plusFavoriteCount() {

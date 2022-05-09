@@ -44,11 +44,6 @@
                 <!--                상품 이름-->
                 <div>
                     <span class="fs-4" th:text="*{name}"></span>
-                    <div class="d-flex aic">
-                        <div th:text="'판매자: ' + ${item.getEnrolledBy().nickname}"></div>
-                        <div class="material-icons-outlined md-24" style="color: #ffd329; margin-right: 5px;">verified
-                        </div>
-                    </div>
                 </div>
                 <!--                -->
                 <!--                -->
@@ -63,10 +58,7 @@
                     <span id="favorite-icon" class="material-icons md-36">favorite_border</span>
                 </button>
             </div>
-            <div class="d-flex">
-                <div th:replace="fragments/badge::badge-post">배송 뱃지</div>
-                <div th:replace="fragments/badge::badge-direct">직거래 뱃지</div>
-            </div>
+
             <div class="d-flex">
                 <div th:each="tag : *{tags}" style="margin-right: 4px;">
                     <!-- 태그 목록-->
@@ -89,17 +81,10 @@
 
             <form th:action="@{/purchase}" th:method="get">
                 <input type="hidden" name="itemId" th:value="*{id}">
-                <select class="form-select mt-2 rounded-0" style="width: 200px; border-color: #56cfff" name="method">
-                    <option th:if="*{post}" value="post">택배배송</option>
-                    <option th:if="*{direct}" value="direct">직거래</option>
-                </select>
                 <div>
-                    <button type="submit" class="btn btn-custom mt-2 w-100">구매하기</button>
+                    <button type="submit" class="btn btn-custom mt-2 w-100">주문하기</button>
                 </div>
             </form>
-            <div th:if="${errorMessage}">
-                <span class="text-danger" th:text="${errorMessage}">flash massage</span>
-            </div>
             <!--        <div th:if="*{sold()}">-->
             <!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->
             <!--        </div>-->

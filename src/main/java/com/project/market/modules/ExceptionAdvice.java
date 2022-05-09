@@ -1,5 +1,6 @@
 package com.project.market.modules;
 
+import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.infra.exception.UnAuthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ public class ExceptionAdvice {
         return "error/missing-path-variable-exception";
     }
 
+
     @ExceptionHandler(UnAuthorizedException.class)
     public String unAuthorizedExceptionHandler(Model model, Exception e) {
         String message = e.getMessage();
@@ -24,6 +26,13 @@ public class ExceptionAdvice {
         model.addAttribute("msg", message);
         log.info("UnAuthorizedException");
         return "exception/unauthorize";
+    }
+
+    @ExceptionHandler(CustomNotFoundException.class)
+    public String customNotFoundExceptionHandler(CustomNotFoundException e) {
+        String message = e.getMessage();
+        log.info("message={}", message, e);
+        return "404";
     }
 
 

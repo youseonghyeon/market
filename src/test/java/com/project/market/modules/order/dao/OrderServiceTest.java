@@ -33,9 +33,9 @@ class OrderServiceTest {
         Account seller = testUtils.createMockAccount("seller");
         Account buyer = testUtils.createMockAccount("buyer");
         Item item = testUtils.createMockItem(seller, "item00");
-        OrderForm orderForm = new OrderForm(item.getId(), "post", buyer);
+        OrderForm orderForm = new OrderForm(item.getId(), buyer);
         //when
-        Order order = orderService.createOrder(buyer, orderForm, item);
+        Order order = orderService.createOrder(buyer, orderForm);
         //then
         assertEquals(order.getOrderStatus(), OrderStatus.WAITING);
         /**

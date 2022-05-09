@@ -36,8 +36,8 @@ public class ItemService {
     private final AccountRepository accountRepository;
     private final TagService tagService;
 
-    public Item createNewItem(Account seller, ItemForm itemForm) {
-        Item item = Item.createNewItem(seller, itemForm);
+    public Item createNewItem(ItemForm itemForm) {
+        Item item = Item.createNewItem(itemForm);
         editTags(item, itemForm);
 
         itemRepository.save(item);

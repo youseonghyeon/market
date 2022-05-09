@@ -1,6 +1,5 @@
 package com.project.market.modules.item.controller;
 
-import com.project.market.infra.aop.Trace;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.dao.ItemService;
@@ -13,7 +12,6 @@ import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.validator.ItemFormValidator;
-import com.project.market.modules.item.validator.ItemValidator;
 import com.project.market.modules.notification.dao.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +38,6 @@ public class ItemController {
     private final ItemFormValidator itemFormValidator;
     private final NotificationService notificationService;
     private final FavoriteRepository favoriteRepository;
-    private final ItemValidator itemValidator;
 
 
     @ExceptionHandler(IllegalStateException.class)
@@ -68,7 +65,7 @@ public class ItemController {
             return "products/enroll";
         }
         tagService.createOrCountingTag(itemForm.getTags());
-        Item item = itemService.createNewItem(account, itemForm);
+        Item item = itemService.createNewItem(itemForm);
 
         // 알람 전송(비동기)
         notificationService.noticeItemEnrollment(item);
@@ -79,7 +76,7 @@ public class ItemController {
 
     @GetMapping("/product/edit/{itemId}")
     public String editMyProduct(@CurrentAccount Account account, @PathVariable("itemId") Item item, Model model) {
-        itemValidator.modifyItemValidator(account, item);
+        // 어드민만 진입 가능
 
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
         model.addAttribute("tagList", item.getTags());
@@ -92,7 +89,7 @@ public class ItemController {
             return "products/edit";
         }
         Item item = itemRepository.findItemWithTagsById(itemForm.getId());
-        itemValidator.modifyItemValidator(account, item);
+        // 어드민만 진입 가능
 
         tagService.createOrFindTags(itemForm.getTags());
         itemService.modifyItem(item, itemForm);
@@ -101,35 +98,11 @@ public class ItemController {
 
     @PostMapping("/product/delete")
     public String deleteProduct(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
-        itemValidator.deleteItemValidator(account, item);
+        // 어드민만 진입 가능
 
         itemService.deleteItem(item);
         return "redirect:/product/my-list";
     }
-//
-//    @PostMapping("/favorite/add")
-//    @ResponseBody
-//    public void addFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
-//        if (favoriteRepository.existsByAccountAndItem(account, item)) {
-//            log.info("이미 favorite에 등록된 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
-//            return;
-//        }
-//        if (item.getEnrolledBy().equals(account)) {
-//            log.info("해당 상품은 본인의 상품입니다. AccountId={} ItemId={}", account.getId(), item.getId());
-//            return;
-//        }
-//        itemService.addFavorite(account, item);
-//    }
-//
-//    @PostMapping("/favorite/delete")
-//    @ResponseBody
-//    public void deleteFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
-//
-//        Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
-//        if (favorite != null) {
-//            itemService.deleteFavorite(favorite);
-//        }
-//    }
 
     @PostMapping("/favorite/toggle")
     @ResponseBody

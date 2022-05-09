@@ -61,22 +61,13 @@ public class TestUtils {
         ItemForm itemForm = new ItemForm();
         itemForm.setName(itemName);
         itemForm.setPrice(10000);
-        itemForm.setOriginAddress("서울시 은평구");
-        itemForm.setPost(true);
-        itemForm.setDirect(true);
         itemForm.getTags().add("태그1");
         itemForm.getTags().add("태그2");
-        return itemService.createNewItem(account, itemForm);
+        return itemService.createNewItem(itemForm);
     }
 
     public Order createMockOrder(Account account, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow();
-        if (item.getEnrolledBy().equals(account)) {
-            System.out.println("################ERROR###############");
-            System.out.println("#    판매자와 구매자가 같습니다.   #");
-            System.out.println("################ERROR###############");
-            return null;
-        }
         OrderForm orderForm = new OrderForm();
         orderForm.setItemId(itemId);
         orderForm.setShippingRequests("shippingRequests");
@@ -86,17 +77,10 @@ public class TestUtils {
         orderForm.setDestinationZoneCode("12334");
         orderForm.setDestinationAddressDetail("102동 505호");
         orderForm.setPaymentMethod("카드");
-        orderForm.setDeliveryMethod(item.isPost() ? "post" : "direct");
-        return orderService.createOrder(account, orderForm, item);
+        return orderService.createOrder(account, orderForm);
     }
 
     public Delivery createMockDelivery(Account account, Item item) {
-        if (item.getEnrolledBy().equals(account)) {
-            System.out.println("################ERROR###############");
-            System.out.println("#    판매자와 구매자가 같습니다.   #");
-            System.out.println("################ERROR###############");
-            return null;
-        }
         OrderForm orderForm = new OrderForm();
         orderForm.setItemId(item.getId());
         orderForm.setShippingRequests("shippingRequests");
@@ -106,7 +90,6 @@ public class TestUtils {
         orderForm.setDestinationZoneCode("12334");
         orderForm.setDestinationAddressDetail("102동 505호");
         orderForm.setPaymentMethod("카드");
-        orderForm.setDeliveryMethod(item.isPost() ? "post" : "direct");
         return deliveryService.createDelivery(account, orderForm, item);
     }
 

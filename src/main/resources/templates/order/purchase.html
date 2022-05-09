@@ -100,7 +100,6 @@
                         <span class="col-4" th:text="${item.getPrice()} + ${item.getShippingFee()}">000</span>
                     </div>
                 </div>
-                <input type="hidden" name="deliveryMethod" th:value="*{deliveryMethod}">
                 <button type="submit" class="btn btn-primary">결제하기</button>
             </div>
         </div>

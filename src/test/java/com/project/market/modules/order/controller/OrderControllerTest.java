@@ -57,19 +57,19 @@ class OrderControllerTest {
         accountRepository.deleteAll();
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("상품 구매 폼")
-    void purchaseForm() throws Exception {
-        Item item = itemRepository.findByName("mockItem");
-        mockMvc.perform(get("/purchase")
-                        .param("itemId", item.getId().toString())
-                        .param("method", item.isPost() ? "post" : "direct"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("orderForm"))
-                .andExpect(model().attributeExists("item"))
-                .andExpect(view().name("order/purchase"));
-    }
+//    @Test
+//    @WithAccount("testUser")
+//    @DisplayName("상품 구매 폼")
+//    void purchaseForm() throws Exception {
+//        Item item = itemRepository.findByName("mockItem");
+//        mockMvc.perform(get("/purchase")
+//                        .param("itemId", item.getId().toString())
+//                        .param("method", item.isPost() ? "post" : "direct"))
+//                .andExpect(status().isOk())
+//                .andExpect(model().attributeExists("orderForm"))
+//                .andExpect(model().attributeExists("item"))
+//                .andExpect(view().name("order/purchase"));
+//    }
 
     @Test
     @WithAccount("testUser")
@@ -85,7 +85,7 @@ class OrderControllerTest {
                         .param("destinationAddress", "메인 주소")
                         .param("destinationAddressDetail", "서브 주소")
                         .param("paymentMethod", "card")
-                        .param("deliveryMethod", item.isPost() ? "post" : "direct")
+//                        .param("deliveryMethod", item.isPost() ? "post" : "direct")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection());
 

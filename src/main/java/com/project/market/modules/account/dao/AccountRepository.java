@@ -25,8 +25,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @EntityGraph(value = "Account.withZones", type = EntityGraph.EntityGraphType.FETCH)
     Account findAccountWithZonesById(Long id);
 
-    @EntityGraph(value = "Account.withEnrolledItems", type = EntityGraph.EntityGraphType.FETCH)
-    Account findAccountWithEnrolledItemById(Long id);
 
     Account findByPasswordToken(String token);
 

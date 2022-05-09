@@ -24,10 +24,10 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDate = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus = OrderStatus.WAITING;
 
     private String paymentMethod;
 
@@ -51,14 +51,13 @@ public class Order {
     @JoinColumn(name = "account_id")
     private Account customer;
 
-    public static Order createNewOrder(Account customer, OrderForm orderForm, Item item) {
+    public static Order createNewOrder(Account customer, OrderForm orderForm) {
         Order order = new Order();
-        order.orderDate = LocalDateTime.now();
-        order.orderStatus = OrderStatus.WAITING;
         order.paymentMethod = orderForm.getPaymentMethod();
         order.shippingRequests = orderForm.getShippingRequests();
-        order.totalPrice = item.getPrice() + item.getShippingFee();
-        order.orderedItem = item;
+        // TODO !!!
+//        order.totalPrice = item.getPrice() + item.getShippingFee();
+//        order.orderedItem = item;
         order.customer = customer;
         return order;
     }

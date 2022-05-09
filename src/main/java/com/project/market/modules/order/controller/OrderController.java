@@ -38,22 +38,12 @@ public class OrderController {
 
 
     @GetMapping("/purchase")
-    public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model, RedirectAttributes attributes) {
+    public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model) {
         Item item = itemRepository.findItemReadOnlyById(purchaseForm.getItemId());
-        // ===================================== 리팩토링
         if (item.isDeleted()) {
             throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
         }
-        if (item.isReserved()) {
-            attributes.addFlashAttribute("errorMessage", "예약된 상품입니다.");
-            return "redirect:/product/" + item.getId();
-        }
-        if (item.isMyItem(account)) {
-            attributes.addFlashAttribute("errorMessage", "내 상품은 구매할 수 없습니다.");
-            return "redirect:/product/" + item.getId();
-        }
-        // ===================================== 리팩토링
-        model.addAttribute("orderForm", new OrderForm(item.getId(), purchaseForm.getMethod(), account));
+        model.addAttribute("orderForm", new OrderForm(item.getId(), account));
         model.addAttribute("item", item);
         model.addAttribute("account", account);
         return "order/purchase";
@@ -66,10 +56,10 @@ public class OrderController {
             return "order/purchase";
         }
         Item item = itemRepository.findById(orderForm.getItemId()).orElseThrow();
-        if (!item.canPurchase(account)) {
+        if (!item.isPurchasable()) {
             throw new IllegalStateException("구매할 수 없는 상품입니다.");
         }
-        Order order = orderService.createOrder(account, orderForm, item);
+        Order order = orderService.createOrder(account, orderForm);
         Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
         orderService.mapping(order, delivery);
 

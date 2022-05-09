@@ -6,8 +6,10 @@ import com.project.market.modules.account.dao.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.SignupForm;
+import com.project.market.modules.item.dao.ItemService;
 import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.form.ItemForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 @EnableAsync
 @SpringBootApplication
@@ -27,6 +30,7 @@ public class App {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -35,20 +39,8 @@ public class App {
 
     @PostConstruct
     public void init() {
-        initZones();
         initUser();
         initItem();
-    }
-
-    public void initZones() {
-        String[] cities = {"서울시", "경기도", "강원도", "충청남도", "충청북도", "전라남도", "전라북도", "경상북도", "경상남도"};
-        for (String city : cities) {
-            if (!zoneRepository.existsByCity(city)) {
-                Zone zone = new Zone();
-                zone.setCity(city);
-                zoneRepository.save(zone);
-            }
-        }
     }
 
     public void initUser() {
@@ -67,27 +59,17 @@ public class App {
     }
 
     private void initItem() {
-        Account account = accountRepository.findByLoginId("admin");
         for (int i = 1; i <= 100; i++) {
             if (!itemRepository.existsByName("mockItem" + i)) {
-                Item item = Item.builder()
-                        .name("mockItem" + i)
-                        .price(5000)
-                        .coverPhoto("사진 없음")
-                        .photo("사진 없음")
-                        .originAddress("은평구 신사동")
-                        .description("mockItem" + i + " 설명")
-                        .enrolledDate(LocalDateTime.now())
-                        .enrolledBy(account)
-                        .shippingFee(2500)
-                        .deleted(false)
-                        .expired(false)
-                        .direct(true)
-                        .post(true)
-                        .tags(new HashSet<>())
-                        .build();
-                itemRepository.save(item);
-
+                ItemForm itemForm = new ItemForm();
+                itemForm.setName("mockItem" + i);
+                itemForm.setPrice(6000);
+                itemForm.setQuantity(100);
+                itemForm.setDescription("mockItem" + i + " 설명");
+                itemForm.setShippingFee(2500);
+                itemForm.getTags().add("test");
+                itemForm.getTags().add("mock" + i);
+                itemService.createNewItem(itemForm);
             }
         }
 

@@ -48,17 +48,12 @@ class ItemServiceTest {
         itemForm.getTags().add("태그2");
         tagService.createOrCountingTag(tagList);
         //when
-        itemService.createNewItem(account, itemForm);
+        itemService.createNewItem(itemForm);
         //then
         Item item = itemRepository.findByName("상품");
         assertEquals(item.getPrice(), 1000);
 //        assertEquals(item.getCoverPhoto(), "test.jpg");
 //        assertEquals(item.getPhoto(), "test.jpg");
-        assertEquals(item.getOriginAddress(), "서울시 은평구");
-        assertTrue(item.isPost());
-        assertFalse(item.isDirect());
-        assertFalse(item.isExpired());
-        assertFalse(item.isReserved());
         Set<Tag> tags = item.getTags();
         assertEquals(tags.size(), 2);
         Tag tag1 = tagRepository.findByTitle("태그1");
@@ -73,27 +68,19 @@ class ItemServiceTest {
         //given
         Account account = accountRepository.findByLoginId("testUser");
         ItemForm itemForm1 = createItemForm();
-        Item item = itemService.createNewItem(account, itemForm1);
+        Item item = itemService.createNewItem(itemForm1);
         //when
         ItemForm itemForm2 = new ItemForm();
         itemForm2.setName("상품2");
         itemForm2.setPrice(2000);
 //        itemForm2.setCoverPhoto("없음");
 //        itemForm2.setPhoto("없음");
-        itemForm2.setOriginAddress("서울");
-        itemForm2.setPost(false);
-        itemForm2.setDirect(true);
         itemService.modifyItem(item, itemForm2);
         //then
         assertEquals(item.getName(), "상품2");
         assertEquals(item.getPrice(), 2000);
 //        assertEquals(item.getCoverPhoto(), "없음");
 //        assertEquals(item.getPhoto(), "없음");
-        assertEquals(item.getOriginAddress(), "서울");
-        assertFalse(item.isPost());
-        assertTrue(item.isDirect());
-        assertFalse(item.isExpired());
-        assertFalse(item.isReserved());
     }
 
     private ItemForm createItemForm() {
@@ -102,9 +89,6 @@ class ItemServiceTest {
         itemForm.setPrice(1000);
 //        itemForm.setCoverPhoto("test.jpg");
 //        itemForm.setPhoto("test.jpg");
-        itemForm.setOriginAddress("서울시 은평구");
-        itemForm.setPost(true);
-        itemForm.setDirect(false);
         return itemForm;
     }
 }

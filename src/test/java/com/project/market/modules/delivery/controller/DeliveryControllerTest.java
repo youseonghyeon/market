@@ -50,7 +50,6 @@ class DeliveryControllerTest {
                 .destinationAddress("test-destination")
                 .expectedArrivalFrom(LocalDate.now().plus(2, ChronoUnit.DAYS))
                 .expectedArrivalUntil(LocalDate.now().plus(3, ChronoUnit.DAYS))
-                .deliveryMethod("POST")
                 .deliveryStatus(DeliveryStatus.READY)
                 .shippingCompany("test-company")
                 .shippingCode("aaa-bbb-ccc")

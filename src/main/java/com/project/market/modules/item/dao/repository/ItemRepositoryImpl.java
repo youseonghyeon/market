@@ -38,7 +38,6 @@ public class ItemRepositoryImpl implements CustomItemRepository {
         return queryFactory.selectFrom(item).distinct()
                 .leftJoin(item.tags, tag)
                 .where(
-                        item.expired.isFalse(),
                         item.deleted.isFalse(),
                         tagNameEq(tagName),
                         searchEq(search)
@@ -57,7 +56,6 @@ public class ItemRepositoryImpl implements CustomItemRepository {
         return queryFactory.selectFrom(item)
                 .leftJoin(item.tags, tag)
                 .where(
-                        item.expired.isFalse(),
                         item.deleted.isFalse(),
                         tagNameEq(tagName),
                         searchEq(search)
