@@ -3,8 +3,6 @@
 <head th:replace="fragments/header::header"></head>
 <script type="text/javascript" th:src="@{/js/sockjs.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/stomp.min.js}"></script>
-
-
 <script th:inline="javascript">
     let userId = [[${account.getLoginId()}]]
 
@@ -13,20 +11,15 @@
         connectStomp();
 
         $('#button-send').on('click', function (evt) {
-            evt.preventDefault();
-            if (!isStomp && socket.readyState !== 1) return;
-
             let msg = $('input#msg').val();
-            console.log("message => ", msg)
-            if (isStomp) {
-                const messageObj = {
-                    senderId: userId,
-                    roomId: roomId,
-                    content: msg
-                }
-                socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
-            } else
-                socket.send(msg);
+            const messageObj = {
+                senderId: userId,
+                roomId: roomId,
+                content: msg
+            }
+            socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
+
+            document.getElementById("msg").value = '';
         })
     })
 
@@ -42,12 +35,20 @@
         client.connect({}, function () {
             // 해당 토픽을 구독한다!
             client.subscribe('/topic/message/' + roomId, function (event) {
-                console.log("EVENT => ", event)
+                let res = JSON.parse(event.body);
+                let str = "";
+                if (userId === res.senderId) {
+                    str += "<div>[오른쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                } else {
+                    str += "<div>[왼쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                }
+                $('#area').append(str);
             })
         })
 
     }
 </script>
+<nav th:replace="fragments/nav::main-nav"></nav>
 <body>
 <!--<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">-->
 <!--    <th:block th:fragment="content">-->
@@ -68,8 +69,10 @@
             </div>
         </div>
     </div>
-    <div th:each="chat : ${chatRecord}">
-        <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()}"></div>
+    <div id="area">
+        <div th:each="chat : ${chatRecord}">
+            <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()} + '(' + ${chat.getSendDate()} + ')'"></div>
+        </div>
     </div>
 </div>
 

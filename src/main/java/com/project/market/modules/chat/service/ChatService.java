@@ -27,7 +27,7 @@ public class ChatService {
 
     public void saveChat(MessageDto message) {
         Account sender = accountRepository.getByLoginId(message.getSenderId());
-        Chat chat = new Chat(sender, message.getRoomId(), message.getContent());
+        Chat chat = new Chat(sender, message.getRoomId(), message.getContent(), message.getSendDate());
         chatRepository.save(chat);
     }
 }

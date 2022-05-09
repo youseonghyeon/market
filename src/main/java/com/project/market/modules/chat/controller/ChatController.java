@@ -7,6 +7,8 @@ import com.project.market.modules.chat.dto.MessageDto;
 import com.project.market.modules.chat.entity.Chat;
 import com.project.market.modules.chat.repository.ChatRepository;
 import com.project.market.modules.chat.service.ChatService;
+import com.project.market.modules.order.dao.OrderRepository;
+import com.project.market.modules.order.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +29,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final ChatRepository chatRepository;
+    private final OrderRepository orderRepository;
 
     private final SimpMessagingTemplate template;
 
@@ -48,8 +52,9 @@ public class ChatController {
 
     @MessageMapping("/inquiry/{roomId}")
     public void receiveInquiry(@DestinationVariable("roomId") Long roomId, MessageDto message) {
+        message.setSendDate(LocalDateTime.now());
         chatService.saveChat(message);
-        template.convertAndSend("/topic/message/" + roomId, message.getContent());
+        template.convertAndSend("/topic/message/" + roomId, message);
     }
 
 
@@ -62,7 +67,9 @@ public class ChatController {
 
     @GetMapping("/admin/chat/{roomId}")
     public String replyForm(@CurrentAccount Account account, @PathVariable("roomId") Long roomId, Model model) {
+        List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(roomId);
         List<Chat> chatRecord = chatRepository.getChatContentsByRoomId(roomId);
+        model.addAttribute("orderList", orders);
         model.addAttribute("chatRecord", chatRecord);
         model.addAttribute("account", account);
         model.addAttribute("roomId", roomId);

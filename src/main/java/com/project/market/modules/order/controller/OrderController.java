@@ -35,7 +35,6 @@ public class OrderController {
     private final ItemRepository itemRepository;
     private final DeliveryService deliveryService;
     private final OrderRepository orderRepository;
-//    private final OrderFormValidator orderFormValidator;
 
 
     @GetMapping("/purchase")
@@ -85,18 +84,14 @@ public class OrderController {
 
     @GetMapping("/purchase/pay/{orderId}")
     public String purchaseByNoBank(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
-        if (!order.isOwner(account)) {
-            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
-        }
+        myOrderValidator(account, order);
         model.addAttribute("orderId", order.getId());
         return "order/pay/nobank";
     }
 
     @GetMapping("/purchase/card/{orderId}")
     public String purchaseByCard(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
-        if (!order.isOwner(account)) {
-            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
-        }
+        myOrderValidator(account, order);
         model.addAttribute("orderId", order.getId());
         return "order/pay/card";
     }
@@ -113,9 +108,7 @@ public class OrderController {
 
     @GetMapping("/order/{orderId}")
     public String orderDetailForm(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
-        if (!order.isOwner(account)) {
-            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
-        }
+        myOrderValidator(account, order);
         model.addAttribute("order", order);
         return "order/detail";
     }
@@ -129,11 +122,15 @@ public class OrderController {
 
     @PostMapping("/order/cancel")
     public String orderCancel(@CurrentAccount Account account, @RequestParam("orderId") Order order) {
-        if (!order.getCustomer().equals(account)) {
-            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
-        }
+        myOrderValidator(account, order);
         orderService.cancelOrder(order);
         return "redirect:/order/list";
+    }
+
+    private void myOrderValidator(Account account, Order order) {
+        if (!order.isOwner(account) && !account.getRole().equals("ROLE_ADMIN")) {
+            throw new UnAuthorizedException("주문에 접근 권한이 없습니다.");
+        }
     }
 
 }

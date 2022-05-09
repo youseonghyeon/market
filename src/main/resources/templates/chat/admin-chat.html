@@ -11,37 +11,36 @@
         connectStomp();
 
         $('#button-send').on('click', function (evt) {
-            evt.preventDefault();
-            if (!isStomp && socket.readyState !== 1) return;
-
             let msg = $('input#msg').val();
-            console.log("message => ", msg)
-            if (isStomp) {
-                const messageObj = {
-                    senderId: userId,
-                    roomId: roomId,
-                    content: msg
-                }
-                socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
-            } else
-                socket.send(msg);
+            const messageObj = {
+                senderId: userId,
+                roomId: roomId,
+                content: msg
+            }
+            socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
+
             document.getElementById("msg").value = '';
         })
     })
 
     let socket = null;
-    let isStomp = false;
 
     function connectStomp() {
         let sock = new SockJS("/stompTest");
         let client = Stomp.over(sock);
-        isStomp = true;
         socket = client;
 
         client.connect({}, function () {
             // 해당 토픽을 구독한다!
             client.subscribe('/topic/message/' + roomId, function (event) {
-                console.log("EVENT => ", event)
+                let res = JSON.parse(event.body);
+                let str = "";
+                if (userId === res.senderId) {
+                    str += "<div>[오른쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                } else {
+                    str += "<div>[왼쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                }
+                $('#area').append(str);
             })
         })
 
@@ -52,13 +51,23 @@
 <!--<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">-->
 <!--    <th:block th:fragment="content">-->
 
-<div class="container">
-    <div class="col-6">
-        <label><b>채팅방</b></label>
+<div class="container d-flex">
+    <div class="w-50">
+        <div th:each="order : ${orderList}">
+            <a th:href="@{/order/{orderId}(orderId=${order.getId()})}">
+                <div th:text="${order.getId()}">주문 번호</div>
+                <div th:text="${order.getOrderDate()}">주문 날짜</div>
+            </a>
+        </div>
     </div>
-    <div>
-        <div id="msgArea" class="col"></div>
-        <div class="col-6">
+
+    <div class="w-50">
+        <div id="area">
+            <div th:each="chat : ${chatRecord}">
+                <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()} + '(' + ${chat.getSendDate()} + ')'"></div>
+            </div>
+        </div>
+        <div class="w-100">
             <div class="input-group mb-3">
                 <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
                        aria-describedby="button-addon2">
@@ -67,9 +76,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div th:each="chat : ${chatRecord}">
-        <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()} + '(' + ${chat.getSendDate()} + ')'"></div>
     </div>
 </div>
 

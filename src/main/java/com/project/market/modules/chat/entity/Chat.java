@@ -31,11 +31,11 @@ public class Chat {
 
     private Boolean confirmed = false;
 
-    public Chat(Account sender, Long roomId, String content) {
-        sendDate = LocalDateTime.now();
+    public Chat(Account sender, Long roomId, String content, LocalDateTime sendDate) {
         this.sender = sender;
-        this.content = content;
         this.roomId = roomId;
+        this.content = content;
+        this.sendDate = sendDate;
         confirmed = false;
     }
 
