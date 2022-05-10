@@ -19,8 +19,8 @@ public class TrackingController {
 
     @GetMapping("/shiptrack/{deliveryId}")
     public String shiptrackForm(@CurrentAccount Account account, @PathVariable("deliveryId") Delivery delivery, Model model) {
-        if (!delivery.isOwner(account)) {
-            throw new UnAuthorizedException("잘못된 접근");
+        if (!deliveryRepository.isMyDelivery(account.getId(), delivery.getId())) {
+            throw new IllegalStateException("고객님이 주문한 상품이 아닙니다.");
         }
         model.addAttribute(delivery);
         return "delivery/shiptrack";

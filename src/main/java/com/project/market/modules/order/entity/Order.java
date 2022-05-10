@@ -8,6 +8,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @NamedEntityGraph(name = "withItemAndDelivery", attributeNodes = {
         @NamedAttributeNode("orderedItem"),
@@ -50,6 +52,11 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account customer;
+
+    @OneToMany(mappedBy = "cart")
+    private Set<CartItem> cartItems = new HashSet<>();
+
+
 
     public static Order createNewOrder(Account customer, OrderForm orderForm) {
         Order order = new Order();

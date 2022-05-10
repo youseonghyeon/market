@@ -4,10 +4,10 @@ import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
-import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.item.entity.Favorite;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
+import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.entity.Order;
 import lombok.*;
 
@@ -26,12 +26,9 @@ import static javax.persistence.CascadeType.PERSIST;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(indexes = @Index(name = "i_account", columnList = "loginId"))
-
 @EqualsAndHashCode(of = "id")
 @NamedEntityGraph(name = "Account.withTags", attributeNodes = {
         @NamedAttributeNode("tags")})
-@NamedEntityGraph(name = "Account.withZones", attributeNodes = {
-        @NamedAttributeNode("zones")})
 public class Account {
 
     @Id
@@ -55,9 +52,9 @@ public class Account {
     private String password;
 
     private LocalDateTime joinedAt = LocalDateTime.now();
-    ;
 
-    private String bio;
+
+//    private String bio;
 
     private String role;
 
@@ -71,8 +68,6 @@ public class Account {
     private String zoneCode;
     private String roadAddress;
     private String addressDetail;
-
-    private int creditScore = 0;
 
     private boolean itemEnrollAlertByWeb = true;
     private boolean itemEnrollAlertByMail = false;
@@ -93,9 +88,6 @@ public class Account {
     private Set<Favorite> favorites = new HashSet<>();
 
     @ManyToMany(cascade = PERSIST)
-    private Set<Zone> zones = new HashSet<>();
-
-    @ManyToMany(cascade = PERSIST)
     private Set<Tag> tags = new HashSet<>();
 
     public static Account createNewAccount(SignupForm signupForm) {
@@ -105,9 +97,8 @@ public class Account {
         account.phone = PhoneUtils.trim(signupForm.getPhone());
         account.email = signupForm.getEmail();
         account.nickname = signupForm.getLoginId();
-        // password는 Encoding해서 넣어야 함
+        account.password = signupForm.getEncodedPassword();
         account.joinedAt = LocalDateTime.now();
-        account.creditScore = 0;
         account.role = "ROLE_USER";
         account.itemEnrollAlertByWeb = true;
         account.itemEnrollAlertByMail = false;

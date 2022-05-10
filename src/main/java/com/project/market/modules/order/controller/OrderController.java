@@ -55,21 +55,22 @@ public class OrderController {
         if (errors.hasErrors()) {
             return "order/purchase";
         }
-        Item item = itemRepository.findById(orderForm.getItemId()).orElseThrow();
-        if (!item.isPurchasable()) {
-            throw new IllegalStateException("구매할 수 없는 상품입니다.");
-        }
-        Order order = orderService.createOrder(account, orderForm);
-        Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
-        orderService.mapping(order, delivery);
+        // 인자를 어떻게 받을지
+        // item 가격 + 배송비 계산
+        // 해서 Order 객체 생성
+        // delivery 객체는 나중에 생성
+//        Order order = orderService.createOrder(account, orderForm);
+//        Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
+//        orderService.mapping(order, delivery);
 
-        if (orderForm.getPaymentMethod().equals("card")) {
-            return "redirect:/purchase/card/" + order.getId();
-        }
-        if (orderForm.getPaymentMethod().equals("nobank")) {
-            return "redirect:/purchase/pay/" + order.getId();
-        }
-        throw new IllegalStateException("결제 방식이 선택되지 않았습니다.");
+//        if (orderForm.getPaymentMethod().equals("card")) {
+//            return "redirect:/purchase/card/" + order.getId();
+//        }
+//        if (orderForm.getPaymentMethod().equals("nobank")) {
+//            return "redirect:/purchase/pay/" + order.getId();
+//        }
+//        throw new IllegalStateException("결제 방식이 선택되지 않았습니다.");
+        return null;
     }
 
     @GetMapping("/purchase/pay/{orderId}")

@@ -1,7 +1,6 @@
 package com.project.market.modules.account.dao;
 
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
@@ -27,15 +26,13 @@ public class AccountService {
     private final EntityManager em;
 
     public void saveNewAccount(SignupForm signupForm) {
+        // 비밀번호 암호화
+        String encode = passwordEncoder.encode(signupForm.getPassword());
+        signupForm.setEncodedPassword(encode);
+
         Account account = Account.createNewAccount(signupForm);
-        passwordEncoding(account, signupForm.getPassword());
 
         accountRepository.save(account);
-    }
-
-    private void passwordEncoding(Account account, String password) {
-        String encodedPassword = passwordEncoder.encode(password);
-        account.modifyPassword(encodedPassword);
     }
 
     public void editProfile(Account account, ProfileForm profileForm) {
@@ -55,21 +52,11 @@ public class AccountService {
         return findAccount.getTags();
     }
 
-    @Transactional(readOnly = true)
-    public Set<Zone> findZones(Account account) {
-        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
-        return findAccount.getZones();
-    }
 
     public void saveNewTag(Account account, Tag tag) {
         account.getTags().add(tag);
     }
 
-    public void saveNewZone(Account account, Zone zone) {
-        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
-        // TODO ##ERROR## 의도하지 않은 delete쿼리문이 나감 && 중복제거 해야함
-        findAccount.getZones().add(zone);
-    }
 
     public String createPasswordToken(Account account) {
         String token = createNewPasswordToken();

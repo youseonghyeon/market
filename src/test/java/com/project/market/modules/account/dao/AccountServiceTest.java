@@ -2,7 +2,6 @@ package com.project.market.modules.account.dao;
 
 import com.project.market.WithAccount;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.item.dao.repository.TagRepository;

@@ -23,16 +23,9 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
 
-    private Long accountId;
-
-    private int fee;
-
+    // 배송자 명 & 전화번호
     private String recipient;
     private String recipientPhone;
-
-    private String originZoneCode;
-    private String originAddress;
-    private String originAddressDetail;
 
     private String destinationZoneCode;
     private String destinationAddress;
@@ -41,8 +34,6 @@ public class Delivery {
     private LocalDate expectedArrivalFrom;
 
     private LocalDate expectedArrivalUntil;
-
-    private String deliveryMethod;
 
     @Enumerated(STRING)
     private DeliveryStatus deliveryStatus;
@@ -57,15 +48,11 @@ public class Delivery {
 
     public static Delivery createNewDelivery(Account account, OrderForm orderForm, Item item) {
         Delivery d = new Delivery();
-        d.fee = item.getShippingFee();
         d.recipient = orderForm.getRecipient();
-        d.accountId = account.getId();
         d.recipientPhone = orderForm.getRecipientPhone();
         d.destinationZoneCode = orderForm.getDestinationZoneCode();
         d.destinationAddress = orderForm.getDestinationAddress();
         d.destinationAddressDetail = orderForm.getDestinationAddressDetail();
-//        d.originZoneCode = null;
-//        d.originAddress = null;
 //        d.originAddressDetail = null;
 //        d.expectedArrivalFrom = null;
 //        d.expectedArrivalUntil = null;
@@ -80,10 +67,6 @@ public class Delivery {
 
     public boolean isShipped() {
         return this.deliveryStatus.equals(DeliveryStatus.COMPLETE);
-    }
-
-    public boolean isOwner(Account account) {
-        return this.accountId.equals(account.getId());
     }
 
     public void completeDelivery() {
