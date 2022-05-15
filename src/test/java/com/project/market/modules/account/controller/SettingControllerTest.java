@@ -63,24 +63,25 @@ class SettingControllerTest {
     @DisplayName("프로필 수정 폼")
     void profileEditForm() throws Exception {
         mockMvc.perform(get("/profile/edit"))
-                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("profileForm"))
-                .andExpect(view().name("account/settings/profile-edit"));
+                .andExpect(view().name("account/settings/profile-edit"))
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithAccount("testUser")
     @DisplayName("프로필 수정")
     void profileEdit() throws Exception {
+
         mockMvc.perform(post("/profile/edit")
                         .param("nickname", "PickMe")
                         .param("phone", "01011882299")
                         .param("email", "testmodify@mail.com")
                         .param("profileImage", "")
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile"))
-                .andExpect(flash().attributeExists("message"));
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(status().is3xxRedirection());
 
         Account findAccount = accountRepository.findByLoginId("testUser");
         assertEquals(findAccount.getNickname(), "PickMe");
@@ -114,35 +115,35 @@ class SettingControllerTest {
         assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("태그 추가 폼")
-    void tagSettingForm() throws Exception {
-        mockMvc.perform(get("/profile/tag"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("tagList"))
-                .andExpect(model().attributeExists("whiteList"))
-                .andExpect(view().name("account/settings/tag"));
-    }
-
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("태그 추가")
-    void tagSetting() throws Exception {
-        TagDto tagDto = new TagDto();
-        tagDto.setTag("홈런볼");
-        mockMvc.perform(post("/profile/tag")
-                        .param("newTag", "홈런볼")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(tagDto))
-                        .with(csrf()))
-                .andExpect(status().isOk());
-        Tag tag = tagRepository.findByTitle("홈런볼");
-        Account account = accountRepository.findByLoginId("testUser");
-        Set<Tag> tagContainer = account.getTags();
-        assertTrue(tagContainer.contains(tag));
-    }
+//    @Test
+//    @WithAccount("testUser")
+//    @DisplayName("태그 추가 폼")
+//    void tagSettingForm() throws Exception {
+//        mockMvc.perform(get("/profile/tag"))
+//                .andExpect(status().isOk())
+//                .andExpect(model().attributeExists("tagList"))
+//                .andExpect(model().attributeExists("whiteList"))
+//                .andExpect(view().name("account/settings/tag"));
+//    }
+//
+//
+//    @Test
+//    @WithAccount("testUser")
+//    @DisplayName("태그 추가")
+//    void tagSetting() throws Exception {
+//        TagDto tagDto = new TagDto();
+//        tagDto.setTag("홈런볼");
+//        mockMvc.perform(post("/profile/tag")
+//                        .param("newTag", "홈런볼")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(tagDto))
+//                        .with(csrf()))
+//                .andExpect(status().isOk());
+//        Tag tag = tagRepository.findByTitle("홈런볼");
+//        Account account = accountRepository.findByLoginId("testUser");
+//        Set<Tag> tagContainer = account.getTags();
+//        assertTrue(tagContainer.contains(tag));
+//    }
 
     @Test
     @WithAccount("testUser")

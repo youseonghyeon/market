@@ -36,4 +36,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findAccountWithNotificationById(Long id);
 
     Account findWithFavoritesById(Long id);
+
+    
 }

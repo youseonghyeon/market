@@ -1,6 +1,7 @@
 package com.project.market.modules.account.controller;
 
 import com.project.market.WithAccount;
+import com.project.market.infra.MockAccount;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.order.entity.Order;
@@ -30,9 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdminControllerTest {
 
     @Autowired
-    AccountRepository accountRepository;
-    @Autowired
     MockMvc mockMvc;
+    @Autowired
+    MockAccount mockAccount;
+    @Autowired
+    AccountRepository accountRepository;
+
+    static String URL_PREFIX = "/admin";
 
 
     @AfterEach
@@ -42,46 +47,51 @@ class AdminControllerTest {
 
     @Test
     @WithAccount("testAdmin")
-    @DisplayName("회원관리 폼")
+    @DisplayName("회원 권한 변경 폼(회원 리스트)")
     void manageForm() throws Exception {
-        mockMvc.perform(get("/admin/manage"))
+        mockMvc.perform(get(URL_PREFIX + "/manage"))
                 .andExpect(model().attributeExists("accountList"))
-                .andExpect(view().name("admin/management"));
+                .andExpect(view().name("admin/management"))
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithAccount("testAdmin")
-    @DisplayName("권한 변경 폼")
+    @DisplayName("회원 권한 변경 폼")
     void editRoleForm() throws Exception {
-        Account account = accountRepository.findByLoginId("testAdmin");
-        mockMvc.perform(get("/admin/manage/" + account.getId()))
-                .andExpect(status().isOk())
+        Account account = mockAccount.createMockAccount("user100");
+
+        mockMvc.perform(get(URL_PREFIX + "/manage/" + account.getId()))
                 .andExpect(model().attributeExists("account"))
-                .andExpect(view().name("admin/edit-management"));
+                .andExpect(view().name("admin/edit-management"))
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithAccount("testAdmin")
     @DisplayName("권한 변경")
     void editRole() throws Exception {
-        Account account = accountRepository.findByLoginId("testAdmin");
-        mockMvc.perform(post("/admin/manage/edit")
+        Account account = mockAccount.createMockAccount("user100");
+        String ROLE = "ROLE_MANAGE";
+
+        mockMvc.perform(post(URL_PREFIX + "/manage/edit")
                         .param("targetId", account.getId().toString())
-                        .param("role", "ROLE_USER")
+                        .param("role", ROLE)
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/manage/" + account.getId()));
-        Account target = accountRepository.findByLoginId("testAdmin");
-        assertEquals(target.getRole(), "ROLE_USER");
+
+        Account target = accountRepository.findByLoginId("user100");
+        assertEquals(target.getRole(), ROLE);
     }
 
     @Test
     @WithAccount("testAdmin")
     @DisplayName("배송사 관리2")
     void deliveryManagement() throws Exception {
-        mockMvc.perform(get("/admin/delivery/manage"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("admin/delivery-manage"));
+        mockMvc.perform(get(URL_PREFIX + "/delivery/manage"))
+                .andExpect(view().name("admin/delivery-manage"))
+                .andExpect(status().isOk());
 
     }
 
@@ -89,10 +99,10 @@ class AdminControllerTest {
     @WithAccount("testAdmin")
     @DisplayName("결제 관리 폼")
     void paymentManageForm() throws Exception {
-        mockMvc.perform(get("/admin/payment"))
-                .andExpect(status().isOk())
+        mockMvc.perform(get(URL_PREFIX + "/payment"))
                 .andExpect(model().attributeExists("orderList"))
-                .andExpect(view().name("admin/payment-manage"));
+                .andExpect(view().name("admin/payment-manage"))
+                .andExpect(status().isOk());
     }
 
 }

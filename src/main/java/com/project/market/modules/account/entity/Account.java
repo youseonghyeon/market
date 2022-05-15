@@ -58,7 +58,6 @@ public class Account {
     private String password;
 
     private LocalDateTime joinedAt = LocalDateTime.now();
-    ;
 
     private String bio;
 

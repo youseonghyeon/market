@@ -1,7 +1,10 @@
 package com.project.market.modules.order.controller;
 
 import com.project.market.WithAccount;
-import com.project.market.infra.TestUtils;
+import com.project.market.infra.MockAccount;
+import com.project.market.infra.MockDelivery;
+import com.project.market.infra.MockItem;
+import com.project.market.infra.MockOrder;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.dao.repository.ItemRepository;
@@ -42,12 +45,21 @@ class OrderControllerTest {
     @Autowired ItemService itemService;
     @Autowired ItemRepository itemRepository;
     @Autowired OrderRepository orderRepository;
-    @Autowired TestUtils testUtils;
+    @Autowired
+    MockDelivery mockDelivery;
+    @Autowired
+    MockAccount mockAccount;
+    @Autowired
+    MockItem mockItem;
+
+    @Autowired
+    MockOrder mockOrder;
+
 
     @BeforeEach
     void beforeEach() {
-        Account account = testUtils.createMockAccount("mockAccount");
-        Item item = testUtils.createMockItem(account, "mockItem");
+        Account account = mockAccount.createMockAccount("mockAccount");
+        Item item = mockItem.createMockItem(account, "mockItem");
     }
 
     @AfterEach
@@ -107,7 +119,7 @@ class OrderControllerTest {
     void orderDetailForm() throws Exception {
         Account account = accountRepository.findByLoginId("testUser");
         Item item = itemRepository.findByName("mockItem");
-        Order order = testUtils.createMockOrder(account, item.getId());
+        Order order = mockOrder.createMockOrder(account, item.getId());
         mockMvc.perform(get("/order/" + order.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("order"))

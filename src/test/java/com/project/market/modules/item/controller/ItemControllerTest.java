@@ -1,7 +1,8 @@
 package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
-import com.project.market.infra.TestUtils;
+import com.project.market.infra.MockDelivery;
+import com.project.market.infra.MockItem;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.dao.repository.ItemRepository;
@@ -40,13 +41,15 @@ class ItemControllerTest {
     @Autowired
     ModelMapper modelMapper;
     @Autowired
-    TestUtils testUtils;
+    MockDelivery mockDelivery;
+    @Autowired
+    MockItem mockItem;
 
     @BeforeEach
     @WithAccount("testUser")
     void beforeEach() {
         Account account = accountRepository.findByLoginId("testUser");
-        testUtils.createMockItem(account, "test상품");
+        mockItem.createMockItem(account, "test상품");
     }
 
     @AfterEach
@@ -60,9 +63,9 @@ class ItemControllerTest {
     @DisplayName("상품 등록 폼")
     void productEnrollForm() throws Exception {
         mockMvc.perform(get("/product/enroll"))
-                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemForm"))
-                .andExpect(view().name("products/enroll"));
+                .andExpect(view().name("products/enroll"))
+                .andExpect(status().isOk());
     }
 
     @Test

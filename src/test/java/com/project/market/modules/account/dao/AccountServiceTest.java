@@ -52,23 +52,39 @@ class AccountServiceTest {
     @DisplayName("사용자 등록")
     void saveNewAccount() {
         //given
+        String loginId = "user1000";
+        String password = "pass1000";
+        String username = "홍길동";
+        String email = "gildong@mail.com";
+        String phone = "010-1010-2020";
+        String phoneTrim = "01010102020";
+
         SignupForm signupForm = new SignupForm();
-        signupForm.setLoginId("user0908");
-        signupForm.setPassword("pass0908");
-        signupForm.setPhone("010-1298-0998");
-        signupForm.setEmail("e9mail@mail.com");
-        signupForm.setUsername("홍길동");
+        signupForm.setLoginId(loginId);
+        signupForm.setPassword(password);
+        signupForm.setPhone(phone);
+        signupForm.setEmail(email);
+        signupForm.setUsername(username);
         //when
         accountService.saveNewAccount(signupForm);
         //then
-        Account account = accountRepository.findByLoginId("user0908");
-        assertNotNull(account);
-        assertEquals(account.getLoginId(), "user0908");
-        assertTrue(passwordEncoder.matches("pass0908", account.getPassword()));
-        assertEquals(account.getPhone(), "01012980998");
-        assertEquals(account.getEmail(), "e9mail@mail.com");
-        assertEquals(account.getNickname(), "user0908");
+        Account account = accountRepository.findByLoginId(loginId);
+        assertEquals(account.getLoginId(), loginId);
+        assertEquals(account.getPhone(), phoneTrim);
+        assertEquals(account.getEmail(), email);
+        assertTrue(passwordEncoder.matches(password, account.getPassword()));
+        assertEquals(account.getNickname(), loginId);
+        assertNotNull(account.getJoinedAt());
         assertEquals(account.getRole(), "ROLE_USER");
+        assertNull(account.getPasswordToken());
+        assertNull(account.getPasswordTokenCreatedAt());
+        assertNull(account.getZoneCode());
+        assertNull(account.getRoadAddress());
+        assertNull(account.getAddressDetail());
+        assertEquals(account.getCreditScore(), 0);
+        assertTrue(account.isItemEnrollAlertByWeb());
+        assertFalse(account.isItemEnrollAlertByMail());
+        assertFalse(account.isDeleted());
     }
 
     @Test

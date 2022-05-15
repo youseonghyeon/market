@@ -1,6 +1,7 @@
 package com.project.market;
 
-import com.project.market.infra.TestUtils;
+import com.project.market.infra.MockAccount;
+import com.project.market.infra.MockDelivery;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
@@ -25,7 +26,13 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
     @Autowired
     private AccountService accountService;
     @Autowired
-    private TestUtils testUtils;
+    private MockDelivery testUtils;
+    @Autowired
+    private MockAccount mockAccount;
+
+    public static String WITH_USER_NAME = "testname";
+    public static String WITH_PASSWORD = "testpass";
+    public static String WITH_EMAIL = "email@email.com";
 
     public WithAccountSecurityContextFactory(AccountService accountService) {
         this.accountService = accountService;
@@ -37,10 +44,10 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
 
         SignupForm signupForm = new SignupForm();
         signupForm.setLoginId(loginId);
-        signupForm.setPassword("testpass");
-        signupForm.setUsername("testname");
-        signupForm.setEmail("email@email.com");
-        signupForm.setPhone(testUtils.createRandomPhoneNumber());
+        signupForm.setPassword(WITH_PASSWORD);
+        signupForm.setUsername(WITH_USER_NAME);
+        signupForm.setEmail(WITH_EMAIL);
+        signupForm.setPhone(mockAccount.createRandomPhoneNumber());
 
         accountService.saveNewAccount(signupForm);
         Account account = accountRepository.findByLoginId(loginId);

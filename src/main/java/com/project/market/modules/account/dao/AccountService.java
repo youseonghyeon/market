@@ -24,13 +24,12 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EntityManager em;
 
-    public void saveNewAccount(SignupForm signupForm) {
+    public Account saveNewAccount(SignupForm signupForm) {
         Account account = Account.createNewAccount(signupForm);
         passwordEncoding(account, signupForm.getPassword());
 
-        accountRepository.save(account);
+        return accountRepository.save(account);
     }
 
     private void passwordEncoding(Account account, String password) {

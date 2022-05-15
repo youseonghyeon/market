@@ -32,6 +32,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
   implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-websocket'
   implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
   implementation 'org.springframework.boot:spring-boot-configuration-processor'
   implementation 'org.modelmapper:modelmapper:3.0.0'
@@ -40,6 +41,11 @@ dependencies {
 
   implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
   implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+  compile('org.webjars.bower:jquery:3.3.1')
+  compile('org.webjars:sockjs-client:1.1.2')
+  compile('org.webjars:stomp-websocket:2.3.3-1')
+  compile('org.webjars:webjars-locator:0.30')
 
 
   compileOnly 'org.projectlombok:lombok'

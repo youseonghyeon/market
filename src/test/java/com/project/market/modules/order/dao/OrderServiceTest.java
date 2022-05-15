@@ -1,6 +1,8 @@
 package com.project.market.modules.order.dao;
 
-import com.project.market.infra.TestUtils;
+import com.project.market.infra.MockAccount;
+import com.project.market.infra.MockDelivery;
+import com.project.market.infra.MockItem;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
@@ -20,19 +22,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class OrderServiceTest {
 
     @Autowired
-    TestUtils testUtils;
+    MockDelivery testUtils;
     @Autowired
     OrderService orderService;
     @Autowired
     ItemRepository itemRepository;
+    @Autowired
+    MockAccount mockAccount;
+
+    @Autowired
+    MockItem mockItem;
 
     @Test
     @DisplayName("")
     void createOrder() {
         //given
-        Account seller = testUtils.createMockAccount("seller");
-        Account buyer = testUtils.createMockAccount("buyer");
-        Item item = testUtils.createMockItem(seller, "item00");
+        Account seller = mockAccount.createMockAccount("seller");
+        Account buyer = mockAccount.createMockAccount("buyer");
+        Item item = mockItem.createMockItem(seller, "item00");
         OrderForm orderForm = new OrderForm(item.getId(), "post", buyer);
         //when
         Order order = orderService.createOrder(buyer, orderForm, item);
