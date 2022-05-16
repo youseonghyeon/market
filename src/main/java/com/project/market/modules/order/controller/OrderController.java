@@ -10,6 +10,7 @@ import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.PurchaseForm;
 import com.project.market.modules.order.dao.OrderRepository;
 import com.project.market.modules.order.dao.OrderService;
+import com.project.market.modules.order.entity.CartItem;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.OrderForm;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -38,13 +40,27 @@ public class OrderController {
 
 
     @GetMapping("/purchase")
-    public String purchaseForm(@CurrentAccount Account account, @Valid PurchaseForm purchaseForm, Model model) {
-        Item item = itemRepository.findItemReadOnlyById(purchaseForm.getItemId());
-        if (item.isDeleted()) {
-            throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
+    public String purchaseForm(@CurrentAccount Account account, @Valid Set<PurchaseForm> forms, Model model) {
+//        Set<Long> itemIdSet = forms.stream().map(form -> form.getItemId()).collect(Collectors.toSet());
+
+        // TODO 파라미터를 set으로 받아야 함 (API로 받는게 좋아보임)
+        Set<CartItem> items = new HashSet<>();
+        int totalPrice = 0;
+        int deliveryFee = 2500;
+        for (PurchaseForm form : forms) {
+            Item item = itemRepository.findById(form.getItemId()).orElseThrow();
+            if (item.isDeleted()) {
+                throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
+            }
+            CartItem cartItem = new CartItem(item, form.getQuantity());
+            totalPrice += cartItem.getPrice();
+            items.add(cartItem);
         }
-        model.addAttribute("orderForm", new OrderForm(item.getId(), account));
-        model.addAttribute("item", item);
+
+        model.addAttribute("orderForm", new OrderForm(account));
+        model.addAttribute("cartItems", items);
+        model.addAttribute("deliveryFee", deliveryFee);
+        model.addAttribute("totalPrice", totalPrice + deliveryFee);
         model.addAttribute("account", account);
         return "order/purchase";
     }

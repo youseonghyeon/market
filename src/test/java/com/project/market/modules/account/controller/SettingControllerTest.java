@@ -43,8 +43,6 @@ class SettingControllerTest {
     TagRepository tagRepository;
     @Autowired
     ObjectMapper objectMapper;
-    @Autowired
-    ZoneRepository zoneRepository;
 
     @AfterEach
     public void afterEach() {
@@ -153,25 +151,6 @@ class SettingControllerTest {
                 .andExpect(view().name("account/settings/zone"));
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("지역 추가")
-    void zoneSetting() throws Exception {
-        List<Zone> zoneList = zoneRepository.findAll();
-        if (zoneList.isEmpty()) {
-            throw new IllegalStateException();
-        }
-        Zone zone = zoneList.get(0);
-        mockMvc.perform(post("/profile/zone")
-                        .param("new-zone", zone.getCity())
-                        .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile/zone"));
-
-        Account account = accountRepository.findByLoginId("testUser");
-        Set<Zone> zoneContainer = account.getZones();
-        assertTrue(zoneContainer.contains(zone));
-    }
 
     @Test
     @WithAccount("testUser")

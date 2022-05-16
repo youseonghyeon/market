@@ -27,6 +27,12 @@
             }
         })
     }
+
+    const addCart = () => {
+        const itemId = [[${item.getId()}]];
+        const quantity = $('#quantity').val();
+        alert("상품번호=" + itemId + " 수량=" + quantity)
+    }
 </script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
@@ -74,15 +80,13 @@
                 <span class="fs-4" th:text="*{#numbers.formatInteger(price, 0, 'COMMA')} + ' 원'"></span>
             </div>
 
-            <div>
-                <span th:text="'등록 일자: ' + *{getBetweenDate()}"></span>
-            </div>
-
 
             <form th:action="@{/purchase}" th:method="get">
+                <input id="quantity" type="number" name="quantity" class="form-control" value="1">
                 <input type="hidden" name="itemId" th:value="*{id}">
-                <div>
-                    <button type="submit" class="btn btn-custom mt-2 w-100">주문하기</button>
+                <div class="d-flex">
+                    <button type="button" onclick="addCart()" class="btn btn-custom mt-2 w-100 m-1">장바구니 담기</button>
+                    <button type="submit" class="btn btn-custom mt-2 w-100 m-1">바로 구매</button>
                 </div>
             </form>
             <!--        <div th:if="*{sold()}">-->

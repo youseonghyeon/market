@@ -74,9 +74,9 @@ public class Account {
 
     private boolean deleted = false;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Cart> cart = new ArrayList<>();
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();

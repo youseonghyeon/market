@@ -48,8 +48,6 @@ public class Item {
 
     private String photo;
 
-    private int shippingFee;
-
     private boolean deleted = false;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
@@ -64,7 +62,6 @@ public class Item {
         item.quantity = itemForm.getQuantity();
         item.description = itemForm.getDescription();
         item.enrolledDate = LocalDateTime.now();
-        item.shippingFee = itemForm.getShippingFee();
         item.deleted = false;
 
         return item;

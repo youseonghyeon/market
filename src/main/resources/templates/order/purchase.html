@@ -29,7 +29,8 @@
 
                     <div>이름</div>
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" name="recipient" th:value="${account.getUsername()}">
+                        <input class="form-control col-5" type="text" name="recipient"
+                               th:value="${account.getUsername()}">
                     </div>
 
                     <div>연락처</div>
@@ -39,7 +40,8 @@
 
                     <div>주소</div>
                     <div class="input-group ">
-                        <input id="zonecode" class="form-control col-5 bg-white" type="text" th:field="*{destinationZoneCode}"
+                        <input id="zonecode" class="form-control col-5 bg-white" type="text"
+                               th:field="*{destinationZoneCode}"
                                readonly>
                         <div class="col-4"></div>
                         <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">배송지
@@ -49,10 +51,10 @@
 
 
                     <div class="input-group ">
-                        <input id="roadAddress" class="form-control col-5 bg-white" type="text" th:field="*{destinationAddress}"
+                        <input id="roadAddress" class="form-control col-5 bg-white" type="text"
+                               th:field="*{destinationAddress}"
                                placeholder="주소검색결과" readonly>
                     </div>
-
 
 
                     <div class="input-group ">
@@ -63,7 +65,8 @@
 
                     <div>배송 요청사항(200자 이내)</div>
                     <div class="input-group ">
-                        <textarea rows="3" style="resize: none" class="form-control col-5" type="text" name="shippingRequests"></textarea>
+                        <textarea rows="3" style="resize: none" class="form-control col-5" type="text"
+                                  name="shippingRequests"></textarea>
                     </div>
                 </div>
 
@@ -77,27 +80,27 @@
             </div>
 
             <div class="col-4 border-dark border bg-white">
-                <input type="hidden" th:field="*{itemId}">
                 <div class="fw-bold" style="font-size: 22px;">주문상품</div>
-                <div class="row container">
+                <div class="row container" th:each="cartItem : ${cartItems}">
                     <div class="border border-dark" style="width: 100px; height: 100px; margin-right: 10px;">상품 이미지
                     </div>
                     <!--                    상품 이름-->
-                    <span style="font-size: 20px;" th:text="${item.getName()}"></span>
+                    <span style="font-size: 20px;" th:text="${cartItem.getItem().getName()}">상품명</span>
+                    <span th:text="${cartItem.getPrice()} + '원'">00000원</span>
                 </div>
 
                 <div class="">
-                    <div class="row">
-                        <span class="col-8">상품금액</span>
-                        <span class="col-4" th:text="${item.getPrice()}">000</span>
-                    </div>
+                    <!--                    <div class="row">-->
+                    <!--                        <span class="col-8">상품금액</span>-->
+                    <!--                        <span class="col-4" th:text="${item.getPrice()}">000</span>-->
+                    <!--                    </div>-->
                     <div class="row">
                         <span class="col-8">배송비</span>
-                        <span class="col-4" th:text="${item.getShippingFee()}">000</span>
+                        <span class="col-4" th:text="${deliveryFee}">000</span>
                     </div>
                     <div class="row">
                         <span class="col-8">총 결제금액</span>
-                        <span class="col-4" th:text="${item.getPrice()} + ${item.getShippingFee()}">000</span>
+                        <span class="col-4" th:text="${totalPrice}">000</span>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">결제하기</button>

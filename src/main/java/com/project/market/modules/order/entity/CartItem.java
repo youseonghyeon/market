@@ -2,11 +2,13 @@ package com.project.market.modules.order.entity;
 
 import com.project.market.modules.item.entity.Item;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class CartItem {
 
     @Id @GeneratedValue
@@ -29,4 +31,10 @@ public class CartItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
+
+    public CartItem(Item item, int quantity) {
+        this.item = item;
+        this.quantity = quantity;
+        this.price = item.getPrice() * quantity;
+    }
 }

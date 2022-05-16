@@ -22,8 +22,5 @@ public class Cart {
 
     private int shippingFee;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private Account customer;
 
 }

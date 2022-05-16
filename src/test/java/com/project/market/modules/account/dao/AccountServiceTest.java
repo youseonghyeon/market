@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +36,6 @@ class AccountServiceTest {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private TagRepository tagRepository;
-    @Autowired
-    private ZoneRepository zoneRepository;
-    @Autowired
-    private EntityManager em;
 
     @AfterEach
     void afterEach() {
@@ -147,41 +142,6 @@ class AccountServiceTest {
         assertTrue(tags.containsAll(collection));
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("지역 추가")
-    void saveNewZone() {
-        //given
-        Account account = accountRepository.findByLoginId("testUser");
-        List<Zone> all = zoneRepository.findAll();
-        Zone zone = all.get(0);
-        //when
-        accountService.saveNewZone(account, zone);
-        //then
-        Account findAccount = accountRepository.findAccountWithZonesById(account.getId());
-        assertTrue(findAccount.getZones().contains(zone));
-    }
-
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("지역 조회")
-    void findZone() {
-        //given
-        Account account = accountRepository.findByLoginId("testUser");
-        List<Zone> all = zoneRepository.findAll();
-        accountService.saveNewZone(account, all.get(0));
-        accountService.saveNewZone(account, all.get(1));
-        accountService.saveNewZone(account, all.get(2));
-        //when
-        Set<Zone> zones = accountService.findZones(account);
-        //then
-        List<Zone> collection = new ArrayList<>();
-        collection.add(all.get(0));
-        collection.add(all.get(1));
-        collection.add(all.get(2));
-        assertEquals(zones.size(), 3);
-        assertTrue(zones.containsAll(collection));
-    }
 
     @Test
     @DisplayName("비밀번호 토큰 생성")

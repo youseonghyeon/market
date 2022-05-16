@@ -9,7 +9,8 @@ import javax.validation.constraints.Positive;
 @Data
 public class PurchaseForm {
 
-    @Positive
     private Long itemId;
+
+    private int quantity;
 
 }

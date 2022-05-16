@@ -43,21 +43,7 @@ class DeliveryControllerTest {
 
     @BeforeEach
     public void init() {
-        Delivery delivery = Delivery.builder()
-                .accountId(999L)
-                .fee(2500)
-                .originAddress("test-origin")
-                .destinationAddress("test-destination")
-                .expectedArrivalFrom(LocalDate.now().plus(2, ChronoUnit.DAYS))
-                .expectedArrivalUntil(LocalDate.now().plus(3, ChronoUnit.DAYS))
-                .deliveryStatus(DeliveryStatus.READY)
-                .shippingCompany("test-company")
-                .shippingCode("aaa-bbb-ccc")
-                .trackingNumber("11001100")
-                .trackingUrl("www.")
-                .build();
-        Delivery savedDelivery = deliveryRepository.save(delivery);
-        TEST_DELIVERY_ID = savedDelivery.getId();
+
     }
 
     @AfterEach

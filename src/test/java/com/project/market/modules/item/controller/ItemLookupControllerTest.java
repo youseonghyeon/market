@@ -1,6 +1,7 @@
 package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
+import com.project.market.infra.MockItem;
 import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.dao.AccountRepository;
 import com.project.market.modules.account.entity.Account;
@@ -39,51 +40,83 @@ class ItemLookupControllerTest {
     ModelMapper modelMapper;
     @Autowired
     TestUtils testUtils;
+    @Autowired
+    MockItem mockItem;
 
     @BeforeEach
-    @WithAccount("testUser")
     void beforeEach() {
-        Account account = accountRepository.findByLoginId("testUser");
-        testUtils.createMockItem(account, "test상품");
+        mockItem.createMockItem("test상품");
     }
 
     @AfterEach
-    @WithAccount("testUser")
     void afterEach() {
         itemRepository.deleteAll();
     }
 
 
     @Test
-    @WithAccount("testUser")
-    @DisplayName("단일 상품 조회 폼")
+    @DisplayName("단일 상품 조회 폼 (비회원)")
     void productForm() throws Exception {
         Item item = itemRepository.findByName("test상품");
+
         mockMvc.perform(get("/product/" + item.getId()))
-                .andExpect(model().attributeExists("item"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("products/product"));
+                .andExpect(model().attribute("item", item))
+                .andExpect(model().attribute("favorite", false))
+                .andExpect(view().name("products/product"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("전체 상품 리스트 조회 폼(권한X)")
+    @DisplayName("삭제된 상품 조회 (Ex)")
+    void productForm_deletedItem() throws Exception {
+        Item item = itemRepository.findByName("test상품");
+        item.delete();
+
+        mockMvc.perform(get("/product/" + item.getId()))
+                .andExpect(view().name("404"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("전체 상품 리스트 조회 폼(비회원)")
     void productList() throws Exception {
         mockMvc.perform(get("/product/list"))
-                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemList"))
                 .andExpect(model().attributeExists("itemPage"))
                 .andExpect(model().attributeExists("tagList"))
-                .andExpect(view().name("products/list"));
+                .andExpect(view().name("products/list"))
+                .andExpect(status().isOk());
     }
 
 
+    // 어드민 페이지로 이동
+//    @Test
+//    @WithAccount("testUser")
+//    @DisplayName("내 상품 리스트 폼")
+//    void myProductListForm() throws Exception {
+//        mockMvc.perform(get("/product/my-list"))
+//                .andExpect(status().isOk())
+//                .andExpect(model().attributeExists("itemList"))
+//                .andExpect(view().name("products/my-list"));
+//    }
+
     @Test
     @WithAccount("testUser")
-    @DisplayName("내 상품 리스트 폼")
-    void myProductListForm() throws Exception {
-        mockMvc.perform(get("/product/my-list"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("itemList"))
-                .andExpect(view().name("products/my-list"));
+    @DisplayName("관심 상품 리스트 폼")
+    void favoriteListForm() throws Exception {
+        mockMvc.perform(get("/favorite/list"))
+                .andExpect(model().attributeExists("favoriteList"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(view().name("products/favorite-list"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithAccount("testUser")
+    @DisplayName("장바구니 목록 폼")
+    void myCart() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(view().name("products/cart"))
+                .andExpect(status().isOk());
     }
 }

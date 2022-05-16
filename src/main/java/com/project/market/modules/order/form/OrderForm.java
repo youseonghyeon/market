@@ -11,8 +11,6 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 public class OrderForm {
 
-    @Positive
-    private Long itemId;
 
     private String shippingRequests;
 
@@ -20,19 +18,14 @@ public class OrderForm {
     private String recipientPhone;
 
     private String destinationZoneCode;
-    @NotEmpty
     private String destinationAddress;
 
     private String destinationAddressDetail;
 
     private String paymentMethod;
 
-    public OrderForm(Long itemId) {
-        this.itemId = itemId;
-    }
 
-    public OrderForm(Long itemId, Account account) {
-        this.itemId = itemId;
+    public OrderForm(Account account) {
         destinationZoneCode = account.getZoneCode();
         destinationAddress = account.getRoadAddress();
         destinationAddressDetail = account.getAddressDetail();
