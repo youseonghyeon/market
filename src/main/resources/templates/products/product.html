@@ -97,6 +97,7 @@
                     <button type="submit" class="btn btn-custom mt-2 w-100">구매하기</button>
                 </div>
             </form>
+            <a class="btn btn-custom" th:href="@{/chat/join/{itemId}(itemId=${item.getId()})}">채팅</a>
             <div th:if="${errorMessage}">
                 <span class="text-danger" th:text="${errorMessage}">flash massage</span>
             </div>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+<script type="text/javascript" th:src="@{/js/sockjs.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/stomp.min.js}"></script>
+<script th:inline="javascript">
+    let userId = [[${account.getLoginId()}]]
+
+    let roomName = [[${roomName}]];
+    $(document).ready(function () {
+        connectStomp();
+
+        $('#button-send').on('click', function (evt) {
+            let msg = $('input#msg').val();
+            const messageObj = {
+                senderId: userId,
+                roomName: roomName,
+                content: msg
+            }
+            socket.send('/message/' + roomName, {}, JSON.stringify(messageObj));
+
+            document.getElementById("msg").value = '';
+        })
+    })
+
+    let socket = null;
+    let isStomp = false;
+
+    function connectStomp() {
+        let sock = new SockJS("/stompTest");
+        let client = Stomp.over(sock);
+        isStomp = true;
+        socket = client;
+
+        client.connect({}, function () {
+            // 해당 토픽을 구독한다!
+            client.subscribe('/topic/message/' + roomName, function (event) {
+                let res = JSON.parse(event.body);
+                let str = "";
+                if (userId === res.senderId) {
+                    str += "<div>[오른쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                } else {
+                    str += "<div>[왼쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                }
+                $('#area').append(str);
+            })
+        })
+
+    }
+</script>
+<nav th:replace="fragments/nav::main-nav"></nav>
+<body>
+<!--<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">-->
+<!--    <th:block th:fragment="content">-->
+
+<div class="container">
+    <div class="col-6">
+        <label><b>채팅방</b></label>
+    </div>
+    <div>
+        <div id="msgArea" class="col"></div>
+        <div class="col-6">
+            <div class="input-group mb-3">
+                <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
+                       aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="area">
+        <div th:each="chat : ${chatRecord}">
+            <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()} + '(' + ${chat.getSendDate()} + ')'"></div>
+        </div>
+    </div>
+</div>
+
+<!--    </th:block>-->
+<!--</th:block>-->
+</body>
+</html>
