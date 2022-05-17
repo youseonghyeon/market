@@ -84,7 +84,6 @@ class ItemControllerTest {
         assertEquals(item.getPrice(), 6000);
         assertEquals(item.getCoverPhoto(), "A.jpg");
         assertEquals(item.getPhoto(), "B.jpg");
-        assertEquals(item.getShippingFee(), ItemService.DEFAULT_SHIPPING_FEE);
     }
 
     @Test

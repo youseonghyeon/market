@@ -69,7 +69,6 @@ public class TestUtils {
     public Order createMockOrder(Account account, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow();
         OrderForm orderForm = new OrderForm();
-        orderForm.setItemId(itemId);
         orderForm.setShippingRequests("shippingRequests");
         orderForm.setRecipient("받는사람");
         orderForm.setRecipientPhone("010-0000-0000");
@@ -82,7 +81,6 @@ public class TestUtils {
 
     public Delivery createMockDelivery(Account account, Item item) {
         OrderForm orderForm = new OrderForm();
-        orderForm.setItemId(item.getId());
         orderForm.setShippingRequests("shippingRequests");
         orderForm.setRecipient("받는사람");
         orderForm.setRecipientPhone("010-0000-0000");

@@ -4,12 +4,11 @@ import com.project.market.modules.account.entity.Account;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
-
 @Data
 @NoArgsConstructor
-public class OrderForm {
+public class LastOrderForm {
+
+    private String items;
 
     private String shippingRequests;
 
@@ -24,7 +23,7 @@ public class OrderForm {
     private String paymentMethod;
 
 
-    public OrderForm(Account account) {
+    public LastOrderForm(Account account) {
         destinationZoneCode = account.getZoneCode();
         destinationAddress = account.getRoadAddress();
         destinationAddressDetail = account.getAddressDetail();

@@ -33,7 +33,7 @@ class OrderServiceTest {
         Account seller = testUtils.createMockAccount("seller");
         Account buyer = testUtils.createMockAccount("buyer");
         Item item = testUtils.createMockItem(seller, "item00");
-        OrderForm orderForm = new OrderForm(item.getId(), buyer);
+        OrderForm orderForm = new OrderForm( buyer);
         //when
         Order order = orderService.createOrder(buyer, orderForm);
         //then

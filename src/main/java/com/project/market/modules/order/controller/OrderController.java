@@ -7,17 +7,17 @@ import com.project.market.modules.delivery.dao.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.dao.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.form.PurchaseForm;
 import com.project.market.modules.order.dao.OrderRepository;
 import com.project.market.modules.order.dao.OrderService;
 import com.project.market.modules.order.entity.CartItem;
 import com.project.market.modules.order.entity.Order;
+import com.project.market.modules.order.form.LastOrderForm;
 import com.project.market.modules.order.form.OrderForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.internal.Errors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,19 +40,21 @@ public class OrderController {
 
 
     @GetMapping("/purchase")
-    public String purchaseForm(@CurrentAccount Account account, @Valid Set<PurchaseForm> forms, Model model) {
-//        Set<Long> itemIdSet = forms.stream().map(form -> form.getItemId()).collect(Collectors.toSet());
-
-        // TODO 파라미터를 set으로 받아야 함 (API로 받는게 좋아보임)
+    public String purchaseForm(@CurrentAccount Account account, @RequestParam("items") String param, Model model) {
+        // /purchase?items=100:1,200:3  -> 100번 아이템 1개, 200번 아이템 3개
+        String[] itemSets = param.split(",");
+        log.info("param={}", param);
         Set<CartItem> items = new HashSet<>();
         int totalPrice = 0;
         int deliveryFee = 2500;
-        for (PurchaseForm form : forms) {
-            Item item = itemRepository.findById(form.getItemId()).orElseThrow();
+        for (String itemSet : itemSets) {
+            Long itemId = Long.parseLong(itemSet.split(":")[0]);
+            int quantity = Integer.parseInt(itemSet.split(":")[1]);
+            Item item = itemRepository.findById(itemId).orElseThrow();
             if (item.isDeleted()) {
                 throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
             }
-            CartItem cartItem = new CartItem(item, form.getQuantity());
+            CartItem cartItem = new CartItem(item, quantity);
             totalPrice += cartItem.getPrice();
             items.add(cartItem);
         }
@@ -62,19 +64,20 @@ public class OrderController {
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPrice", totalPrice + deliveryFee);
         model.addAttribute("account", account);
+        model.addAttribute("items", param);
         return "order/purchase";
     }
 
 
     @PostMapping("/purchase")
-    public String purchase(@CurrentAccount Account account, @Valid OrderForm orderForm, Errors errors) {
+    public String purchase(@CurrentAccount Account account, @Valid LastOrderForm orderForm, Errors errors) {
         if (errors.hasErrors()) {
             return "order/purchase";
         }
-        // 인자를 어떻게 받을지
-        // item 가격 + 배송비 계산
-        // 해서 Order 객체 생성
-        // delivery 객체는 나중에 생성
+        System.out.println("orderForm = " + orderForm);
+        // 여기서 가격 계산 후
+        // 결제 시스템 on
+
 //        Order order = orderService.createOrder(account, orderForm);
 //        Delivery delivery = deliveryService.createDelivery(account, orderForm, item);
 //        orderService.mapping(order, delivery);
@@ -86,7 +89,7 @@ public class OrderController {
 //            return "redirect:/purchase/pay/" + order.getId();
 //        }
 //        throw new IllegalStateException("결제 방식이 선택되지 않았습니다.");
-        return null;
+        return "redirect:/";
     }
 
     @GetMapping("/purchase/pay/{orderId}")

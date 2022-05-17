@@ -19,6 +19,7 @@
 <div class="container" th:object="${orderForm}">
     <h3 class="col-12 mt-5">주문 결제</h3>
     <form th:action="@{/purchase}" th:method="post">
+        <input type="hidden" name="items" th:value="${items}">
         <div class="row justify-content-md-center mt-3">
             <div class="col-8">
                 <div class="row container pt-4 pb-4 border-dark border bg-white">
