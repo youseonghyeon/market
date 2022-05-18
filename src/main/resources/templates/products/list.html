@@ -8,17 +8,6 @@
 </script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<!--<div>-->
-<!--    <div th:if="${itemPage.hasPrevious()}">-->
-<!--        <a th:href="${itemPage.hasPrevious()} ? @{/product/list(page=${itemPage.number} - 1)} : '#'">이전 페이지</a>-->
-<!--    </div>-->
-<!--    <div th:if="${itemPage.hasNext()}">-->
-<!--        <a th:href="${itemPage.hasNext()} ? @{/product/list(page=${itemPage.number} + 1)} : '#'">다음 페이지</a>-->
-<!--    </div>-->
-<!--    <a th:href="@{/product/list(order='recent')}">최신순</a>-->
-<!--    <a th:href="@{/product/list(order='popular')}">평점순</a>-->
-<!--    <button onclick="show()">페이징 로그</button>-->
-<!--</div>-->
 <div class="container" style="margin-top: 30px;">
     <div style="justify-content: space-between; height: 130px;" class="d-flex align-items-center">
         <a th:href="@{/product/list}" class="font-title">Market</a>

@@ -2,15 +2,14 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.service.ItemService;
-import com.project.market.modules.item.service.TagService;
+import com.project.market.modules.item.entity.Favorite;
+import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.repository.FavoriteRepository;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.repository.TagRepository;
-import com.project.market.modules.item.entity.Favorite;
-import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.item.entity.Tag;
-import com.project.market.modules.item.form.ItemForm;
+import com.project.market.modules.item.service.ItemService;
+import com.project.market.modules.item.service.TagService;
 import com.project.market.modules.item.validator.ItemFormValidator;
 import com.project.market.modules.item.validator.ItemValidator;
 import com.project.market.modules.notification.service.NotificationService;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -55,8 +53,8 @@ public class ItemController {
 
     @GetMapping("/product/enroll")
     public String productEnrollForm(Model model) {
-        List<Tag> whiteList = tagRepository.findTop100ByOrderByCountDesc(); // 태그 목록 (최대 상위 100개)
-        model.addAttribute("whiteList", whiteList);
+//        List<Tag> whiteList = tagRepository.findTop100ByOrderByCountDesc(); // 태그 목록 (최대 상위 100개)
+//        model.addAttribute("whiteList", whiteList);
         model.addAttribute("itemForm", new ItemForm());
         return "products/enroll";
     }
