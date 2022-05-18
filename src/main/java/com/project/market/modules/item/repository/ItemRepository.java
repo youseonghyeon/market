@@ -1,4 +1,4 @@
-package com.project.market.modules.item.dao.repository;
+package com.project.market.modules.item.repository;
 
 import com.project.market.modules.item.entity.Item;
 import org.springframework.data.jpa.repository.EntityGraph;

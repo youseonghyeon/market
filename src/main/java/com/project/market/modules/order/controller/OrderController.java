@@ -3,12 +3,12 @@ package com.project.market.modules.order.controller;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.delivery.dao.DeliveryService;
+import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.order.dao.OrderRepository;
-import com.project.market.modules.order.dao.OrderService;
+import com.project.market.modules.order.repository.OrderRepository;
+import com.project.market.modules.order.service.OrderService;
 import com.project.market.modules.order.entity.CartItem;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.LastOrderForm;
@@ -55,7 +55,7 @@ public class OrderController {
                 throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
             }
             CartItem cartItem = new CartItem(item, quantity);
-            totalPrice += cartItem.getPrice();
+            totalPrice += 100000; //TODO 수정해야 함
             items.add(cartItem);
         }
 

@@ -1,8 +1,8 @@
 package com.project.market.modules.account.controller;
 
 import com.project.market.WithAccount;
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
 import org.junit.jupiter.api.AfterEach;

@@ -25,8 +25,6 @@ public class ItemForm {
 
     private MultipartFile photo;
 
-    private Integer shippingFee;
-
     @NotEmpty
     private String description;
 

@@ -3,10 +3,10 @@ package com.project.market.modules.item.controller;
 import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.dao.repository.FavoriteRepository;
-import com.project.market.modules.item.dao.repository.ItemRepository;
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.service.ItemService;
+import com.project.market.modules.item.repository.FavoriteRepository;
+import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 
@@ -65,11 +64,11 @@ public class ItemLookupController {
         return "products/list";
     }
 
-    @GetMapping("/product/my-list")
+    @GetMapping("/product/modify-list")
     public String myProductList(@CurrentAccount Account account, Model model) {
         List<Item> itemList = itemRepository.findAllByDeletedFalseOrderByEnrolledDateDesc();
         model.addAttribute("itemList", itemList);
-        return "products/my-list";
+        return "products/modify-list";
     }
 
     @GetMapping("/favorite/list")

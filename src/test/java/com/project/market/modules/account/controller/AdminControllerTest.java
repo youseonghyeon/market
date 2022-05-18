@@ -1,10 +1,8 @@
 package com.project.market.modules.account.controller;
 
 import com.project.market.WithAccount;
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.order.entity.Order;
-import com.project.market.modules.order.entity.OrderStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,10 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

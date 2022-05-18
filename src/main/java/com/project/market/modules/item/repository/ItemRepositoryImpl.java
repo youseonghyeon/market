@@ -1,7 +1,6 @@
-package com.project.market.modules.item.dao.repository;
+package com.project.market.modules.item.repository;
 
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.repository.CustomItemRepository;
 import com.project.market.modules.item.entity.Item;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;

@@ -16,12 +16,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="account : ${accountList}">
+        <tr class="" th:each="account : ${accountList}">
             <th th:text="${account.getId()}">111</th>
             <th th:text="${account.getUsername()}">홍길동</th>
             <th th:text="${account.getRole()}">ROLE_USER</th>
             <th th:text="${#temporals.format(account.getJoinedAt(), 'yyyy년 M월 d일')}"></th>
-            <th><a th:href="@{/admin/manage/{accountId}(accountId = ${account.getId()})}">권한 변경</a></th>
+            <th><a class="btn btn-custom" th:href="@{/admin/manage/{accountId}(accountId = ${account.getId()})}">권한 변경</a></th>
         </tr>
         </tbody>
     </table>

@@ -53,7 +53,7 @@ public class Order {
     @JoinColumn(name = "account_id")
     private Account customer;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "order")
     private Set<CartItem> cartItems = new HashSet<>();
 
 

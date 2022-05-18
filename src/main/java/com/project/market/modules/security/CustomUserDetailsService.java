@@ -1,6 +1,6 @@
 package com.project.market.modules.security;
 
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

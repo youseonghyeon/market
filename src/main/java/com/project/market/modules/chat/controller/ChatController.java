@@ -7,7 +7,7 @@ import com.project.market.modules.chat.dto.MessageDto;
 import com.project.market.modules.chat.entity.Chat;
 import com.project.market.modules.chat.repository.ChatRepository;
 import com.project.market.modules.chat.service.ChatService;
-import com.project.market.modules.order.dao.OrderRepository;
+import com.project.market.modules.order.repository.OrderRepository;
 import com.project.market.modules.order.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

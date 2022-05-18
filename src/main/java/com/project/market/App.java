@@ -1,11 +1,11 @@
 package com.project.market;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
-import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.service.ItemService;
+import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.form.ItemForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
@@ -58,7 +58,6 @@ public class App {
                 itemForm.setPrice(6000);
                 itemForm.setQuantity(100);
                 itemForm.setDescription("mockItem" + i + " 설명");
-                itemForm.setShippingFee(2500);
                 itemForm.getTags().add("test");
                 itemForm.getTags().add("mock" + i);
                 itemService.createNewItem(itemForm);

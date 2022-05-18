@@ -1,15 +1,15 @@
 package com.project.market.modules.account.controller;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.PasswordForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.account.validator.PasswordFormValidator;
-import com.project.market.modules.item.dao.TagService;
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.service.TagService;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.dto.TagDto;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;

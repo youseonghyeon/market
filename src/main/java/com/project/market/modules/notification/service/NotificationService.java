@@ -1,11 +1,12 @@
-package com.project.market.modules.notification.dao;
+package com.project.market.modules.notification.service;
 
 import com.project.market.infra.mail.MailSender;
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.notification.entity.Notification;
+import com.project.market.modules.notification.repository.NotificationRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

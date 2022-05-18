@@ -1,9 +1,10 @@
-package com.project.market.modules.account.dao;
+package com.project.market.modules.account.service;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

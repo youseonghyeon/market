@@ -18,9 +18,4 @@ public class Cart {
     @OneToMany(mappedBy = "cart")
     private Set<CartItem> cartItems = new HashSet<>();
 
-    private int totalPrice;
-
-    private int shippingFee;
-
-
 }

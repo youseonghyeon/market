@@ -4,7 +4,9 @@ import com.project.market.WithAccount;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.form.SignupForm;
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.security.AccountContext;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

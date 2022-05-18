@@ -1,22 +1,19 @@
 package com.project.market.modules.account.controller;
 
 import com.project.market.infra.exception.UnAuthorizedException;
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.order.dao.OrderRepository;
+import com.project.market.modules.order.repository.OrderRepository;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.entity.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +26,10 @@ public class AdminController {
     private final AccountService accountService;
     private final OrderRepository orderRepository;
 
+    @GetMapping("/dashboard")
+    public String adminDashboard() {
+        return "admin/dashboard";
+    }
     @GetMapping("/manage")
     public String roleManagement(@CurrentAccount Account account, Model model) {
         List<Account> accounts = accountRepository.findAll();

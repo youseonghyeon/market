@@ -1,6 +1,6 @@
 package com.project.market.modules.account.validator;
 
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.account.util.PhoneUtils;
 import lombok.RequiredArgsConstructor;

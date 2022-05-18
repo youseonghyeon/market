@@ -1,27 +1,24 @@
 package com.project.market.infra;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
-import com.project.market.modules.delivery.dao.DeliveryRepository;
-import com.project.market.modules.delivery.dao.DeliveryService;
+import com.project.market.modules.delivery.repository.DeliveryRepository;
+import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.item.dao.repository.ItemRepository;
-import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.order.dao.OrderRepository;
-import com.project.market.modules.order.dao.OrderService;
+import com.project.market.modules.order.repository.OrderRepository;
+import com.project.market.modules.order.service.OrderService;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.OrderForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Transactional
 @SpringBootTest

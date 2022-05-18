@@ -2,9 +2,9 @@ package com.project.market.modules.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.market.WithAccount;
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.dto.TagDto;
 import com.project.market.modules.item.entity.Tag;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;

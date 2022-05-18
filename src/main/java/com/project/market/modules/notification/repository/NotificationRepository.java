@@ -1,4 +1,4 @@
-package com.project.market.modules.notification.dao;
+package com.project.market.modules.notification.repository;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.notification.entity.Notification;

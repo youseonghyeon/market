@@ -1,12 +1,13 @@
-package com.project.market.modules.order.dao;
+package com.project.market.modules.order.service;
 
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.delivery.dao.DeliveryService;
+import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.entity.OrderStatus;
 import com.project.market.modules.order.form.OrderForm;
+import com.project.market.modules.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -2,10 +2,10 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
 import com.project.market.infra.TestUtils;
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.repository.ItemRepository;
-import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.entity.Item;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

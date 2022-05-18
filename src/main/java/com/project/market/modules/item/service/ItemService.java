@@ -1,25 +1,20 @@
-package com.project.market.modules.item.dao;
+package com.project.market.modules.item.service;
 
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.item.dao.repository.FavoriteRepository;
-import com.project.market.modules.item.dao.repository.ItemRepository;
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.repository.FavoriteRepository;
+import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.entity.*;
 import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.notification.dao.NotificationRepository;
+import com.project.market.modules.notification.repository.NotificationRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import static com.project.market.modules.item.entity.QFavorite.*;
-import static com.project.market.modules.item.entity.QItem.*;
 
 @Slf4j
 @Service

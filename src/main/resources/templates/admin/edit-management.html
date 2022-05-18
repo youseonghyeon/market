@@ -15,7 +15,7 @@
     </div>
     <form th:action="@{/admin/manage/edit}" th:method="post">
         <input type="hidden" name="targetId" th:value="${account.getId()}">
-        <div>
+        <div style="width: 200px;">
             <select class="form-select" name="role">
                 <option value="ROLE_USER">회원</option>
                 <option value="ROLE_COURIER">택배사</option>

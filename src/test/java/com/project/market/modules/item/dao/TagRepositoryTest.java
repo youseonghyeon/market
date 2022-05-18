@@ -1,6 +1,6 @@
 package com.project.market.modules.item.dao;
 
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

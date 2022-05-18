@@ -1,9 +1,10 @@
 package com.project.market.modules.delivery.dao;
 
 import com.project.market.WithAccount;
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.item.dao.repository.ItemRepository;
-import com.project.market.modules.item.dao.ItemService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.delivery.service.DeliveryService;
+import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.form.ItemForm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

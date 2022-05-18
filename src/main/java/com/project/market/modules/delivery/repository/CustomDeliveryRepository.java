@@ -1,4 +1,4 @@
-package com.project.market.modules.delivery.dao;
+package com.project.market.modules.delivery.repository;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
