@@ -1,16 +1,9 @@
 package com.project.market.infra;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.delivery.dao.DeliveryRepository;
-import com.project.market.modules.delivery.dao.DeliveryService;
-import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.order.dao.OrderRepository;
-import com.project.market.modules.order.dao.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;

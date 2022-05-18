@@ -1,4 +1,4 @@
-package com.project.market.modules.order.dao;
+package com.project.market.modules.order.repository;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.order.entity.OrderStatus;

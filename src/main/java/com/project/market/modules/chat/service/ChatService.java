@@ -1,6 +1,6 @@
 package com.project.market.modules.chat.service;
 
-import com.project.market.modules.account.dao.AccountRepository;
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.chat.dto.MessageDto;
 import com.project.market.modules.chat.entity.Chat;

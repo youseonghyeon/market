@@ -2,8 +2,8 @@ package com.project.market.modules.delivery.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.market.WithAccount;
-import com.project.market.modules.delivery.dao.DeliveryRepository;
-import com.project.market.modules.delivery.dao.DeliveryService;
+import com.project.market.modules.delivery.repository.DeliveryRepository;
+import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.dto.CompleteDto;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.delivery.entity.DeliveryStatus;

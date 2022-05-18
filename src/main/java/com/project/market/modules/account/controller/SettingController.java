@@ -1,8 +1,8 @@
 package com.project.market.modules.account.controller;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
-import com.project.market.modules.account.dao.ZoneRepository;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
+import com.project.market.modules.account.repository.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.AddressForm;
@@ -10,8 +10,8 @@ import com.project.market.modules.account.form.PasswordForm;
 import com.project.market.modules.account.form.ProfileForm;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.account.validator.PasswordFormValidator;
-import com.project.market.modules.item.dao.repository.TagRepository;
-import com.project.market.modules.item.dao.TagService;
+import com.project.market.modules.item.repository.TagRepository;
+import com.project.market.modules.item.service.TagService;
 import com.project.market.modules.item.dto.TagDto;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j

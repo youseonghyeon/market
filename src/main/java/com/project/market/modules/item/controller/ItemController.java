@@ -1,20 +1,19 @@
 package com.project.market.modules.item.controller;
 
-import com.project.market.infra.aop.Trace;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.item.dao.ItemService;
-import com.project.market.modules.item.dao.TagService;
-import com.project.market.modules.item.dao.repository.FavoriteRepository;
-import com.project.market.modules.item.dao.repository.ItemRepository;
-import com.project.market.modules.item.dao.repository.TagRepository;
+import com.project.market.modules.item.service.ItemService;
+import com.project.market.modules.item.service.TagService;
+import com.project.market.modules.item.repository.FavoriteRepository;
+import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.entity.Favorite;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.validator.ItemFormValidator;
 import com.project.market.modules.item.validator.ItemValidator;
-import com.project.market.modules.notification.dao.NotificationService;
+import com.project.market.modules.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

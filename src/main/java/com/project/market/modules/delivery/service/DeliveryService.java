@@ -1,6 +1,7 @@
-package com.project.market.modules.delivery.dao;
+package com.project.market.modules.delivery.service;
 
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.delivery.repository.DeliveryRepository;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.form.OrderForm;

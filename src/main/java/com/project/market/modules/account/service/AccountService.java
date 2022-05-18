@@ -1,5 +1,6 @@
-package com.project.market.modules.account.dao;
+package com.project.market.modules.account.service;
 
+import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.AddressForm;
@@ -12,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.Set;
 import java.util.UUID;
 

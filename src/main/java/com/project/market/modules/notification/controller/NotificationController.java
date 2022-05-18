@@ -2,8 +2,8 @@ package com.project.market.modules.notification.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.notification.dao.NotificationRepository;
-import com.project.market.modules.notification.dao.NotificationService;
+import com.project.market.modules.notification.repository.NotificationRepository;
+import com.project.market.modules.notification.service.NotificationService;
 import com.project.market.modules.notification.dto.NotificationResponseDto;
 import com.project.market.modules.notification.entity.Notification;
 import lombok.AllArgsConstructor;

@@ -1,12 +1,12 @@
 package com.project.market;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
-import com.project.market.modules.account.dao.ZoneRepository;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
+import com.project.market.modules.account.repository.ZoneRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.entity.Zone;
 import com.project.market.modules.account.form.SignupForm;
-import com.project.market.modules.item.dao.repository.ItemRepository;
+import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 @EnableAsync

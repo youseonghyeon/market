@@ -1,7 +1,7 @@
 package com.project.market.modules.delivery.controller;
 
-import com.project.market.modules.delivery.dao.DeliveryRepository;
-import com.project.market.modules.delivery.dao.DeliveryService;
+import com.project.market.modules.delivery.repository.DeliveryRepository;
+import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.dto.CompleteDto;
 import com.project.market.modules.delivery.entity.Delivery;
 import lombok.RequiredArgsConstructor;

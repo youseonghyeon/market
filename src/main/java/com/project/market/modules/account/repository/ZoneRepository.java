@@ -1,4 +1,4 @@
-package com.project.market.modules.account.dao;
+package com.project.market.modules.account.repository;
 
 import com.project.market.modules.account.entity.Zone;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -10,7 +10,7 @@ import com.project.market.modules.chat.repository.RoomRepository;
 import com.project.market.modules.chat.service.ChatService;
 import com.project.market.modules.chat.service.RoomService;
 import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.order.dao.OrderRepository;
+import com.project.market.modules.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -81,13 +81,10 @@ public class ChatController {
         }
     }
 
-    //    @MessageMapping("/inquiry/{roomId}")
     @MessageMapping("/message/{roomName}")
     public void receiveInquiry(@DestinationVariable("roomName") String roomName, MessageDto message) {
-        log.info("roomName={}", roomName);
-        log.info("message.getContent()={}", message.getContent());
-//        message.setSendDate(LocalDateTime.now());
-//        chatService.saveChat(message);
+        message.setSendDate(LocalDateTime.now());
+        chatService.saveChat(message);
         template.convertAndSend("/topic/message/" + roomName, message);
     }
 

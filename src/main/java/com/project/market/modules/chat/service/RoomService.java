@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.PriorityQueue;
 
 import static com.project.market.modules.chat.entity.QRoom.room;
 
@@ -21,16 +22,21 @@ public class RoomService {
     private final JPAQueryFactory queryFactory;
 
     public Room findPreviousRoom(Long userAId, Long userBId) {
-        Long[] list = {userAId, userBId};
+        PriorityQueue<Long> Q = new PriorityQueue<>();
+        Q.add(userAId);
+        Q.add(userBId);
         return queryFactory.select(room)
                 .from(room)
-                .where(room.userAId.in(list),
-                        room.userBId.in(list))
+                .where(room.userAId.eq(Q.poll()),
+                        room.userBId.eq(Q.poll()))
                 .fetchOne();
     }
 
     public void createRoom(String roomName, Long userAId, Long userBId) {
-        Room room = new Room(roomName, userAId, userBId);
+        PriorityQueue<Long> Q = new PriorityQueue<>();
+        Q.add(userAId);
+        Q.add(userBId);
+        Room room = new Room(roomName, Q.poll(), Q.poll());
         roomRepository.save(room);
     }
 

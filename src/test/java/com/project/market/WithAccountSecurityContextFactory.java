@@ -2,8 +2,8 @@ package com.project.market;
 
 import com.project.market.infra.MockAccount;
 import com.project.market.infra.MockDelivery;
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
 import com.project.market.modules.security.CustomUserDetailsService;

@@ -3,7 +3,7 @@ package com.project.market.modules.delivery.controller;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.delivery.dao.DeliveryRepository;
+import com.project.market.modules.delivery.repository.DeliveryRepository;
 import com.project.market.modules.delivery.entity.Delivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

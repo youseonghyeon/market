@@ -1,7 +1,6 @@
 package com.project.market.infra;
 
-import com.project.market.modules.account.dao.AccountRepository;
-import com.project.market.modules.account.dao.AccountService;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
 import org.springframework.beans.factory.annotation.Autowired;
