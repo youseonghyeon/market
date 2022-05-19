@@ -58,40 +58,41 @@
     <div class="col-6">
         <label><b>채팅방</b></label>
     </div>
-    <div id="chat-area" class="border border-gray p-2">
-        <div class="d-flex mb-2"
-             th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"
-             th:each="chat : ${chatRecord}">
-            <div class="chat-box"
-                 th:if="${chat.getSender().getId() == account.getId()}">
+    <div class="border border-gray p-2 bg-white" style="width: 530px;">
+        <div id="chat-area">
+            <div class="d-flex mb-2"
+                 th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"
+                 th:each="chat : ${chatRecord}">
                 <div>
-                    <div class="chat-content-text-my" th:text="${chat.content}">내용</div>
-                    <div class="chat-temporals" th:text="${#temporals.format(chat.getSendDate(), 'M월d일 H:m')}">보낸날짜
+                    <div class="chat-box" style="background-color: #2cb5ff;"
+                         th:if="${chat.getSender().getId() == account.getId()}">
+                        <div style="color: white;" th:text="${chat.content}">내용</div>
                     </div>
-                </div>
-            </div>
-            <div class="chat-box" th:if="${chat.getSender().getId() != account.getId()}">
-                <div>
-                    <div th:text="${chat.getSender().getNickname()}">닉네임</div>
-                    <div class="chat-content-text-partner" th:text="${chat.content}">내용</div>
+                    <div th:if="${chat.getSender().getId() != account.getId()}">
+                        <div th:text="${chat.getSender().getNickname()}">닉네임</div>
+                        <div class="chat-box" style="background-color: #e8e8e8;">
+                            <div th:text="${chat.content}">내용</div>
+                        </div>
+                    </div>
                     <div class="chat-temporals" th:text="${#temporals.format(chat.getSendDate(), 'M월d일 H:m')}">보낸날짜
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div>
-        <div id="msgArea" class="col"></div>
-        <div class="col-6">
-            <div class="input-group mb-3">
-                <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
-                       aria-describedby="button-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+        <div>
+            <div id="msgArea" class="col"></div>
+            <div>
+                <div class="input-group mb-3">
+                    <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
+                           aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <!--    </th:block>-->
