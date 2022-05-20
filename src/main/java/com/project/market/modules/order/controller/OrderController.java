@@ -1,5 +1,6 @@
 package com.project.market.modules.order.controller;
 
+import com.project.market.infra.config.Config;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
@@ -7,9 +8,10 @@ import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.order.repository.CartRepository;
 import com.project.market.modules.order.repository.OrderRepository;
 import com.project.market.modules.order.service.OrderService;
-import com.project.market.modules.order.entity.CartItem;
+import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.LastOrderForm;
 import com.project.market.modules.order.form.OrderForm;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,16 +40,37 @@ public class OrderController {
     private final ItemRepository itemRepository;
     private final DeliveryService deliveryService;
     private final OrderRepository orderRepository;
-
+    private final CartRepository cartRepository;
 
     @GetMapping("/purchase")
     public String purchaseForm(@CurrentAccount Account account, @RequestParam("items") String param, Model model) {
-        // /purchase?items=100:1,200:3  -> 100번 아이템 1개, 200번 아이템 3개
+        Set<Cart> items = new HashSet<>();
+        int totalPrice = 0;
+        int deliveryFee = Config.SHIPPING_FEE;
+        if (param.contains(":")) {
+            // /purchase?items=100:1,200:3  -> 100번 아이템 1개, 200번 아이템 3개
+            itemQuantityConvertor(items, param);
+        } else {
+            // /purchase?items=102,103,188 -> cart엔티티의 id=102, id=103, id=188 아이템 3개
+           cartIdsConvertor(items, param);
+        }
+
+        for (Cart item : items) {
+            totalPrice += item.getPrice();
+        }
+
+        model.addAttribute("orderForm", new OrderForm(account));
+        model.addAttribute("cartItems", items);
+        model.addAttribute("deliveryFee", deliveryFee);
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("account", account);
+        model.addAttribute("items", param);
+        return "order/purchase";
+    }
+
+    private void itemQuantityConvertor(Set<Cart> items, String param) {
         String[] itemSets = param.split(",");
         log.info("param={}", param);
-        Set<CartItem> items = new HashSet<>();
-        int totalPrice = 0;
-        int deliveryFee = 2500;
         for (String itemSet : itemSets) {
             Long itemId = Long.parseLong(itemSet.split(":")[0]);
             int quantity = Integer.parseInt(itemSet.split(":")[1]);
@@ -54,18 +78,24 @@ public class OrderController {
             if (item.isDeleted()) {
                 throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
             }
-            CartItem cartItem = new CartItem(item, quantity);
-            totalPrice += 100000; //TODO 수정해야 함
-            items.add(cartItem);
+            Cart cart = new Cart(item, quantity);
+            items.add(cart);
         }
+    }
 
-        model.addAttribute("orderForm", new OrderForm(account));
-        model.addAttribute("cartItems", items);
-        model.addAttribute("deliveryFee", deliveryFee);
-        model.addAttribute("totalPrice", totalPrice + deliveryFee);
-        model.addAttribute("account", account);
-        model.addAttribute("items", param);
-        return "order/purchase";
+    private void cartIdsConvertor(Set<Cart> items, String param) {
+        String[] split = param.split(",");
+        List<Long> idList = new ArrayList<>();
+        for (String s : split) {
+            Long id = Long.parseLong(s);
+            idList.add(id);
+        }
+        Set<Cart> findCarts = cartRepository.findByIdIn(idList);
+        for (Cart findCart : findCarts) {
+            if (!findCart.getItem().isDeleted()) {
+                items.add(findCart);
+            }
+        }
     }
 
 

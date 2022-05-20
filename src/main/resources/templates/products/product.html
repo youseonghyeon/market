@@ -31,7 +31,16 @@
     const addCart = () => {
         const itemId = [[${item.getId()}]];
         const quantity = $('#quantity').val();
-        alert("상품번호=" + itemId + " 수량=" + quantity)
+        $.ajax({
+            url: "/cart/add",
+            method: "GET",
+            data: {
+                itemId,
+                quantity
+            }
+        }).done(function (res, status) {
+            alert(res);
+        })
     }
 
     const buy = () => {

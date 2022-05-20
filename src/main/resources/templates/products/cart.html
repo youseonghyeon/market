@@ -1,27 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
+<script th:inline="javascript">
+    const purchase = () => {
+        let str = "";
+        let elems = document.getElementsByClassName("check_buttons");
+        for (const elem of elems) {
+            if (elem.checked) {
+                str += elem.value + ",";
+            }
+        }
+        $('#input_items').val(str);
+        $('#form_submit').submit();
+    }
+
+    const deleteCart = (cartId) => {
+        $.ajax({
+            url: "/cart/delete",
+            method: "GET",
+            data: {
+                cartId
+            }
+        }).done(function (result, status) {
+            console.log(result)
+            $('#cart' + cartId).remove()
+            $('#total').text(result)
+            if (result === 0) {
+                $('#shippingFee').text(result)
+            }
+        })
+    }
+
+    const deleteAll = () => {
+        $.ajax({
+            url: "/cart/delete/all",
+            method: "GET"
+        }).done(function (result, status) {
+            $('.eachCart').remove()
+        })
+    }
+
+
+</script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container" style="padding-right: 200px; padding-left: 200px;">
-    <div class="fs-3 mt-4 fw-bold">장바구니</div>
-    <div>
-        <table class="table">
-            <tr>
-                <td>전체선택</td>
-                <td>상품정보</td>
-                <td>상품금액</td>
-                <td>배송비</td>
-            </tr>
-        </table>
+    <div class="bg-white shadow" style="padding-right: 30px; padding-left: 30px; padding-top: 20px; margin-top: 40px;">
+        <div class="fs-3 mt-4 fw-bold">장바구니</div>
+        <div th:if="${cartList.isEmpty()}" style="height: 500px;">장바구니에 상품이 없어요 ㅠㅠ</div>
+        <div th:unless="${cartList.isEmpty()}">
+            <button class="btn btn-danger" onclick="deleteAll()">전체삭제</button>
+            <table class="table">
+                <tr>
+                    <td>전체선택</td>
+                    <td>상품정보</td>
+                    <td>수량</td>
+                    <td>상품금액</td>
+                    <td style="width: 30px;"></td>
+                </tr>
+                <tr th:id="'cart' + ${cart.getId()}" class="eachCart" th:each="cart : ${cartList}">
+                    <td><input class="check_buttons" th:value="${cart.getId()}" type="checkbox" checked></td>
+                    <td th:text="${cart.getItem().getName()}"></td>
+                    <td>
+                        <select th:if="${cart.getQuantity() <=5}" class="select" style="width: 50px;" type="number"
+                                th:value="${cart.getQuantity()}">
+                            <option value="1" th:selected="${cart.getQuantity() == 1}">1</option>
+                            <option value="2" th:selected="${cart.getQuantity() == 2}">2</option>
+                            <option value="3" th:selected="${cart.getQuantity() == 3}">3</option>
+                            <option value="4" th:selected="${cart.getQuantity() == 4}">4</option>
+                            <option value="5" th:selected="${cart.getQuantity() == 5}">5</option>
+                            <option value="직접입력">직접입력</option>
+                        </select>
+                        <input th:unless="${cart.getQuantity() <= 5}" style="width: 50px;" type="number">
+                    </td>
+                    <td th:text="${cart.getPrice()} + '원'"></td>
+                    <td>
+                        <button th:onclick="deleteCart([[${cart.getId()}]])">X</button>
+                    </td>
+                </tr>
+            </table>
+            <div class="border-bottom border-gray d-flex justify-content-between mt-4" style="padding-right: 150px;">
+                <div>배송비</div>
+                <div id="shippingFee" th:text="${shippingFee} + '원'">배송비</div>
+            </div>
+            <div class="border-bottom border-gray d-flex justify-content-between mt-4" style="padding-right: 150px;">
+                <div>합계</div>
+                <div id="total" th:text="${totalPrice} + '원'"></div>
+            </div>
 
-        <div>장바구니에 담은 상품이 없습니다.</div>
-        <div style="height: 500px;"></div>
-
-        <div class="btn btn-custom">구매하기</div>
+            <div onclick="purchase()" class="btn btn-custom mt-5">구매하기</div>
+            <div style="height: 200px;"></div>
+            <form id="form_submit" th:action="@{/purchase}" method="GET">
+                <input id="input_items" type="hidden" name="items">
+            </form>
+        </div>
 
     </div>
-
 </div>
 <footer th:replace="fragments/footer::footer"></footer>
 </body>

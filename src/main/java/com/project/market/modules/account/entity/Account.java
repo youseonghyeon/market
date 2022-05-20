@@ -74,10 +74,6 @@ public class Account {
 
     private boolean deleted = false;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
 
@@ -89,6 +85,9 @@ public class Account {
 
     @ManyToMany(cascade = PERSIST)
     private Set<Tag> tags = new HashSet<>();
+
+    @OneToMany(mappedBy = "account")
+    private Set<Cart> carts = new HashSet<>();
 
     public static Account createNewAccount(SignupForm signupForm) {
         Account account = new Account();
@@ -103,7 +102,6 @@ public class Account {
         account.itemEnrollAlertByWeb = true;
         account.itemEnrollAlertByMail = false;
         account.deleted = false;
-
         return account;
     }
 

@@ -82,27 +82,23 @@
 
             <div class="col-4 border-dark border bg-white">
                 <div class="fw-bold" style="font-size: 22px;">주문상품</div>
-                <div class="row container" th:each="cartItem : ${cartItems}">
+                <div class="d-flex justify-content-between p-2" th:each="cart : ${cartItems}">
                     <div class="border border-dark" style="width: 100px; height: 100px; margin-right: 10px;">상품 이미지
                     </div>
-                    <!--                    상품 이름-->
-                    <span style="font-size: 20px;" th:text="${cartItem.getItem().getName()}">상품명</span>
-                    <span th:text="${cartItem.getPrice()} + '원'">00000원</span>
+                    <div>
+                        <div style="font-size: 20px;" th:text="${cart.getItem().getName()}">상품명</div>
+                        <div th:text="${cart.getQuantity() + '개'}">수량</div>
+                        <div th:text="${cart.getPrice()} + '원'">00000원</div>
+                    </div>
                 </div>
 
-                <div class="">
-                    <!--                    <div class="row">-->
-                    <!--                        <span class="col-8">상품금액</span>-->
-                    <!--                        <span class="col-4" th:text="${item.getPrice()}">000</span>-->
-                    <!--                    </div>-->
-                    <div class="row">
-                        <span class="col-8">배송비</span>
-                        <span class="col-4" th:text="${deliveryFee}">000</span>
-                    </div>
-                    <div class="row">
-                        <span class="col-8">총 결제금액</span>
-                        <span class="col-4" th:text="${totalPrice}">000</span>
-                    </div>
+                <div class="border-bottom border-gray d-flex justify-content-between p-2">
+                    <div class="">배송비</div>
+                    <div class="" th:text="${deliveryFee}">000</div>
+                </div>
+                <div class="border-bottom border-gray d-flex justify-content-between p-2">
+                    <div class="">총 결제금액</div>
+                    <div class="" th:text="${totalPrice}">000</div>
                 </div>
                 <button type="submit" class="btn btn-primary">결제하기</button>
             </div>

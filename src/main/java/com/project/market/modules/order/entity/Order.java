@@ -54,7 +54,7 @@ public class Order {
     private Account customer;
 
     @OneToMany(mappedBy = "order")
-    private Set<CartItem> cartItems = new HashSet<>();
+    private Set<Cart> carts = new HashSet<>();
 
 
 

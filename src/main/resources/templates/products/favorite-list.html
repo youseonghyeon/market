@@ -20,6 +20,19 @@
             }
         })
     }
+
+    const addCart = (itemId) => {
+        $.ajax({
+            url: "/cart/add",
+            method: "GET",
+            data: {
+                itemId,
+                quantity: 1
+            }
+        }).done(function (res, status) {
+            alert(res);
+        })
+    }
 </script>
 <head th:replace="fragments/header::header"></head>
 <body>
@@ -40,7 +53,7 @@
                 </div>
             </a>
             <div class="d-flex flex-column">
-                <div class="btn btn-custom" style="height: 30px;">장바구니 담기</div>
+                <div th:onclick="addCart([[${item.getId()}]])" class="btn btn-custom" style="height: 30px;">장바구니 담기</div>
                 <button th:onclick="deleteFavorite([[${item.getId()}]])" class="btn btn-custom mt-3" style="height: 30px;">삭제</button>
             </div>
         </div>

@@ -79,10 +79,4 @@ public class ItemLookupController {
         return "products/favorite-list";
     }
 
-    @GetMapping("/cart")
-    public String myCart(@CurrentAccount Account account, Model model) {
-
-        return "products/cart";
-
-    }
 }
