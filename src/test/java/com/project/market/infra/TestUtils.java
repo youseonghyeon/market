@@ -11,6 +11,7 @@ import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.form.ItemForm;
+import com.project.market.modules.order.form.LastOrderForm;
 import com.project.market.modules.order.repository.OrderRepository;
 import com.project.market.modules.order.service.OrderService;
 import com.project.market.modules.order.entity.Order;
@@ -65,7 +66,7 @@ public class TestUtils {
 
     public Order createMockOrder(Account account, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow();
-        OrderForm orderForm = new OrderForm();
+        LastOrderForm orderForm = new LastOrderForm();
         orderForm.setShippingRequests("shippingRequests");
         orderForm.setRecipient("받는사람");
         orderForm.setRecipientPhone("010-0000-0000");
@@ -73,7 +74,7 @@ public class TestUtils {
         orderForm.setDestinationZoneCode("12334");
         orderForm.setDestinationAddressDetail("102동 505호");
         orderForm.setPaymentMethod("카드");
-        return orderService.createOrder(account, orderForm);
+        return orderService.createOrder(account, orderForm, null);
     }
 
     public Delivery createMockDelivery(Account account, Item item) {

@@ -36,7 +36,7 @@ class OrderServiceTest {
         Item item = testUtils.createMockItem(seller, "item00");
         OrderForm orderForm = new OrderForm( buyer);
         //when
-        Order order = orderService.createOrder(buyer, orderForm);
+        Order order = orderService.createOrder(buyer, null, null);
         //then
         assertEquals(order.getOrderStatus(), OrderStatus.WAITING);
         /**

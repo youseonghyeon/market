@@ -2,8 +2,7 @@ package com.project.market.modules.order.entity;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
-import com.project.market.modules.item.entity.Item;
-import com.project.market.modules.order.form.OrderForm;
+import com.project.market.modules.order.form.LastOrderForm;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NamedEntityGraph(name = "withItemAndDelivery", attributeNodes = {
-        @NamedAttributeNode("orderedItem"),
         @NamedAttributeNode("orderDelivery")})
 @Entity(name = "orders")
 @Getter
@@ -32,18 +30,18 @@ public class Order {
     private OrderStatus orderStatus = OrderStatus.WAITING;
 
     private String paymentMethod;
+    private String customerPhone;
 
     private String shippingRequests;
+    private String destinationZoneCode;
+    private String destinationAddress;
+    private String destinationAddressDetail;
 
     private int totalPrice;
 
     private int shippingFee;
 
     private LocalDateTime arrivalDate;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item orderedItem;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id")
@@ -58,15 +56,22 @@ public class Order {
 
 
 
-    public static Order createNewOrder(Account customer, OrderForm orderForm) {
+    public static Order createNewOrder(Account customer, LastOrderForm orderForm) {
         Order order = new Order();
-        order.paymentMethod = orderForm.getPaymentMethod();
         order.shippingRequests = orderForm.getShippingRequests();
-        // TODO !!!
-//        order.totalPrice = item.getPrice() + item.getShippingFee();
-//        order.orderedItem = item;
         order.customer = customer;
+        order.customerPhone = orderForm.getRecipientPhone();
+        order.destinationZoneCode = orderForm.getDestinationZoneCode();
+        order.destinationAddress = orderForm.getDestinationAddress();
+        order.destinationAddressDetail = orderForm.getDestinationAddressDetail();
+        order.paymentMethod = orderForm.getPaymentMethod();
+
         return order;
+    }
+
+    public void setBill(int totalPrice, int shippingFee) {
+        this.totalPrice = totalPrice;
+        this.shippingFee = shippingFee;
     }
 
     public boolean isOwner(Account account) {

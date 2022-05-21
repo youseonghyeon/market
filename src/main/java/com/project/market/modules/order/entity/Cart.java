@@ -53,4 +53,9 @@ public class Cart {
         this.order = order;
         this.price = item.getPrice() * quantity;
     }
+
+    public void handOverToOrder(Order order) {
+        this.account = null;
+        this.order = order;
+    }
 }

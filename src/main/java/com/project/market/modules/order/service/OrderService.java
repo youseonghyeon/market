@@ -1,12 +1,16 @@
 package com.project.market.modules.order.service;
 
+import com.project.market.infra.config.Config;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.entity.OrderStatus;
+import com.project.market.modules.order.form.LastOrderForm;
 import com.project.market.modules.order.form.OrderForm;
+import com.project.market.modules.order.repository.CartRepository;
 import com.project.market.modules.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -23,12 +28,24 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final DeliveryService deliveryService;
+    private final CartRepository cartRepository;
 
-    public Order createOrder(Account account, OrderForm orderForm) {
+    public Order createOrder(Account account, LastOrderForm orderForm, Set<Cart> cartSet) {
         Order order = Order.createNewOrder(account, orderForm);
+        int tempPrice = 0;
         orderRepository.save(order);
+        for (Cart cart : cartSet) {
+            cart.handOverToOrder(order);
+            tempPrice += cart.getPrice();
 
-        // TODO CART로 받아서 주문 작성하고 Item 개수 빼줘야 함 & 취소 로직도 만들어야 함
+            // 상품 수량 삭감
+            Item item = cart.getItem();
+            item.minusQuantity(cart.getQuantity());
+        }
+        cartRepository.saveAll(cartSet);
+        // totalPrice/ShippingFee 설정
+        order.setBill(tempPrice + Config.SHIPPING_FEE, Config.SHIPPING_FEE);
+
         return order;
     }
 
@@ -75,13 +92,13 @@ public class OrderService {
         }
 
         // 상품 ROLLBACK
-        Item item = order.getOrderedItem();
-        if (item != null) {
-//            item.orderCancel();
-            //TODO
-        } else {
-            log.info("Item이 존재하지 않습니다. orderId={}", order.getId());
-        }
+//        Item item = order.getOrderedItem();
+//        if (item != null) {
+////            item.orderCancel();
+//            //TODO
+//        } else {
+//            log.info("Item이 존재하지 않습니다. orderId={}", order.getId());
+//        }
     }
 
     private boolean paymentHasBeenMade(Order order) {

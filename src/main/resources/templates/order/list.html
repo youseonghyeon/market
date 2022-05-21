@@ -23,12 +23,12 @@
 
 
             <div class="d-flex justify-content-between">
-                <a th:href="@{/product/{itemId}(itemId=${order.getOrderedItem().getId()})}">
+                <div>
                     <div class="d-flex">
                         <div class="border border-dark" style="width: 110px; height:110px; margin-right: 20px;"></div>
 
                         <div>
-                            <div class="fs-5" th:text="${order.getOrderedItem().getName()}">제품명</div>
+                            <div class="fs-5">제품명 외 3개</div>
                             <span class="fs-6" style="color: #434343;"
                                   th:text="${#numbers.formatInteger(order.getTotalPrice(), '0', 'COMMA')}">0000</span>원
                         </div>
@@ -41,12 +41,10 @@
                         <!--                    도착예정-->
                         <!--                </div>-->
                     </div>
-                </a>
+                </div>
                 <div class="d-flex flex-column justify-content-around" style="margin-right: 20px;">
                     <div>
-                        <a class="btn btn-outline-primary "
-                           th:href="@{/shiptrack/{deliveryId}(deliveryId = ${order.getOrderDelivery().getId()})}">배송
-                            조회</a>
+                        <a th:if="${order.getOrderDelivery() != null}" class="btn btn-outline-primary">배송 조회</a>
                     </div>
                     <div>
                         <form th:action="@{/order/cancel}" th:method="post">

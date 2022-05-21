@@ -4,6 +4,7 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.item.form.ItemForm;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import static javax.persistence.FetchType.LAZY;
 
+@Slf4j
 @Entity
 @Getter
 @Builder
@@ -106,6 +108,18 @@ public class Item {
 
     public void delete() {
         deleted = true;
+    }
+
+    public void plusQuantity(int quantity) {
+        this.quantity += quantity;
+    }
+
+    public void minusQuantity(int quantity) {
+        this.quantity -= quantity;
+        if (this.quantity < 0) {
+            log.info("상품 수량 부족 itemId={}", id);
+            throw new IllegalStateException("상품 수량 부족");
+        }
     }
 
     public void plusFavoriteCount() {

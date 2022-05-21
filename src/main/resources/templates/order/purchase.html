@@ -3,7 +3,7 @@
 <head th:replace="fragments/header::header"></head>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
-<script>
+<script th:inline="javascript">
     function openPopup() {
         new daum.Postcode({
             oncomplete: function (data) {
@@ -13,6 +13,37 @@
                 roadAddress.value = data.roadAddress
             }
         }).open();
+    }
+
+    function purchase() {
+        const items = [[${items}]];
+        const shippingRequests = $('#shippingRequests').val();
+        const recipient = $('#recipient').val();
+        const recipientPhone = $('#recipientPhone').val();
+        const destinationZoneCode = $('#zonecode').val();
+        const destinationAddress = $('#roadAddress').val();
+        const destinationAddressDetail = $('#addressDetail').val();
+        const paymentMethod = $(':radio[name="paymentMethod"]:checked').val();
+
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: "/purchase",
+            method: "POST",
+            data: {
+                items,
+                shippingRequests,
+                recipient,
+                recipientPhone,
+                destinationZoneCode,
+                destinationAddress,
+                destinationAddressDetail,
+                paymentMethod
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            }
+        })
     }
 
 </script>
@@ -30,13 +61,13 @@
 
                     <div>이름</div>
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" name="recipient"
+                        <input id="recipient" class="form-control col-5" type="text" name="recipient"
                                th:value="${account.getUsername()}">
                     </div>
 
                     <div>연락처</div>
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" name="recipientPhone">
+                        <input id="recipientPhone" class="form-control col-5" type="text" name="recipientPhone">
                     </div>
 
                     <div>주소</div>
@@ -59,14 +90,16 @@
 
 
                     <div class="input-group ">
-                        <input class="form-control col-5" type="text" th:field="*{destinationAddressDetail}"
+                        <input id="addressDetail" class="form-control col-5" type="text"
+                               th:name="*{destinationAddressDetail}"
                                placeholder="상세주소">
                     </div>
 
 
                     <div>배송 요청사항(200자 이내)</div>
                     <div class="input-group ">
-                        <textarea rows="3" style="resize: none" class="form-control col-5" type="text"
+                        <textarea id="shippingRequests" rows="3" style="resize: none" class="form-control col-5"
+                                  type="text"
                                   name="shippingRequests"></textarea>
                     </div>
                 </div>
@@ -100,7 +133,7 @@
                     <div class="">총 결제금액</div>
                     <div class="" th:text="${totalPrice}">000</div>
                 </div>
-                <button type="submit" class="btn btn-primary">결제하기</button>
+                <button type="button" onclick="purchase()" class="btn btn-primary">결제하기</button>
             </div>
         </div>
 

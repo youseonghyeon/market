@@ -24,4 +24,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
 
     Set<Cart> findByIdIn(List<Long> id);
+    @EntityGraph(attributePaths = {"item"}, type = EntityGraph.EntityGraphType.FETCH)
+    Set<Cart> findCartsWithItemByIdIn(List<Long> id);
 }

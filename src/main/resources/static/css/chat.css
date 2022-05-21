@@ -1,0 +1,23 @@
+.chat-temporals {
+  font-size: 8px;
+}
+
+.chat-content-text-my {
+  background-color: #0dcaf0;
+}
+
+.chat-content-text-partner {
+  background-color: #0eff00;
+}
+
+.chat-box {
+  border-radius: 10px;
+  padding: 5px;
+  max-width: 200px;
+}
+
+#chat-area {
+  width: 500px;
+  max-height: 500px;
+  overflow: auto;
+}

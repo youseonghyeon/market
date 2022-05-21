@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header::header"></head>
+<link rel="stylesheet" th:href="@{/css/chat.css}">
 <script type="text/javascript" th:src="@{/js/sockjs.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/stomp.min.js}"></script>
 <script th:inline="javascript">
@@ -42,7 +43,7 @@
                 } else {
                     str += "<div>[왼쪽 배치]" + res.senderId + ": " + res.content + "</div>"
                 }
-                $('#area').append(str);
+                $('#chat-area').append(str);
             })
         })
 
@@ -57,23 +58,41 @@
     <div class="col-6">
         <label><b>채팅방</b></label>
     </div>
-    <div>
-        <div id="msgArea" class="col"></div>
-        <div class="col-6">
-            <div class="input-group mb-3">
-                <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
-                       aria-describedby="button-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+    <div class="border border-gray p-2 bg-white" style="width: 530px;">
+        <div id="chat-area">
+            <div class="d-flex mb-2"
+                 th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"
+                 th:each="chat : ${chatRecord}">
+                <div>
+                    <div class="chat-box" style="background-color: #2cb5ff;"
+                         th:if="${chat.getSender().getId() == account.getId()}">
+                        <div style="color: white;" th:text="${chat.content}">내용</div>
+                    </div>
+                    <div th:if="${chat.getSender().getId() != account.getId()}">
+                        <div th:text="${chat.getSender().getNickname()}">닉네임</div>
+                        <div class="chat-box" style="background-color: #e8e8e8;">
+                            <div th:text="${chat.content}">내용</div>
+                        </div>
+                    </div>
+                    <div class="chat-temporals" th:text="${#temporals.format(chat.getSendDate(), 'M월d일 H:m')}">보낸날짜
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div id="msgArea" class="col"></div>
+            <div>
+                <div class="input-group mb-3">
+                    <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
+                           aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div id="area">
-        <div th:each="chat : ${chatRecord}">
-            <div th:text="${chat.getSender.getNickname()} + ': '+${chat.getContent()} + '(' + ${chat.getSendDate()} + ')'"></div>
-        </div>
-    </div>
+
 </div>
 
 <!--    </th:block>-->
