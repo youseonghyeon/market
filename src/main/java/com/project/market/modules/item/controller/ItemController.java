@@ -77,6 +77,7 @@ public class ItemController {
     @GetMapping("/product/edit/{itemId}")
     public String editMyProduct(@CurrentAccount Account account, @PathVariable("itemId") Item item, Model model) {
         // 어드민만 진입 가능
+        // TODO 가격 수정 시 Cart 리포지토리에 있는 totalPrice의 대규모 연산(수정)이 필요함 (Sync 작업을 해주어야 함)
 
         model.addAttribute("itemForm", modelMapper.map(item, ItemForm.class));
         model.addAttribute("tagList", item.getTags());

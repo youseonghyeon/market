@@ -63,14 +63,9 @@
             <div class="d-flex justify-content-between">
                 <!--                상품 이름-->
                 <div>
-                    <span class="fs-4" th:text="*{name}"></span>
+                    <div class="fs-4" th:text="*{name}">상품명</div>
+                    <div th:text="*{'재고 ' + getQuantity() + '개 남음'}"></div>
                 </div>
-                <!--                -->
-                <!--                -->
-                <!--                -->
-                <!--                -->
-                <!--                -->
-                <!--                -->
 
                 <button onclick="favoriteToggle()" id="favorite-btn"
                         class="rounded-circle d-flex jcc aic"

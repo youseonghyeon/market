@@ -60,14 +60,14 @@
                     </a>
                 </li>
                 <!-- 택배 페이지-->
-                <li class="nav-item" sec:authorize="hasRole('ROLE_COURIER')">
-                    <a class="nav-link" th:href="@{/delivery/list}">
-                        <span class="material-icons-outlined">local_shipping</span>
-                    </a>
-                </li>
+<!--                <li class="nav-item" sec:authorize="hasRole('ROLE_COURIER')">-->
+<!--                    <a class="nav-link" th:href="@{/delivery/list}">-->
+<!--                        <span class="material-icons-outlined">local_shipping</span>-->
+<!--                    </a>-->
+<!--                </li>-->
                 <li>
-                    <a class="nav-link position-relative" th:href="@{/cart}">
-                        <span>카트</span>
+                    <a class="nav-link position-relative" sec:authorize="hasRole('ROLE_COURIER')" th:href="@{/cart}">
+                        <span class="material-icons-outlined">shopping_cart</span>
                     </a>
                 </li>
                 <!-- 알림-->
@@ -112,6 +112,7 @@
                         }
                     </script>
                     <a class="nav-link position-relative" onclick="openModal()">
+                        <!-- 알림 -->
                         <span class="material-icons-outlined">notifications</span>
                         <div class="position-absolute top-0 start-100 translate-middle-x badge rounded-pill bg-danger"
                              id="total" hidden="hidden"></div>
@@ -184,7 +185,6 @@
         </div>
     </div>
 </nav>
-
 
 
 <nav th:fragment="delivery-nav" class="p-2 navbar navbar-expand-md navbar-light border-bottom shadow-sm bg-white"

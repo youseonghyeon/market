@@ -6,8 +6,9 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.delivery.service.DeliveryService;
-import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.order.converter.CartConverter;
+import com.project.market.modules.order.dto.PurchaseResDto;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.LastOrderForm;
@@ -17,13 +18,13 @@ import com.project.market.modules.order.repository.OrderRepository;
 import com.project.market.modules.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,31 +33,30 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
     private final ItemRepository itemRepository;
-    private final DeliveryService deliveryService;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private final CartRepository cartRepository;
+    private final DeliveryService deliveryService;
+    private final CartConverter cartConverter;
+
+    @Value("${credit.account.number}")
+    private String accountNumber;
+    @Value("${credit.company}")
+    private String creditCompany;
 
     @GetMapping("/purchase")
     public String purchaseForm(@CurrentAccount Account account, @RequestParam("items") String param, Model model) {
-        Set<Cart> items = new HashSet<>();
+        Set<Cart> cartList = cartConverter.cartParameterConvert(param);
         int totalPrice = 0;
         int deliveryFee = Config.SHIPPING_FEE;
-        if (param.contains(":")) {
-            // /purchase?items=100:1,200:3  -> 100번 아이템 1개, 200번 아이템 3개
-            itemQuantityConvertor(items, param);
-        } else {
-            // /purchase?items=102,103,188 -> cart엔티티의 id=102, id=103, id=188 아이템 3개
-            cartIdsConvertor(items, param);
-        }
 
-        for (Cart item : items) {
-            totalPrice += item.getPrice();
+        for (Cart cart : cartList) {
+            totalPrice += cart.getPrice();
         }
 
         model.addAttribute("orderForm", new OrderForm(account));
-        model.addAttribute("cartItems", items);
+        model.addAttribute("cartItems", cartList);
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("account", account);
@@ -64,62 +64,35 @@ public class OrderController {
         return "order/purchase";
     }
 
-    private void itemQuantityConvertor(Set<Cart> items, String param) {
-        String[] itemSets = param.split(",");
-        log.info("param={}", param);
-        for (String itemSet : itemSets) {
-            Long itemId = Long.parseLong(itemSet.split(":")[0]);
-            int quantity = Integer.parseInt(itemSet.split(":")[1]);
-            Item item = itemRepository.findById(itemId).orElseThrow();
-            if (item.isDeleted()) {
-                throw new IllegalStateException("해당 상품은 존재하지 않습니다.");
-            }
-            Cart cart = new Cart(item, quantity);
-            items.add(cart);
-        }
-    }
-
-    private void cartIdsConvertor(Set<Cart> items, String param) {
-        String[] split = param.split(",");
-        List<Long> idList = new ArrayList<>();
-        for (String s : split) {
-            Long id = Long.parseLong(s);
-            idList.add(id);
-        }
-        Set<Cart> findCarts = cartRepository.findByIdIn(idList);
-        for (Cart findCart : findCarts) {
-            if (!findCart.getItem().isDeleted()) {
-                items.add(findCart);
-            }
-        }
-    }
-
-    private List<Long> getCartIds(String param) {
-        String[] split = param.split(",");
-        List<Long> idList = new ArrayList<>();
-        for (String s : split) {
-            Long id = Long.parseLong(s);
-            idList.add(id);
-        }
-        return idList;
-    }
-
 
     @PostMapping("/purchase")
     @ResponseBody
-    public void purchase(@CurrentAccount Account account, @Valid LastOrderForm orderForm) {
-        List<Long> cartIds = getCartIds(orderForm.getItems());
-        Set<Cart> cartList = cartRepository.findCartsWithItemByIdIn(cartIds);
-        orderService.createOrder(account, orderForm, cartList);
-        // 결제 모듈 실행
+    public PurchaseResDto purchase(@CurrentAccount Account account, @Valid LastOrderForm orderForm) {
+        Set<Cart> cartList = cartConverter.cartParameterConvert(orderForm.getItems());
+        Order order = orderService.createOrder(account, orderForm, cartList);
+
+        // PG사 결제 모듈 실행
+        return new PurchaseResDto(orderForm.getPaymentMethod(), order.getId());
     }
 
-    @GetMapping("/purchase/pay/{orderId}")
-    public String purchaseByNoBank(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
-        myOrderValidator(account, order);
-        model.addAttribute("orderId", order.getId());
+    @GetMapping("/nobank/{orderId}")
+    public String nobankDesc(@CurrentAccount Account account, @PathVariable("orderId") Long orderId, Model model) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        if (!order.getCustomer().equals(account)) {
+            throw new UnAuthorizedException("접근 권한이 없습니다.");
+        }
+        model.addAttribute("order", order);
+        model.addAttribute("accountNumber", accountNumber);
+        model.addAttribute("creditCompany", creditCompany);
         return "order/pay/nobank";
     }
+
+//    @GetMapping("/purchase/pay/{orderId}")
+//    public String purchaseByNoBank(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
+//        myOrderValidator(account, order);
+//        model.addAttribute("orderId", order.getId());
+//        return "order/pay/nobank";
+//    }
 
     @GetMapping("/purchase/card/{orderId}")
     public String purchaseByCard(@CurrentAccount Account account, @PathVariable("orderId") Order order, Model model) {
@@ -146,14 +119,15 @@ public class OrderController {
     }
 
     @GetMapping("/order/list")
-    public String orderListForm(@CurrentAccount Account account, @RequestParam(name = "orderType", required = false) String orderType, Model model) {
-        List<Order> orderList = orderService.findOrders(account, orderType);
+    public String orderListForm(Pageable pageable, @CurrentAccount Account account, @RequestParam(name = "orderType", required = false) String orderType, Model model) {
+        List<Order> orderList = orderRepository.findOrdersWithCartAndItemAndDeliveryByAccount(account, pageable);
         model.addAttribute("orderList", orderList);
         return "order/list";
     }
 
     @PostMapping("/order/cancel")
-    public String orderCancel(@CurrentAccount Account account, @RequestParam("orderId") Order order) {
+    public String orderCancel(@CurrentAccount Account account, @RequestParam("orderId") Long orderId) {
+        Order order = orderRepository.findWithCartsById(orderId);
         myOrderValidator(account, order);
         orderService.cancelOrder(order);
         return "redirect:/order/list";

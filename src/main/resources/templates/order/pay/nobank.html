@@ -6,10 +6,20 @@
 <div class="container">
     <h3>무통장 결제</h3>
 
-    <form th:action="@{/pay}" th:method="POST">
-        <input type="hidden" name="order-id" th:value="${orderId}">
-        <button type="submit">결제</button>
-    </form>
+    <table class="table">
+        <tr>
+            <td>주문 번호</td>
+            <td>계좌번호</td>
+            <td>금액</td>
+            <td>상태</td>
+        </tr>
+        <tr>
+            <td th:text="${order.getId()}">0000</td>
+            <td th:text="${accountNumber + '(' + creditCompany + ')'}">110-11111111-111</td>
+            <td th:text="${order.getTotalPrice() + '원'}">00000</td>
+            <td th:text="${order.getOrderStatusKo()}">결제 대기중</td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>

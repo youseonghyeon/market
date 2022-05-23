@@ -76,29 +76,29 @@ public class OrderService {
     }
 
     public void cancelOrder(Order order) {
+        Set<Cart> carts = order.getCarts();
+        // Item 재고 롤백
+        for (Cart cart : carts) {
+            Item item = cart.getItem();
+            item.plusQuantity(cart.getQuantity());
+        }
         // 주문 취소
         if (paymentHasBeenMade(order)) {
+            // 결제가 되어있을 때
             order.cancelOrderWithRefund();
+            // 배송이 시작이 되었을 때
+            Delivery delivery = order.getOrderDelivery();
+            if (delivery != null) {
+                // 수정 해야 함
+                deliveryService.cancel(delivery);
+            }
+
         } else {
+            // 아직 결제가 되어있지 않을 때
             order.cancelOrder();
         }
 
-        // 배송 취소
-        Delivery delivery = order.getOrderDelivery();
-        if (delivery != null) {
-            deliveryService.cancel(delivery);
-        } else {
-            log.info("Delivery가 존재하지 않습니다. orderId={}", order.getId());
-        }
 
-        // 상품 ROLLBACK
-//        Item item = order.getOrderedItem();
-//        if (item != null) {
-////            item.orderCancel();
-//            //TODO
-//        } else {
-//            log.info("Item이 존재하지 않습니다. orderId={}", order.getId());
-//        }
     }
 
     private boolean paymentHasBeenMade(Order order) {

@@ -43,6 +43,11 @@
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token)
             }
+        }).done(function (res, status) {
+            if (res.paymentMethod === "nobank") {
+                // 무통장 결제(계좌번호) 페이지로 이동
+                location.href = "/nobank/" + res.orderId
+            }
         })
     }
 

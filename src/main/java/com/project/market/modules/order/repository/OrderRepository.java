@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long>, CustomOrderRepository {
 
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
     List<Order> findByCustomerAndOrderStatusIsOrderByOrderDateDesc(Account account, OrderStatus orderStatus);
@@ -24,4 +24,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findOrderWithDeliveryById(Long orderId);
 
     List<Order> findOrdersByOrderStatusAndPaymentMethodOrderByOrderDateAsc(OrderStatus orderStatus, String method);
+
+    @EntityGraph(attributePaths = {"carts"}, type = EntityGraph.EntityGraphType.FETCH)
+    Order findWithCartsById(Long orderId);
 }

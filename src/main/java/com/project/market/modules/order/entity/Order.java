@@ -30,7 +30,9 @@ public class Order {
     private OrderStatus orderStatus = OrderStatus.WAITING;
 
     private String paymentMethod;
-    private String customerPhone;
+
+    private String buyerName;
+    private String buyerPhone;
 
     private String shippingRequests;
     private String destinationZoneCode;
@@ -60,7 +62,8 @@ public class Order {
         Order order = new Order();
         order.shippingRequests = orderForm.getShippingRequests();
         order.customer = customer;
-        order.customerPhone = orderForm.getRecipientPhone();
+        order.buyerName = orderForm.getRecipient();
+        order.buyerPhone = orderForm.getRecipientPhone();
         order.destinationZoneCode = orderForm.getDestinationZoneCode();
         order.destinationAddress = orderForm.getDestinationAddress();
         order.destinationAddressDetail = orderForm.getDestinationAddressDetail();

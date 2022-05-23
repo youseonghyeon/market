@@ -53,9 +53,6 @@ public class Account {
 
     private LocalDateTime joinedAt = LocalDateTime.now();
 
-
-//    private String bio;
-
     private String role;
 
     @Lob
@@ -74,20 +71,21 @@ public class Account {
 
     private boolean deleted = false;
 
+    @ManyToMany(cascade = PERSIST)
+    private Set<Tag> tags = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "account")
+    private Set<Cart> carts = new HashSet<>();
+
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
-
-    @OneToMany(mappedBy = "recipient")
-    private List<Notification> notifications = new ArrayList<>();
 
     @OneToMany(mappedBy = "account")
     private Set<Favorite> favorites = new HashSet<>();
 
-    @ManyToMany(cascade = PERSIST)
-    private Set<Tag> tags = new HashSet<>();
-
-    @OneToMany(mappedBy = "account")
-    private Set<Cart> carts = new HashSet<>();
+    @OneToMany(mappedBy = "recipient")
+    private List<Notification> notifications = new ArrayList<>();
 
     public static Account createNewAccount(SignupForm signupForm) {
         Account account = new Account();
