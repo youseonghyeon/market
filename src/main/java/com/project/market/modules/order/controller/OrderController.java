@@ -8,7 +8,7 @@ import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.order.converter.CartConverter;
-import com.project.market.modules.order.dto.PurchaseResDto;
+import com.project.market.modules.order.dto.PurchaseRes;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.form.LastOrderForm;
@@ -67,12 +67,12 @@ public class OrderController {
 
     @PostMapping("/purchase")
     @ResponseBody
-    public PurchaseResDto purchase(@CurrentAccount Account account, @Valid LastOrderForm orderForm) {
+    public PurchaseRes purchase(@CurrentAccount Account account, @Valid LastOrderForm orderForm) {
         Set<Cart> cartList = cartConverter.cartParameterConvert(orderForm.getItems());
         Order order = orderService.createOrder(account, orderForm, cartList);
 
         // PG사 결제 모듈 실행
-        return new PurchaseResDto(orderForm.getPaymentMethod(), order.getId());
+        return new PurchaseRes(orderForm.getPaymentMethod(), order.getId());
     }
 
     @GetMapping("/nobank/{orderId}")

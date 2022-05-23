@@ -58,4 +58,8 @@ public class Cart {
         this.account = null;
         this.order = order;
     }
+
+    public void modifyQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

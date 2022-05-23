@@ -31,7 +31,7 @@ public class MockAccount {
         return accountRepository.findByLoginId(form.getLoginId());
     }
 
-    private SignupForm createSignupForm(String loginId) {
+    public SignupForm createSignupForm(String loginId) {
         SignupForm form = new SignupForm();
         form.setLoginId(loginId);
         form.setPassword(ACCOUNT_PASSWORD);

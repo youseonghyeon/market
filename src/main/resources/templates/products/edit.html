@@ -57,7 +57,7 @@
             <small class="form-text text-danger" th:if="${#fields.hasErrors('quantity')}"
                    th:errors="*{quantity}"></small>
 
-            <div class="mt-3">상품 가격</div>
+            <div class="mt-3">상품 가격<span class="text-danger" style="font-size: 15px;">※변경시 대량의 연산이 수행될 수 있으므로 주의하세요.</span></div>
             <input type="number" class="form-control w-100" th:field="*{price}" placeholder="가격" required>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}"
                    th:errors="*{price}"></small>

@@ -27,7 +27,7 @@ public class MockItem {
         return itemService.createNewItem(itemForm);
     }
 
-    private ItemForm createItemForm(String itemName) {
+    public ItemForm createItemForm(String itemName) {
         ItemForm itemForm = new ItemForm();
         itemForm.setName(itemName);
         itemForm.setPrice(PRICE);

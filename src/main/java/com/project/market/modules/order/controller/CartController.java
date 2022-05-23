@@ -1,21 +1,21 @@
 package com.project.market.modules.order.controller;
 
 import com.project.market.infra.config.Config;
+import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.order.dto.AddCartDto;
+import com.project.market.modules.order.dto.QuantityModifyReq;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.repository.CartRepository;
+import com.project.market.modules.order.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -26,6 +26,21 @@ public class CartController {
 
     private final CartRepository cartRepository;
     private final ItemRepository itemRepository;
+    private final CartService cartService;
+
+    @GetMapping("/cart")
+    public String cartForm(@CurrentAccount Account account, Model model) {
+        Set<Cart> cartList = cartRepository.findCartsByAccount(account);
+        int totalPrice = 0;
+        for (Cart cart : cartList) {
+            totalPrice += cart.getPrice();
+        }
+        totalPrice += Config.SHIPPING_FEE;
+        model.addAttribute("cartList", cartList);
+        model.addAttribute("shippingFee", Config.SHIPPING_FEE);
+        model.addAttribute("totalPrice", totalPrice);
+        return "products/cart";
+    }
 
     @GetMapping("/cart/add")
     @ResponseBody
@@ -46,39 +61,33 @@ public class CartController {
 
     @GetMapping("/cart/delete")
     @ResponseBody
-    public Integer deleteCart(@CurrentAccount Account account, @RequestParam("cartId") Long cartId) {
-        cartRepository.deleteById(cartId);
-        Set<Cart> carts = cartRepository.findCartsByAccount(account);
-        Integer totalPrice = 0;
-        for (Cart cart : carts) {
-            totalPrice += cart.getPrice();
-        }
-
-        return totalPrice;
+    public String deleteCart(@CurrentAccount Account account, @RequestParam("cartId") Cart cart) {
+        checkCartAccess(account, cart);
+        cartRepository.delete(cart);
+        return "ok";
     }
 
     @GetMapping("/cart/delete/all")
     @ResponseBody
     public String deleteAllOfCart(@CurrentAccount Account account) {
         cartRepository.deleteCartsByAccount(account);
-        log.info("삭제");
         return "ok";
     }
 
-    @GetMapping("/cart")
-    public String myCart(@CurrentAccount Account account, Model model) {
-        Set<Cart> cartList = cartRepository.findCartsByAccount(account);
-        int totalPrice = 0;
-        for (Cart cart : cartList) {
-            totalPrice += cart.getPrice();
-        }
-        totalPrice += Config.SHIPPING_FEE;
-        model.addAttribute("cartList", cartList);
-        model.addAttribute("shippingFee", Config.SHIPPING_FEE);
-        model.addAttribute("totalPrice", totalPrice);
-        return "products/cart";
-
+    @PostMapping("/quantity/modify")
+    @ResponseBody
+    public String modifyQuantityInCart(@CurrentAccount Account account, @ModelAttribute QuantityModifyReq req) {
+        Cart cart = cartRepository.findById(req.getCartId()).orElseThrow();
+        checkCartAccess(account, cart);
+        cartService.modifyQuantity(cart, req.getQuantity());
+        return "ok";
     }
 
+    private void checkCartAccess(Account account, Cart cart) {
+        // 접근해야하는 카트가 본인의 카트인지 검증
+        if (!cart.getAccount().equals(account)) {
+            throw new UnAuthorizedException("접근 권한이 없습니다.");
+        }
+    }
 
 }
