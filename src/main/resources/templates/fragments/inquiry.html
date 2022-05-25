@@ -1,25 +1,140 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header::header"></head>
-
 <body>
-<div th:fragment="chatting">
+<div th:fragment="chatting" sec:authorize="isAuthenticated()">
     <script th:inline="javascript">
+        let ssrFlag = false;
+
+
         function chattingModalOpen() {
-            $('#chattingModal').css("display", "block")
+            $('#chattingModal').css("display", "block");
+            $('#chattingModalButton').css("display", "none");
+            if (!ssrFlag) {
+                // 렌더링
+                $.ajax({
+                    url: "/chat",
+                    method: "get",
+                }).done(function (res, status) {
+                    roomId = res;
+                    getPreviousData()
+                    connectStomp();
+                })
+                ssrFlag = true;
+            }
         }
 
         function chattingModalClose() {
-            $('#chattingModal').css("display", "none")
+            $('#chattingModal').css("display", "none");
+            $('#chattingModalButton').css("display", "block");
+        }
+
+        let socket = null;
+        let roomId = null;
+
+        $(document).ready(function () {
+            $('#button-send').on('click', function (evt) {
+                let msg = $('input#msg').val();
+                const messageObj = {
+                    senderId: roomId,
+                    roomId: roomId,
+                    content: msg
+                }
+                if (roomId != null) {
+                    socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
+                    document.getElementById("msg").value = '';
+                }
+            })
+        })
+
+        function getPreviousData() {
+            console.log("데이터를 불러옵니다.")
+            $.ajax({
+                url: "/chat/record/" + roomId,
+                method: "GET"
+            }).done(function (res) {
+                console.log(res)
+                // 데이터 삽입
+            })
+        }
+
+
+        function connectStomp() {
+            let sock = new SockJS("/inquiryStomp");
+            let client = Stomp.over(sock);
+            socket = client;
+
+            client.connect({}, function () {
+                // 해당 토픽을 구독한다!
+                client.subscribe('/topic/message/' + roomId, function (event) {
+                    let res = JSON.parse(event.body);
+                    let str = "";
+                    if (roomId === res.senderId) {
+                        str += "<div>[오른쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                    } else {
+                        str += "<div>[왼쪽 배치]" + res.senderId + ": " + res.content + "</div>"
+                    }
+                    $('#chat-area').append(str);
+                })
+            })
         }
 
     </script>
-    <div onclick="chattingModalOpen()" class="border border-gray position-fixed bg-white p-4" style="bottom: 50px; right: 50px;">문의하기</div>
+    <div id="chattingModalButton" onclick="chattingModalOpen()" class="fw-bold border border-gray position-fixed bg-white p-3 rounded-pill shadow-sm"
+         style="bottom: 40px; right: 30px; font-size: 23px;">
+        <span style="margin-right: 20px;">문의하기</span>
+        <img class="position-absolute" style="width: 30px; height: 30px; right: 11px; top: 15px;" th:src="@{/img/inquiry.png}" alt="문의하기">
+    </div>
 
 
-    <div id="chattingModal" class="position-fixed bg-white border border-2" style="display: none; bottom: 50px; right: 50px; width: 400px; height: 700px; z-index: 10;" >
-        채팅창
-        <div onclick="chattingModalClose()">X</div>
+    <div id="chattingModal" class="position-fixed bg-white border border-2 p-3"
+         style="display: none; bottom: 50px; right: 50px; width: 400px; height: 550px; z-index: 10;">
+        <div class="d-flex justify-content-between">
+            <div>채팅창</div>
+            <div onclick="chattingModalClose()">
+                <img th:src="@{/img/close.svg}" style="width: 26px;" alt="close">
+            </div>
+        </div>
+        <div>
+            <div class="border border-gray p-2 bg-white w-100">
+                <div id="chat-area">
+                    <!-- 이전 데이터 출력 위치 -->
+
+
+                    <!--                    <div class="d-flex mb-2"-->
+                    <!--                         th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"-->
+                    <!--                         th:each="chat : ${chatRecord}">-->
+                    <!--                        <div>-->
+                    <!--                            <div class="chat-box" style="background-color: #2cb5ff;"-->
+                    <!--                                 th:if="${chat.getSender().getId() == account.getId()}">-->
+                    <!--                                <div style="color: white;" th:text="${chat.content}">내용</div>-->
+                    <!--                            </div>-->
+                    <!--                            <div th:if="${chat.getSender().getId() != account.getId()}">-->
+                    <!--                                <div th:text="${chat.getSender().getNickname()}">닉네임</div>-->
+                    <!--                                <div class="chat-box" style="background-color: #e8e8e8;">-->
+                    <!--                                    <div th:text="${chat.content}">내용</div>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                            <div class="chat-temporals" th:text="${#temporals.format(chat.getSendDate(), 'M월d일 H:m')}">-->
+                    <!--                                보낸날짜-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                </div>
+                <div>
+                    <div id="msgArea" class="col"></div>
+                    <div>
+                        <div class="input-group mb-3">
+                            <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
+                                   aria-describedby="button-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

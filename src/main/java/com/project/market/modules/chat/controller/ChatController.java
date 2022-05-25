@@ -4,6 +4,7 @@ import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.chat.dto.MessageDto;
+import com.project.market.modules.chat.dto.RecordDto;
 import com.project.market.modules.chat.entity.Chat;
 import com.project.market.modules.chat.repository.ChatRepository;
 import com.project.market.modules.chat.service.ChatService;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,20 +36,21 @@ public class ChatController {
     private final SimpMessagingTemplate template;
 
     @GetMapping("/chat")
-    public String chatLink(@CurrentAccount Account account) {
-        return "redirect:/chat/" + account.getId();
+    @ResponseBody
+    public Long chatLink(@CurrentAccount Account account) {
+        // roomId = accountId 이기 때문에 그대로 사용
+        return account.getId();
     }
 
-    @GetMapping("/chat/{roomId}")
-    public String chatForm(@CurrentAccount Account account, @PathVariable("roomId") Long roomId, Model model) {
+    @GetMapping("/chat/record/{roomId}")
+    @ResponseBody
+    public List<RecordDto> chatForm(@CurrentAccount Account account, @PathVariable("roomId") Long roomId) {
         if (!account.getId().equals(roomId)) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
-        List<Chat> chatRecord = chatRepository.getChatContentsByRoomId(roomId);
-        model.addAttribute("chatRecord", chatRecord);
-        model.addAttribute("roomId", roomId);
-        model.addAttribute("account", account);
-        return "chat/chat";
+        return chatRepository.getChatDtoContentsByRoomId(roomId);
+
+
     }
 
     @MessageMapping("/inquiry/{roomId}")

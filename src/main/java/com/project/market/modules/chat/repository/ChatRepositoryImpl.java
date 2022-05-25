@@ -1,7 +1,11 @@
 package com.project.market.modules.chat.repository;
 
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.account.entity.QAccount;
+import com.project.market.modules.chat.dto.RecordDto;
 import com.project.market.modules.chat.entity.Chat;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.project.market.modules.account.entity.QAccount.account;
 import static com.project.market.modules.chat.entity.QChat.chat;
 
 @Repository
@@ -40,5 +45,17 @@ public class ChatRepositoryImpl implements CustomChatRepository {
                 .where(chat.roomId.eq(roomId))
                 .orderBy(chat.sendDate.asc())
                 .fetch();
+    }
+
+    public List<RecordDto> getChatDtoContentsByRoomId(Long roomId) {
+        List<RecordDto> dto = queryFactory.select(Projections.constructor(RecordDto.class,
+                        chat.content, chat.sendDate, account.id,
+                        account.nickname, chat.confirmed))
+                .from(chat)
+                .join(chat.sender, account)
+                .where(chat.roomId.eq(roomId))
+                .orderBy(chat.sendDate.asc())
+                .fetch();
+        return dto;
     }
 }

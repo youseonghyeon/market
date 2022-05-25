@@ -5,9 +5,10 @@
 <script type="text/javascript" th:src="@{/js/sockjs.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/stomp.min.js}"></script>
 <script th:inline="javascript">
-    let userId = [[${account.getLoginId()}]]
 
-    let roomId = [[${roomId}]];
+
+    let userId = [[${#authentication.principal.id}]]
+    let roomId = userId
     $(document).ready(function () {
         connectStomp();
 
@@ -54,11 +55,11 @@
 <!--<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">-->
 <!--    <th:block th:fragment="content">-->
 
-<div class="container">
+<div class="container" th:fragment="chat">
     <div class="col-6">
         <label><b>채팅방</b></label>
     </div>
-    <div class="border border-gray p-2 bg-white" style="width: 530px;">
+    <div class="border border-gray p-2 bg-white w-100" >
         <div id="chat-area">
             <div class="d-flex mb-2"
                  th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"
