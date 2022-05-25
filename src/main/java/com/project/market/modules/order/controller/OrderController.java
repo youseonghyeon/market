@@ -1,6 +1,5 @@
 package com.project.market.modules.order.controller;
 
-import com.project.market.infra.config.Config;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
@@ -45,11 +44,13 @@ public class OrderController {
     @Value("${credit.company}")
     private String creditCompany;
 
+    @Value("${shipping.fee}")
+    private int shippingFee;
+
     @GetMapping("/purchase")
     public String purchaseForm(@CurrentAccount Account account, @RequestParam("items") String param, Model model) {
         Set<Cart> cartList = cartConverter.cartParameterConvert(param);
         int totalPrice = 0;
-        int deliveryFee = Config.SHIPPING_FEE;
 
         for (Cart cart : cartList) {
             totalPrice += cart.getPrice();
@@ -57,7 +58,7 @@ public class OrderController {
 
         model.addAttribute("orderForm", new OrderForm(account));
         model.addAttribute("cartItems", cartList);
-        model.addAttribute("deliveryFee", deliveryFee);
+        model.addAttribute("deliveryFee", shippingFee);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("account", account);
         model.addAttribute("items", param);
@@ -73,11 +74,15 @@ public class OrderController {
 
         // PG사 결제 모듈 실행
         return new PurchaseRes(orderForm.getPaymentMethod(), order.getId());
+
     }
 
     @GetMapping("/nobank/{orderId}")
     public String nobankDesc(@CurrentAccount Account account, @PathVariable("orderId") Long orderId, Model model) {
         Order order = orderRepository.findById(orderId).orElseThrow();
+        if (!order.getPaymentMethod().equals("nobank")) {
+            throw new IllegalStateException("무통장 결제 주문이 아닙니다.");
+        }
         if (!order.getCustomer().equals(account)) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }

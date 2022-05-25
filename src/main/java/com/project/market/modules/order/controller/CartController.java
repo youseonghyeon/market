@@ -1,6 +1,5 @@
 package com.project.market.modules.order.controller;
 
-import com.project.market.infra.config.Config;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
@@ -13,6 +12,7 @@ import com.project.market.modules.order.repository.CartRepository;
 import com.project.market.modules.order.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +27,8 @@ public class CartController {
     private final CartRepository cartRepository;
     private final ItemRepository itemRepository;
     private final CartService cartService;
+    @Value("${shipping.fee}")
+    private int shippingFee;
 
     @GetMapping("/cart")
     public String cartForm(@CurrentAccount Account account, Model model) {
@@ -35,9 +37,9 @@ public class CartController {
         for (Cart cart : cartList) {
             totalPrice += cart.getPrice();
         }
-        totalPrice += Config.SHIPPING_FEE;
+        totalPrice += shippingFee;
         model.addAttribute("cartList", cartList);
-        model.addAttribute("shippingFee", Config.SHIPPING_FEE);
+        model.addAttribute("shippingFee", shippingFee);
         model.addAttribute("totalPrice", totalPrice);
         return "products/cart";
     }
@@ -76,11 +78,12 @@ public class CartController {
 
     @PostMapping("/quantity/modify")
     @ResponseBody
-    public String modifyQuantityInCart(@CurrentAccount Account account, @ModelAttribute QuantityModifyReq req) {
-        Cart cart = cartRepository.findById(req.getCartId()).orElseThrow();
+    public int modifyQuantityInCart(@CurrentAccount Account account, @ModelAttribute QuantityModifyReq req) {
+        Cart cart = cartRepository.findCartWithItemById(req.getCartId());
         checkCartAccess(account, cart);
         cartService.modifyQuantity(cart, req.getQuantity());
-        return "ok";
+
+        return cart.getPrice();
     }
 
     private void checkCartAccess(Account account, Cart cart) {

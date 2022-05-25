@@ -3,23 +3,20 @@ package com.project.market.modules.order.controller;
 import com.project.market.WithAccount;
 import com.project.market.infra.MockCart;
 import com.project.market.infra.MockItem;
-import com.project.market.infra.TestUtils;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.repository.ItemRepository;
-import com.project.market.modules.item.repository.TagRepository;
-import com.project.market.modules.item.service.ItemService;
-import com.project.market.modules.item.service.TagService;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.repository.CartRepository;
-import com.project.market.modules.order.repository.OrderRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -178,12 +175,13 @@ class CartControllerTest {
         Cart cart = savedCartList.get(0);
         Long cartId = cart.getId();
         int previousQuantity = cart.getQuantity();
+        int expectedTotalPrice = cart.getItem().getPrice() * (previousQuantity + 5);
 
         mockMvc.perform(post("/quantity/modify")
                         .param("cartId", String.valueOf(cartId))
                         .param("quantity", String.valueOf(previousQuantity + 5))
                         .with(csrf()))
-                .andExpect(content().string("ok"))
+                .andExpect(content().string(String.valueOf(expectedTotalPrice)))
                 .andExpect(status().isOk());
 
         Cart findCart = cartRepository.findById(cartId).orElseThrow();

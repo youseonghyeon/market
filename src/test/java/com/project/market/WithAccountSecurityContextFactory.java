@@ -1,10 +1,11 @@
 package com.project.market;
 
-import com.project.market.infra.TestUtils;
-import com.project.market.modules.account.repository.AccountRepository;
-import com.project.market.modules.account.service.AccountService;
+import com.project.market.infra.MockAccount;
+import com.project.market.infra.MockItem;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.SignupForm;
+import com.project.market.modules.account.repository.AccountRepository;
+import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +20,15 @@ import java.util.Locale;
 public class WithAccountSecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    CustomUserDetailsService userDetailsService;
     @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
     @Autowired
-    private TestUtils testUtils;
+    MockItem mockItem;
+    @Autowired
+    MockAccount mockAccount;
 
     public WithAccountSecurityContextFactory(AccountService accountService) {
         this.accountService = accountService;
@@ -40,7 +43,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         signupForm.setPassword("testpass");
         signupForm.setUsername("testname");
         signupForm.setEmail("email@email.com");
-        signupForm.setPhone(testUtils.createRandomPhoneNumber());
+        signupForm.setPhone(mockAccount.createRandomPhoneNumber());
 
         accountService.saveNewAccount(signupForm);
         Account account = accountRepository.findByLoginId(loginId);

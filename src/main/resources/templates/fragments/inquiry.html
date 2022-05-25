@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header::header"></head>
+
+<body>
+<div th:fragment="chatting">
+    <script th:inline="javascript">
+        function chattingModalOpen() {
+            $('#chattingModal').css("display", "block")
+        }
+
+        function chattingModalClose() {
+            $('#chattingModal').css("display", "none")
+        }
+
+    </script>
+    <div onclick="chattingModalOpen()" class="border border-gray position-fixed bg-white p-4" style="bottom: 50px; right: 50px;">문의하기</div>
+
+
+    <div id="chattingModal" class="position-fixed bg-white border border-2" style="display: none; bottom: 50px; right: 50px; width: 400px; height: 700px; z-index: 10;" >
+        채팅창
+        <div onclick="chattingModalClose()">X</div>
+    </div>
+</div>
+</body>
+</html>

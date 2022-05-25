@@ -1,7 +1,7 @@
 package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
-import com.project.market.infra.TestUtils;
+import com.project.market.infra.MockItem;
 import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.repository.ItemRepository;
@@ -40,13 +40,12 @@ class ItemControllerTest {
     @Autowired
     ModelMapper modelMapper;
     @Autowired
-    TestUtils testUtils;
+    MockItem mockItem;
 
     @BeforeEach
     @WithAccount("testUser")
     void beforeEach() {
-        Account account = accountRepository.findByLoginId("testUser");
-        testUtils.createMockItem(account, "test상품");
+        mockItem.createMockItem("test상품");
     }
 
     @AfterEach

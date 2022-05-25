@@ -40,6 +40,26 @@
         })
     }
 
+    const modifyQuantity = (cartId) => {
+        let quantity = $('#quantity' + cartId).val();
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            url: "/quantity/modify",
+            method: "POST",
+            data: {
+                cartId,
+                quantity
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            }
+        }).done(function (res) {
+            $('#price' + cartId).text(res)
+        })
+    }
+
 
 </script>
 <body>
@@ -73,18 +93,22 @@
                     <td><input class="check_buttons" th:value="${cart.getId()}" type="checkbox" checked></td>
                     <td th:text="${cart.getItem().getName()}"></td>
                     <td>
-                        <select th:if="${cart.getQuantity() <=5}" class="select" style="width: 50px;" type="number"
-                                th:value="${cart.getQuantity()}">
-                            <option value="1" th:selected="${cart.getQuantity() == 1}">1</option>
-                            <option value="2" th:selected="${cart.getQuantity() == 2}">2</option>
-                            <option value="3" th:selected="${cart.getQuantity() == 3}">3</option>
-                            <option value="4" th:selected="${cart.getQuantity() == 4}">4</option>
-                            <option value="5" th:selected="${cart.getQuantity() == 5}">5</option>
-                            <option value="직접입력">직접입력</option>
-                        </select>
-                        <input th:unless="${cart.getQuantity() <= 5}" style="width: 50px;" type="number">
+                        <input th:id="${'quantity' + cart.getId()}" th:onfocusout="|modifyQuantity(${cart.getId()})|"
+                               style="width: 50px;" type="number" th:value="${cart.getQuantity()}">
+                        <!--                        <select th:if="${cart.getQuantity() <=5}" class="select" style="width: 50px;" type="number"-->
+                        <!--                                th:value="${cart.getQuantity()}">-->
+                        <!--                            <option value="1" th:selected="${cart.getQuantity() == 1}">1</option>-->
+                        <!--                            <option value="2" th:selected="${cart.getQuantity() == 2}">2</option>-->
+                        <!--                            <option value="3" th:selected="${cart.getQuantity() == 3}">3</option>-->
+                        <!--                            <option value="4" th:selected="${cart.getQuantity() == 4}">4</option>-->
+                        <!--                            <option value="5" th:selected="${cart.getQuantity() == 5}">5</option>-->
+                        <!--                            <option value="직접입력">직접입력</option>-->
+                        <!--                        </select>-->
                     </td>
-                    <td th:text="${cart.getPrice()} + '원'"></td>
+                    <td>
+                        <span th:id="'price' + ${cart.getId()}" th:text="${cart.getPrice()}"></span>
+                        <span>원</span>
+                    </td>
                     <td>
                         <button th:onclick="deleteCart([[${cart.getId()}]])">
                             <span class="material-icons-outlined">close</span>

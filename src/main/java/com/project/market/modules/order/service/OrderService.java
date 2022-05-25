@@ -1,19 +1,18 @@
 package com.project.market.modules.order.service;
 
-import com.project.market.infra.config.Config;
 import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.delivery.entity.Delivery;
+import com.project.market.modules.delivery.service.DeliveryService;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.entity.Order;
 import com.project.market.modules.order.entity.OrderStatus;
 import com.project.market.modules.order.form.LastOrderForm;
-import com.project.market.modules.order.form.OrderForm;
 import com.project.market.modules.order.repository.CartRepository;
 import com.project.market.modules.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +29,9 @@ public class OrderService {
     private final DeliveryService deliveryService;
     private final CartRepository cartRepository;
 
+    @Value("${shipping.fee}")
+    private int shippingFee;
+
     public Order createOrder(Account account, LastOrderForm orderForm, Set<Cart> cartSet) {
         Order order = Order.createNewOrder(account, orderForm);
         int tempPrice = 0;
@@ -44,7 +46,7 @@ public class OrderService {
         }
         cartRepository.saveAll(cartSet);
         // totalPrice/ShippingFee 설정
-        order.setBill(tempPrice + Config.SHIPPING_FEE, Config.SHIPPING_FEE);
+        order.setBill(tempPrice + shippingFee, shippingFee);
 
         return order;
     }

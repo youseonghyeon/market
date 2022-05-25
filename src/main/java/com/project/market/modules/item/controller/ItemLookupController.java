@@ -11,6 +11,7 @@ import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,9 @@ public class ItemLookupController {
     private final ItemService itemService;
     private final FavoriteRepository favoriteRepository;
 
+    @Value("${shipping.fee}")
+    private int shippingFee;
+
     @GetMapping("/product/{itemId}")
     public String productForm(@CurrentAccount Account account, @PathVariable("itemId") Long itemId, Model model) {
         Item item = itemRepository.findItemWithTagsById(itemId);
@@ -46,6 +50,7 @@ public class ItemLookupController {
         }
 
         model.addAttribute("item", item);
+        model.addAttribute("shippingFee", shippingFee);
         return "products/product";
     }
 

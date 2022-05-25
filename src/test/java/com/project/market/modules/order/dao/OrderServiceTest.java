@@ -1,6 +1,6 @@
 package com.project.market.modules.order.dao;
 
-import com.project.market.infra.TestUtils;
+import com.project.market.infra.MockItem;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.entity.Item;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class OrderServiceTest {
 
     @Autowired
-    TestUtils testUtils;
+    MockItem mockItem;
     @Autowired
     OrderService orderService;
     @Autowired
@@ -31,17 +31,7 @@ class OrderServiceTest {
     @DisplayName("")
     void createOrder() {
         //given
-        Account seller = testUtils.createMockAccount("seller");
-        Account buyer = testUtils.createMockAccount("buyer");
-        Item item = testUtils.createMockItem(seller, "item00");
-        OrderForm orderForm = new OrderForm( buyer);
-        //when
-        Order order = orderService.createOrder(buyer, null, null);
-        //then
-        assertEquals(order.getOrderStatus(), OrderStatus.WAITING);
-        /**
-         * TODO 카드 결제 시 카드로 처리
-         */
+
     }
 
     @Test

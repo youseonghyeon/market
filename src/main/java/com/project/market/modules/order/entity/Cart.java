@@ -61,5 +61,6 @@ public class Cart {
 
     public void modifyQuantity(int quantity) {
         this.quantity = quantity;
+        this.price = item.getPrice() * quantity;
     }
 }
