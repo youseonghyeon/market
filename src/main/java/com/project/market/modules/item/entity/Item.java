@@ -46,9 +46,9 @@ public class Item {
 
     private LocalDateTime enrolledDate = LocalDateTime.now();
 
-    private String coverPhoto;
+    private String coverPhotoPath;
 
-    private String photo;
+    private String photoPath;
 
     private boolean deleted = false;
 
@@ -65,7 +65,6 @@ public class Item {
         item.description = itemForm.getDescription();
         item.enrolledDate = LocalDateTime.now();
         item.deleted = false;
-
         return item;
     }
 
@@ -82,8 +81,8 @@ public class Item {
         price = itemForm.getPrice();
         quantity = itemForm.getQuantity();
         description = itemForm.getDescription();
-        coverPhoto = null;
-        photo = null;
+        photoPath = "/" + itemForm.getId() + "/" + itemForm.getPhoto().getOriginalFilename();
+        coverPhotoPath = "/" + itemForm.getId() + "/" + itemForm.getCoverPhoto().getOriginalFilename();
     }
 
     public boolean isDeleted() {
@@ -128,5 +127,15 @@ public class Item {
 
     public void minusFavoriteCount() {
         favoriteCount--;
+    }
+
+    public void uploadPhotos( ItemForm itemForm) {
+        photoPath = "/" + 10 + "/" + itemForm.getPhoto().getOriginalFilename();
+        coverPhotoPath = "/" + 10 + "/" + itemForm.getCoverPhoto().getOriginalFilename();
+    }
+
+    public void setPhotoPaths(String coverPhotoPath, String photoPath) {
+        this.coverPhotoPath = coverPhotoPath;
+        this.photoPath = photoPath;
     }
 }

@@ -81,8 +81,8 @@ class ItemControllerTest {
 
         Item item = itemRepository.findByName("상품A");
         assertEquals(item.getPrice(), 6000);
-        assertEquals(item.getCoverPhoto(), "A.jpg");
-        assertEquals(item.getPhoto(), "B.jpg");
+        assertEquals(item.getCoverPhotoPath(), "A.jpg");
+        assertEquals(item.getPhotoPath(), "B.jpg");
     }
 
     @Test
@@ -118,8 +118,8 @@ class ItemControllerTest {
         Item modifiedItem = itemRepository.findByName("수정된 상품");
         assertNotNull(modifiedItem);
         assertEquals(modifiedItem.getPrice(), 4000);
-        assertEquals(modifiedItem.getCoverPhoto(), "없음");
-        assertEquals(modifiedItem.getPhoto(), "없음");
+        assertEquals(modifiedItem.getCoverPhotoPath(), "없음");
+        assertEquals(modifiedItem.getPhotoPath(), "없음");
         assertEquals(modifiedItem.getDescription(), "상세 설명1");
 
     }

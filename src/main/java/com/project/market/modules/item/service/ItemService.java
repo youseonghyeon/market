@@ -1,14 +1,14 @@
 package com.project.market.modules.item.service;
 
-import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.item.entity.Favorite;
+import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.entity.Tag;
+import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.repository.FavoriteRepository;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.repository.TagRepository;
-import com.project.market.modules.item.entity.*;
-import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.notification.repository.NotificationRepository;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,20 +22,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ItemService {
 
-    public static Integer DEFAULT_SHIPPING_FEE = 2500;
     private final ItemRepository itemRepository;
     private final TagRepository tagRepository;
-    private final JPAQueryFactory queryFactory;
     private final NotificationRepository notificationRepository;
     private final FavoriteRepository favoriteRepository;
-    private final AccountRepository accountRepository;
-    private final TagService tagService;
 
     public Item createNewItem(ItemForm itemForm) {
         Item item = Item.createNewItem(itemForm);
         editTags(item, itemForm);
-
         itemRepository.save(item);
+
+//        item.uploadPhotos(itemForm);
         return item;
     }
 
@@ -77,4 +74,7 @@ public class ItemService {
         itemRepository.save(item);
     }
 
+    public void savePhotoPath(Item item, String coverPhotoPath, String photoPath) {
+        item.setPhotoPaths(coverPhotoPath, photoPath);
+    }
 }

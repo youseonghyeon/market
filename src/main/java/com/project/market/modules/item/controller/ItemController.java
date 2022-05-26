@@ -1,5 +1,6 @@
 package com.project.market.modules.item.controller;
 
+import com.project.market.infra.fileupload.AwsS3Service;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.service.ItemService;
@@ -21,8 +22,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +42,7 @@ public class ItemController {
     private final ItemFormValidator itemFormValidator;
     private final NotificationService notificationService;
     private final FavoriteRepository favoriteRepository;
+    private final AwsS3Service awsS3Service;
 
 
     @ExceptionHandler(IllegalStateException.class)
@@ -66,6 +71,13 @@ public class ItemController {
         }
         tagService.createOrCountingTag(itemForm.getTags());
         Item item = itemService.createNewItem(itemForm);
+        itemForm.setId(item.getId());
+
+        String dir = "item/" + item.getId() + "/";
+        String coverPhotoUrl = awsS3Service.uploadFile(dir, itemForm.getCoverPhoto());
+        String photoUrl = awsS3Service.uploadFile(dir, itemForm.getPhoto());
+
+        itemService.savePhotoPath(item, coverPhotoUrl, photoUrl);
 
         // 알람 전송(비동기)
         notificationService.noticeItemEnrollment(item);

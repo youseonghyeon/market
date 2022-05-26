@@ -57,7 +57,9 @@
                 style="height: 400px;"
                 th:each="item : ${itemList}">
                 <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
-                    <div class="border border-gray" style="height: 240px; width: 240px;"></div>
+                    <div class="border border-gray" style="height: 240px; width: 240px;">
+                        <img class="w-100" th:src="${item.getCoverPhotoPath()}" alt="미리보기">
+                    </div>
                     <h5 class="m-0" th:text="${item.getName()}"></h5>
                     <div>
                         <span class="fs-6" th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></span>

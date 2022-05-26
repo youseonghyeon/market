@@ -1,5 +1,6 @@
 package com.project.market.modules.account.controller;
 
+import com.project.market.infra.fileupload.AwsS3Service;
 import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
@@ -24,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +46,7 @@ public class SettingController {
     private final AccountRepository accountRepository;
     private final PasswordFormValidator passwordFormValidator;
     private final PasswordEncoder passwordEncoder;
+    private final AwsS3Service awsS3Service;
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) {
@@ -146,5 +149,14 @@ public class SettingController {
         }
         accountService.deleteAccount(account);
         return "redirect:/";
+    }
+
+    @PostMapping("/profile/image")
+    @ResponseBody
+    public String modifyProfileImage(MultipartFile image) {
+        // TODO 파라미터랑 검증 로직 추가해야 함
+        String dir = "account/profile/";
+        String imageUrl = awsS3Service.uploadFile(dir, image);
+        return imageUrl;
     }
 }
