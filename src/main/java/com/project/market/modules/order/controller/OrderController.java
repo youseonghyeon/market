@@ -55,6 +55,7 @@ public class OrderController {
         for (Cart cart : cartList) {
             totalPrice += cart.getPrice();
         }
+        totalPrice += shippingFee;
 
         model.addAttribute("orderForm", new OrderForm(account));
         model.addAttribute("cartItems", cartList);

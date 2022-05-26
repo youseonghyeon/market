@@ -5,7 +5,9 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.order.converter.CartConverter;
 import com.project.market.modules.order.dto.AddCartDto;
+import com.project.market.modules.order.dto.CurrentCartData;
 import com.project.market.modules.order.dto.QuantityModifyReq;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.repository.CartRepository;
@@ -29,6 +31,8 @@ public class CartController {
     private final CartService cartService;
     @Value("${shipping.fee}")
     private int shippingFee;
+
+    private final CartConverter cartConverter;
 
     @GetMapping("/cart")
     public String cartForm(@CurrentAccount Account account, Model model) {
@@ -91,6 +95,27 @@ public class CartController {
         if (!cart.getAccount().equals(account)) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
+    }
+
+    @GetMapping("/cart/data")
+    @ResponseBody
+    public CurrentCartData findCurrentData(@CurrentAccount Account account, @RequestParam(name = "cartIdList", required = false) String idList) {
+        if (idList.trim().equals("")) {
+            return new CurrentCartData(0, 0);
+        }
+        Set<Cart> cartList = cartConverter.cartParameterConvert(idList);
+        int totalPrice = 0;
+        int shippingPrice = 0;
+        for (Cart cart : cartList) {
+            checkCartAccess(account, cart);
+            totalPrice += cart.getPrice();
+        }
+        if (totalPrice > 0) {
+            totalPrice += shippingFee;
+            shippingPrice = shippingFee;
+        }
+
+        return new CurrentCartData(totalPrice, shippingPrice);
     }
 
 }

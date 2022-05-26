@@ -1,6 +1,8 @@
 package com.project.market.modules.account.controller;
 
 import com.project.market.infra.fileupload.AwsS3Service;
+import com.project.market.modules.account.dto.ModifyImageReq;
+import com.project.market.modules.account.dto.ModifyImageRes;
 import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.service.AccountService;
 import com.project.market.modules.account.entity.Account;
@@ -25,7 +27,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -153,10 +154,10 @@ public class SettingController {
 
     @PostMapping("/profile/image")
     @ResponseBody
-    public String modifyProfileImage(MultipartFile image) {
-        // TODO 파라미터랑 검증 로직 추가해야 함
-        String dir = "account/profile/";
-        String imageUrl = awsS3Service.uploadFile(dir, image);
-        return imageUrl;
+    public ModifyImageRes modifyProfileImage(@CurrentAccount Account account, @ModelAttribute ModifyImageReq req) {
+        Account findAccount = accountRepository.findById(account.getId()).orElseThrow();
+        accountService.modifyProfileImageAndNickName(findAccount, req.getNickname(), req.getProfileImage());
+
+        return new ModifyImageRes(findAccount.getNickname(), findAccount.getProfileImagePath());
     }
 }

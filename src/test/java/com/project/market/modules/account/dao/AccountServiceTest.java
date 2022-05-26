@@ -76,7 +76,6 @@ class AccountServiceTest {
         profileForm.setNickname("newNick");
         profileForm.setPhone("01012981298");
         profileForm.setEmail("newMail@test.com");
-        profileForm.setProfileImage("newImg");
         //when
         accountService.editProfile(account, profileForm);
         //then
@@ -85,7 +84,6 @@ class AccountServiceTest {
         assertEquals(findAccount.getNickname(), "newNick");
         assertEquals(findAccount.getPhone(), "01012981298");
         assertEquals(findAccount.getEmail(), "newMail@test.com");
-        assertEquals(findAccount.getProfileImage(), "newImg");
     }
 
     @Test

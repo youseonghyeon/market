@@ -1,5 +1,6 @@
 package com.project.market.modules.account.service;
 
+import com.project.market.infra.fileupload.AwsS3Service;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.form.AddressForm;
 import com.project.market.modules.account.form.ProfileForm;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import java.util.Set;
@@ -24,6 +26,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AwsS3Service awsS3Service;
     private final EntityManager em;
 
     public void saveNewAccount(SignupForm signupForm) {
@@ -90,5 +93,15 @@ public class AccountService {
     public void deleteAccount(Account account) {
         account.withdrawal();
         accountRepository.save(account);
+    }
+
+    public void modifyProfileImageAndNickName(Account account, String nickname, MultipartFile profileImage) {
+        String dir = "account/profile/" + account.getId() + "/";
+        if (profileImage != null) {
+            String url = awsS3Service.uploadFile(dir, profileImage);
+            account.modifyProfileImageAndNickname(nickname, url);
+        } else {
+            account.modifyNickname(nickname);
+        }
     }
 }

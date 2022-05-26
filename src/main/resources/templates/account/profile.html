@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
 <script th:inline="javascript">
+
     function messageClose() {
         document.getElementById("notification").style.display = "none";
     }
@@ -59,10 +60,59 @@
         elem.remove();
     }
 
+    const modifyProfileImageAndNickname = () => {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+
+        const form = $("#imageAndNickname")[0];
+        let formData = new FormData(form);
+        formData.append("profileImage", $("#profileImage")[0].files[0]);
+
+        $.ajax({
+            url: "/profile/image",
+            method: "POST",
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            data: formData,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            },
+        }).done(function (res) {
+            $("#nickname").text(res.nickname);
+            $("#imagePath").attr("src", res.imagePath);
+            closeImageModal()
+        })
+    }
+
+    const openImageModal = () => {
+        $("#image-modal").css("display", "block");
+    }
+
+    const closeImageModal = () => {
+        $("#image-modal").css("display", "none");
+    }
+
 </script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container" style="padding-left: 140px; padding-right: 140px;" th:object="${account}">
+
+    <div id="image-modal" style="display: none;">
+        <div class="position-absolute bg-white border border-gray d-flex jcc aic"
+             style="width: 400px; height: 400px; z-index: 9">
+            <button onclick="closeImageModal()">X</button>
+            <form id="imageAndNickname" method="POST" enctype="multipart/form-data">
+                <div>
+                    <input id="nickname-input" name="nickname" type="text" th:value="*{getNickname()}">
+                    <input id="profileImage" name="profileImage" type="file">
+                    <button id="saveImage" type="button" onclick="modifyProfileImageAndNickname()"
+                            class="btn btn-custom">저장
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div id="notification" th:if="${message}"
          class="alert alert-info alert-dismissible fade show justify-content-between align-items-center mt-2"
@@ -79,15 +129,16 @@
 
     <div class="d-flex justify-content-center align-items-center" style="height: 270px;">
         <div class="d-flex position-relative flex-column align-items-center">
-            <div class="border border-gray bg-white" style="border-radius: 140px; width: 120px; height: 120px;">
-
-                <!--                사진 위치-->
+            <div class="border border-gray bg-white"
+                 style="border-radius: 140px; width: 120px; height: 120px;">
+                <img id="imagePath" style="border-radius: 140px; width: 120px; height: 120px;"
+                     th:src="*{getProfileImagePath()}" alt="">
             </div>
             <div class="position-relative" style="bottom: 20px;">
-                <span style="font-size: 20px;" th:text="*{nickname}">별명</span>
-                <a href="#">
+                <span id="nickname" style="font-size: 20px;" th:text="*{nickname}">별명</span>
+                <button onclick="openImageModal()">
                     <span class="material-icons-outlined md-18">settings</span>
-                </a>
+                </button>
             </div>
         </div>
 
@@ -168,13 +219,6 @@
                 </div>
             </div>
 
-<!--            <div>-->
-<!--                <h5 class="">관심 지역 추가</h5>-->
-<!--                <input id="zone-input" type="text" onkeydown="if(event.keyCode === 13) addZone()"-->
-<!--                       class="form-control w-75 mt-1"-->
-<!--                       placeholder="Tags.">-->
-<!--                <div id="zone-area" class="mt-2" style="min-height: 10px;"></div>-->
-<!--            </div>-->
         </div>
 
         <div class="container mt-4 ">

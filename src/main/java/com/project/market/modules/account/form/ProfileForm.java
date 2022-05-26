@@ -16,8 +16,6 @@ public class ProfileForm {
 
     private String email;
 
-    private String profileImage;
-
     private boolean itemEnrollAlertByWeb;
     private boolean itemEnrollAlertByMail;
 }

@@ -2,6 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
 <script th:inline="javascript">
+
+    $(document).ready(function () {
+        $(":checkbox").change(function () {
+            getCurrentData();
+        })
+    })
+
     const purchase = () => {
         let str = "";
         let elems = document.getElementsByClassName("check_buttons");
@@ -22,12 +29,7 @@
                 cartId
             }
         }).done(function (result, status) {
-            console.log(result)
-            $('#cart' + cartId).remove()
-            $('#total').text(result)
-            if (result === 0) {
-                $('#shippingFee').text(result)
-            }
+            getCurrentData();
         })
     }
 
@@ -37,6 +39,7 @@
             method: "GET"
         }).done(function (result, status) {
             $('.eachCart').remove()
+            getCurrentData();
         })
     }
 
@@ -56,7 +59,28 @@
                 xhr.setRequestHeader(header, token)
             }
         }).done(function (res) {
-            $('#price' + cartId).text(res)
+            $("#price" + cartId).text(res);
+            getCurrentData()
+        })
+    }
+
+    const getCurrentData = () => {
+        let checkButtons = $(".check_buttons");
+        let data = "";
+        for (const check of checkButtons) {
+            if (check.checked) {
+                data += check.value + ",";
+            }
+        }
+        $.ajax({
+            url: "/cart/data",
+            method: "GET",
+            data: {
+                cartIdList: data,
+            },
+        }).done(function (res) {
+            $("#shippingFee").text(res.shippingFee);
+            $("#totalPrice").text(res.totalPrice);
         })
     }
 
@@ -118,11 +142,17 @@
             </table>
             <div class="border-bottom border-gray d-flex justify-content-between mt-4" style="padding-right: 150px;">
                 <div>배송비</div>
-                <div id="shippingFee" th:text="${shippingFee} + '원'">배송비</div>
+                <div>
+                    <span id="shippingFee" th:text="${shippingFee}">0000(배송비)</span>
+                    <span>원</span>
+                </div>
             </div>
             <div class="border-bottom border-gray d-flex justify-content-between mt-4" style="padding-right: 150px;">
                 <div>합계</div>
-                <div id="total" th:text="${totalPrice} + '원'"></div>
+                <div>
+                    <span id="totalPrice" th:text="${totalPrice}">총 금액</span>
+                    <span>원</span>
+                </div>
             </div>
 
             <div onclick="purchase()" class="btn btn-custom mt-5">구매하기</div>
@@ -131,6 +161,7 @@
                 <input id="input_items" type="hidden" name="items">
             </form>
         </div>
+        <button onclick="getCurrentData()">버스터콜</button>
 
     </div>
 </div>

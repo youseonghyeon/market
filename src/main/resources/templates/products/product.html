@@ -101,9 +101,10 @@
             <form id="buy_submit" th:action="@{/purchase}" th:method="get">
                 <input type="hidden" name="items" id="items">
                 <div class="d-flex align-items-center">
-                    <input style="width: 90px;" id="quantity" type="number" class="form-control m-1" value="1">
-                    <button type="button" onclick="addCart()" class="btn btn-custom mt-2 w-100 m-1">장바구니 담기</button>
-                    <button type="button" onclick="buy()" class="btn btn-custom mt-2 w-100 m-1">바로 구매</button>
+                    <input th:disabled="${item.getQuantity() == 0}" style="width: 90px;" id="quantity" type="number" class="form-control m-1" value="1">
+                    <button th:if="${item.getQuantity() > 0}" type="button" onclick="addCart()" class="btn btn-custom mt-2 w-100 m-1">장바구니 담기</button>
+                    <button th:if="${item.getQuantity() > 0}" type="button" onclick="buy()" class="btn btn-custom mt-2 w-100 m-1">바로 구매</button>
+                    <button th:unless="${item.getQuantity() > 0}" type="button" disabled class="btn btn-custom mt-2 w-100 m-1">품절</button>
                 </div>
             </form>
             <div th:text="*{'재고 ' + getQuantity() + '개 남음'}"></div>

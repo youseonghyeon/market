@@ -55,8 +55,7 @@ public class Account {
 
     private String role;
 
-    @Lob
-    private String profileImage;
+    private String profileImagePath;
 
     private String passwordToken;
 
@@ -106,7 +105,6 @@ public class Account {
 
     public void modifyProfile(ProfileForm profileForm) {
         nickname = profileForm.getNickname();
-        profileImage = profileForm.getProfileImage();
         email = profileForm.getEmail();
         phone = profileForm.getPhone();
         itemEnrollAlertByWeb = profileForm.isItemEnrollAlertByWeb();
@@ -140,5 +138,14 @@ public class Account {
 
     public void withdrawal() {
         deleted = true;
+    }
+
+    public void modifyProfileImageAndNickname(String nickname, String profileImagePath) {
+        this.nickname = nickname;
+        this.profileImagePath = profileImagePath;
+    }
+
+    public void modifyNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

@@ -80,10 +80,12 @@
         }
 
     </script>
-    <div id="chattingModalButton" onclick="chattingModalOpen()" class="fw-bold border border-gray position-fixed bg-white p-3 rounded-pill shadow-sm"
+    <div id="chattingModalButton" onclick="chattingModalOpen()"
+         class="fw-bold border border-gray position-fixed bg-white p-3 rounded-pill shadow-sm"
          style="bottom: 40px; right: 30px; font-size: 23px;">
         <span style="margin-right: 20px;">문의하기</span>
-        <img class="position-absolute" style="width: 30px; height: 30px; right: 11px; top: 15px;" th:src="@{/img/inquiry.png}" alt="문의하기">
+        <img class="position-absolute" style="width: 30px; height: 30px; right: 11px; top: 15px;"
+             th:src="@{/img/inquiry.png}" alt="문의하기">
     </div>
 
 
@@ -98,9 +100,8 @@
         <div>
             <div class="border border-gray p-2 bg-white w-100">
                 <div id="chat-area">
+                    <div style="height: 400px;">이전 채팅 내용</div>
                     <!-- 이전 데이터 출력 위치 -->
-
-
                     <!--                    <div class="d-flex mb-2"-->
                     <!--                         th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"-->
                     <!--                         th:each="chat : ${chatRecord}">-->
@@ -122,7 +123,7 @@
                     <!--                    </div>-->
                 </div>
                 <div>
-                    <div id="msgArea" class="col"></div>
+                    <div id="msgArea"></div>
                     <div>
                         <div class="input-group mb-3">
                             <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
