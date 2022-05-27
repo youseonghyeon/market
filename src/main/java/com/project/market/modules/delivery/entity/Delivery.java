@@ -3,6 +3,7 @@ package com.project.market.modules.delivery.entity;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.order.form.OrderForm;
+import com.project.market.modules.superclass.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import static javax.persistence.EnumType.STRING;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Delivery {
+public class Delivery extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

@@ -3,6 +3,7 @@ package com.project.market.modules.invoice.controller;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.superclass.BaseTimeEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class InvoiceController {
+public class InvoiceController extends BaseTimeEntity {
 
     @PostMapping
     public String paymentConfirm(@CurrentAccount Account account, @RequestParam("invoiceId") String id) {

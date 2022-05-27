@@ -70,7 +70,7 @@ public class ChatController {
 
     @GetMapping("/admin/chat/{roomId}")
     public String replyForm(@CurrentAccount Account account, @PathVariable("roomId") Long roomId, Model model) {
-        List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(roomId);
+        List<Order> orders = orderRepository.findByCustomerIdOrderByCreatedDateDesc(roomId);
         List<Chat> chatRecord = chatRepository.getChatContentsByRoomId(roomId);
         model.addAttribute("orderList", orders);
         model.addAttribute("chatRecord", chatRecord);

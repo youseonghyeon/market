@@ -1,5 +1,7 @@
 package com.project.market.modules.order.entity;
 
+import com.project.market.modules.superclass.BaseAccountEntity;
+import com.project.market.modules.superclass.BaseTimeEntity;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.order.form.LastOrderForm;
@@ -17,7 +19,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Order {
+public class Order extends BaseAccountEntity {
 
     @Id
     @GeneratedValue
@@ -55,7 +57,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private Set<Cart> carts = new HashSet<>();
-
 
 
     public static Order createNewOrder(Account customer, LastOrderForm orderForm) {

@@ -3,6 +3,8 @@ package com.project.market.modules.item.controller;
 import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.entity.Comment;
+import com.project.market.modules.item.repository.CommentRepository;
 import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.repository.FavoriteRepository;
 import com.project.market.modules.item.repository.ItemRepository;
@@ -33,6 +35,8 @@ public class ItemLookupController {
     private final ItemService itemService;
     private final FavoriteRepository favoriteRepository;
 
+    private final CommentRepository commentRepository;
+
     @Value("${shipping.fee}")
     private int shippingFee;
 
@@ -49,7 +53,11 @@ public class ItemLookupController {
             model.addAttribute("favorite", false);
         }
 
+        // COMMENT
+        List<Comment> commentList = commentRepository.findCommentsByItemIdOrderByCreatedDateDesc(itemId);
+
         model.addAttribute("item", item);
+        model.addAttribute("commentList", commentList);
         model.addAttribute("shippingFee", shippingFee);
         return "products/product";
     }
@@ -71,7 +79,7 @@ public class ItemLookupController {
 
     @GetMapping("/product/modify-list")
     public String myProductList(@CurrentAccount Account account, Model model) {
-        List<Item> itemList = itemRepository.findAllByDeletedFalseOrderByEnrolledDateDesc();
+        List<Item> itemList = itemRepository.findAllByDeletedFalseOrderByCreatedDateDesc();
         model.addAttribute("itemList", itemList);
         return "products/modify-list";
     }

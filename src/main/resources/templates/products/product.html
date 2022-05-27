@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
+<link rel="stylesheet" th:href="@{/css/starpoint.css}">
 <script th:inline="javascript">
     const favoriteToggle = () => {
         let token = $("meta[name='_csrf']").attr("content");
@@ -47,6 +48,39 @@
         $('#items').val([[${item.getId()}]] + ":" + $('#quantity').val())
         $('#buy_submit').submit();
     }
+
+    const addComment = () => {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+
+
+        const body = {
+            itemId: [[${item.getId()}]],
+            content: $("#content-input").val(),
+            star: getStarPoint(),
+        }
+
+        $.ajax({
+            url: "/comment/add",
+            method: "POST",
+            data: body,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            },
+        }).done(function (res) {
+            console.log(res)
+        })
+    }
+
+    const getStarPoint = () => {
+        let radioGroup = $(".star_radio");
+        for (const radio of radioGroup) {
+            if (radio.checked) {
+                return radio.value
+            }
+        }
+    }
+
 </script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
@@ -101,10 +135,17 @@
             <form id="buy_submit" th:action="@{/purchase}" th:method="get">
                 <input type="hidden" name="items" id="items">
                 <div class="d-flex align-items-center">
-                    <input th:disabled="${item.getQuantity() == 0}" style="width: 90px;" id="quantity" type="number" class="form-control m-1" value="1">
-                    <button th:if="${item.getQuantity() > 0}" type="button" onclick="addCart()" class="btn btn-custom mt-2 w-100 m-1">장바구니 담기</button>
-                    <button th:if="${item.getQuantity() > 0}" type="button" onclick="buy()" class="btn btn-custom mt-2 w-100 m-1">바로 구매</button>
-                    <button th:unless="${item.getQuantity() > 0}" type="button" disabled class="btn btn-custom mt-2 w-100 m-1">품절</button>
+                    <input th:disabled="${item.getQuantity() == 0}" style="width: 90px;" id="quantity" type="number"
+                           class="form-control m-1" value="1">
+                    <button th:if="${item.getQuantity() > 0}" type="button" onclick="addCart()"
+                            class="btn btn-custom mt-2 w-100 m-1">장바구니 담기
+                    </button>
+                    <button th:if="${item.getQuantity() > 0}" type="button" onclick="buy()"
+                            class="btn btn-custom mt-2 w-100 m-1">바로 구매
+                    </button>
+                    <button th:unless="${item.getQuantity() > 0}" type="button" disabled
+                            class="btn btn-custom mt-2 w-100 m-1">품절
+                    </button>
                 </div>
             </form>
             <div th:text="*{'재고 ' + getQuantity() + '개 남음'}"></div>
@@ -118,8 +159,50 @@
 
     <div class="border-gray border p-5 mt-3" style="min-height: 500px;">
         <!--        상품 설명-->
-<!--        <span th:text="${item.getDescription()}"></span>-->
+        <!--        <span th:text="${item.getDescription()}"></span>-->
         <img class="w-100" th:src="${item.getPhotoPath()}" alt="상품 사진">
+    </div>
+
+
+    <div>
+        <div>상품평</div>
+        <div>최신순 | 베스트순</div>
+        <div>
+            <div>
+                <div class="starpoint_wrap">
+                    <div class="starpoint_box">
+                        <label for="starpoint_1" class="label_star" title="0.5"><span class="blind">0.5점</span></label>
+                        <label for="starpoint_2" class="label_star" title="1"><span class="blind">1점</span></label>
+                        <label for="starpoint_3" class="label_star" title="1.5"><span class="blind">1.5점</span></label>
+                        <label for="starpoint_4" class="label_star" title="2"><span class="blind">2점</span></label>
+                        <label for="starpoint_5" class="label_star" title="2.5"><span class="blind">2.5점</span></label>
+                        <label for="starpoint_6" class="label_star" title="3"><span class="blind">3점</span></label>
+                        <label for="starpoint_7" class="label_star" title="3.5"><span class="blind">3.5점</span></label>
+                        <label for="starpoint_8" class="label_star" title="4"><span class="blind">4점</span></label>
+                        <label for="starpoint_9" class="label_star" title="4.5"><span class="blind">4.5점</span></label>
+                        <label for="starpoint_10" class="label_star" title="5"><span class="blind">5점</span></label>
+                        <input type="radio" name="starpoint" id="starpoint_1" class="star_radio" value="0.5">
+                        <input type="radio" name="starpoint" id="starpoint_2" class="star_radio" value="1">
+                        <input type="radio" name="starpoint" id="starpoint_3" class="star_radio" value="1.5">
+                        <input type="radio" name="starpoint" id="starpoint_4" class="star_radio" value="2">
+                        <input type="radio" name="starpoint" id="starpoint_5" class="star_radio" value="2.5">
+                        <input type="radio" name="starpoint" id="starpoint_6" class="star_radio" value="3">
+                        <input type="radio" name="starpoint" id="starpoint_7" class="star_radio" value="3.5">
+                        <input type="radio" name="starpoint" id="starpoint_8" class="star_radio" value="4">
+                        <input type="radio" name="starpoint" id="starpoint_9" class="star_radio" value="4.5">
+                        <input type="radio" name="starpoint" id="starpoint_10" class="star_radio" value="5">
+                        <span class="starpoint_bg"></span>
+                    </div>
+                </div>
+            </div>
+            <textarea class="form-control" id="content-input"
+                      style="resize:none; width: 800px; height: 200px; "></textarea>
+
+            <button class="btn btn-custom" type="button" onclick="addComment()">등록</button>
+        </div>
+        <div th:each="comment : ${commentList}">
+            <div th:text="${comment.getContent()}">내용</div>
+        </div>
     </div>
 </div>
 <footer th:replace="fragments/footer::footer"></footer>

@@ -54,17 +54,17 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<Order> findOrders(Account account, String orderType) {
         if (orderType == null) {
-            return orderRepository.findByCustomerOrderByOrderDateDesc(account);
+            return orderRepository.findByCustomerOrderByCreatedDateDesc(account);
         }
         switch (orderType) {
             case "DELIVERY":
-                return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateDesc(account, OrderStatus.DELIVERY);
+                return orderRepository.findByCustomerAndOrderStatusIsOrderByCreatedDateDesc(account, OrderStatus.DELIVERY);
             case "OPTION2":
-                return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateDesc(account, OrderStatus.DELIVERY);
+                return orderRepository.findByCustomerAndOrderStatusIsOrderByCreatedDateDesc(account, OrderStatus.DELIVERY);
             case "OPTION3":
-                return orderRepository.findByCustomerAndOrderStatusIsOrderByOrderDateDesc(account, OrderStatus.DELIVERY);
+                return orderRepository.findByCustomerAndOrderStatusIsOrderByCreatedDateDesc(account, OrderStatus.DELIVERY);
             default:
-                return orderRepository.findByCustomerOrderByOrderDateDesc(account);
+                return orderRepository.findByCustomerOrderByCreatedDateDesc(account);
         }
 
     }

@@ -72,7 +72,7 @@ public class AdminController {
 
     @GetMapping("/payment")
     public String paymentManageForm(Model model) {
-        List<Order> orders = orderRepository.findOrdersByOrderStatusAndPaymentMethodOrderByOrderDateAsc(OrderStatus.WAITING, "nobank");
+        List<Order> orders = orderRepository.findOrdersByOrderStatusAndPaymentMethodOrderByCreatedDateAsc(OrderStatus.WAITING, "nobank");
         model.addAttribute("orderList", orders);
         return "admin/payment-manage";
     }

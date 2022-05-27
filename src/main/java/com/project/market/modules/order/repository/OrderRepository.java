@@ -13,17 +13,17 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long>, CustomOrderRepository {
 
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
-    List<Order> findByCustomerAndOrderStatusIsOrderByOrderDateDesc(Account account, OrderStatus orderStatus);
+    List<Order> findByCustomerAndOrderStatusIsOrderByCreatedDateDesc(Account account, OrderStatus orderStatus);
 
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
-    List<Order> findByCustomerOrderByOrderDateDesc(Account account);
+    List<Order> findByCustomerOrderByCreatedDateDesc(Account account);
     @EntityGraph(value = "withItemAndDelivery", type = EntityGraph.EntityGraphType.FETCH)
-    List<Order> findByCustomerIdOrderByOrderDateDesc(Long customerId);
+    List<Order> findByCustomerIdOrderByCreatedDateDesc(Long customerId);
 
     @EntityGraph(attributePaths = {"customer"}, type = EntityGraph.EntityGraphType.FETCH)
     Order findOrderWithDeliveryById(Long orderId);
 
-    List<Order> findOrdersByOrderStatusAndPaymentMethodOrderByOrderDateAsc(OrderStatus orderStatus, String method);
+    List<Order> findOrdersByOrderStatusAndPaymentMethodOrderByCreatedDateAsc(OrderStatus orderStatus, String method);
 
     @EntityGraph(attributePaths = {"carts"}, type = EntityGraph.EntityGraphType.FETCH)
     Order findWithCartsById(Long orderId);

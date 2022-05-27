@@ -103,6 +103,10 @@ public class ItemController {
         }
         Item item = itemRepository.findItemWithTagsById(itemForm.getId());
         // 어드민만 진입 가능
+        String dir = "item/" + item.getId() + "/";
+        String coverPhotoUrl = awsS3Service.uploadFile(dir, itemForm.getCoverPhoto());
+        String photoUrl = awsS3Service.uploadFile(dir, itemForm.getPhoto());
+        itemService.savePhotoPath(item, coverPhotoUrl, photoUrl);
 
         tagService.createOrFindTags(itemForm.getTags());
         itemService.modifyItem(item, itemForm);
