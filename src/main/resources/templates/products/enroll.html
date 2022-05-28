@@ -41,6 +41,30 @@
                    placeholder="Tags.">
             <div id="tag-area" class="mt-2" style="min-height: 10px;"></div>
 
+            <div>
+                <div>
+                    옵션
+                    <input type="text" name="option1">
+                    <input type="text" name="option1">
+                    <input type="text" name="option1">
+                    <input type="text" name="option1">
+                </div>
+                <div>
+                    옵션
+                    <input type="text" name="option2">
+                    <input type="text" name="option2">
+                    <input type="text" name="option2">
+                    <input type="text" name="option2">
+                </div>
+                <div>
+                    옵션
+                    <input type="text" name="option3">
+                    <input type="text" name="option3">
+                    <input type="text" name="option3">
+                    <input type="text" name="option3">
+                </div>
+            </div>
+
             <div class="mt-3">수량</div>
             <input type="number" class="form-control w-100" th:field="*{quantity}" placeholder="수량" required>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('quantity')}"
@@ -68,7 +92,6 @@
                    th:errors="*{errorMessage}"></small>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-custom" style="width: 100px;">미리보기</button>
                 <button type="submit" class="btn btn-custom" style="width: 100px;">등록</button>
             </div>
         </form>

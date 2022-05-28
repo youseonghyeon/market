@@ -1,14 +1,15 @@
 package com.project.market.modules.item.entity;
 
+import com.project.market.modules.item.entity.option.OptionTitle;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.superclass.BaseAccountEntity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -45,10 +46,13 @@ public class Item extends BaseAccountEntity {
 
     private boolean deleted = false;
 
+    private int favoriteCount = 0;
+
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Tag> tags = new HashSet<>();
 
-    private int favoriteCount = 0;
+    @OneToMany(mappedBy = "item")
+    private List<OptionTitle> optionTitles = new ArrayList<>();
 
     public static Item createNewItem(ItemForm itemForm) {
         Item item = new Item();

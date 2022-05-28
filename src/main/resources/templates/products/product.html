@@ -132,6 +132,17 @@
             </div>
 
 
+            <div>
+                <select class="form-select" th:each="optionTitle : *{getOptionTitles()}">
+                    <option>
+                        <span th:text="${optionTitle.getTitle()}"></span>
+                    </option>
+                    <option th:each="optionContent : ${optionTitle.getOptionContents()}">
+                        <span th:text="${optionContent.getContent()}"></span>
+                    </option>
+                </select>
+            </div>
+
             <form id="buy_submit" th:action="@{/purchase}" th:method="get">
                 <input type="hidden" name="items" id="items">
                 <div class="d-flex align-items-center">

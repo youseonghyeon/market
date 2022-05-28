@@ -2,11 +2,10 @@ package com.project.market.modules.item.service;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.*;
+import com.project.market.modules.item.entity.option.OptionContent;
+import com.project.market.modules.item.entity.option.OptionTitle;
 import com.project.market.modules.item.form.ItemForm;
-import com.project.market.modules.item.repository.CommentRepository;
-import com.project.market.modules.item.repository.FavoriteRepository;
-import com.project.market.modules.item.repository.ItemRepository;
-import com.project.market.modules.item.repository.TagRepository;
+import com.project.market.modules.item.repository.*;
 import com.project.market.modules.notification.repository.NotificationRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
@@ -19,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.project.market.modules.item.entity.QComment.comment;
@@ -35,6 +36,8 @@ public class ItemService {
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
     private final JPAQueryFactory queryFactory;
+    private final OptionContentRepository optionContentRepository;
+    private final OptionTitleRepository optionTitleRepository;
 
     public Item createNewItem(ItemForm itemForm) {
         Item item = Item.createNewItem(itemForm);
@@ -95,13 +98,13 @@ public class ItemService {
             Double avgStar = totalStar / totalCount;
             item.syncStar(avgStar, totalCount);
         }
-
     }
 
-    @Getter
-    @AllArgsConstructor
-    static class StartTuple {
-        Double sum;
-        Long count;
+
+    public void createItemOption(Item item, String title, List<String> contentList) {
+        OptionTitle optionTitle = OptionTitle.createOptionTitle(title, item);
+        OptionContent.createOptionContent(optionTitle, contentList);
+
+        optionTitleRepository.save(optionTitle); // cascade.ALL
     }
 }

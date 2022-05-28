@@ -1,5 +1,6 @@
 package com.project.market.modules.item.entity;
 
+import com.project.market.modules.superclass.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.persistence.Id;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Tag {
+public class Tag extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "tag_id")

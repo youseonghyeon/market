@@ -18,7 +18,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRep
 
     Item findItemReadOnlyById(Long itemId);
 
-    @EntityGraph(attributePaths = {"tags"}, type = EntityGraph.EntityGraphType.FETCH)
+    @EntityGraph(attributePaths = {"tags", "optionTitles"}, type = EntityGraph.EntityGraphType.FETCH)
     Item findItemWithTagsById(Long itemId);
 
 }

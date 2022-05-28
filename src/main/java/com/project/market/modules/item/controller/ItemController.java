@@ -3,6 +3,8 @@ package com.project.market.modules.item.controller;
 import com.project.market.infra.fileupload.AwsS3Service;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.entity.option.OptionTitle;
+import com.project.market.modules.item.repository.OptionTitleRepository;
 import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.service.TagService;
 import com.project.market.modules.item.repository.FavoriteRepository;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -73,17 +76,47 @@ public class ItemController {
         Item item = itemService.createNewItem(itemForm);
         itemForm.setId(item.getId());
 
+        saveOption(item, itemForm);
+
         String dir = "item/" + item.getId() + "/";
-        String coverPhotoUrl = awsS3Service.uploadFile(dir, itemForm.getCoverPhoto());
-        String photoUrl = awsS3Service.uploadFile(dir, itemForm.getPhoto());
+        String coverPhotoPath = awsS3Service.uploadFile(dir, itemForm.getCoverPhoto());
+        String photoPath = awsS3Service.uploadFile(dir, itemForm.getPhoto());
 
-        itemService.savePhotoPath(item, coverPhotoUrl, photoUrl);
+        itemService.savePhotoPath(item, coverPhotoPath, photoPath);
 
-        // 알람 전송(비동기)
+        // 알람/메일 전송(비동기)
         notificationService.noticeItemEnrollment(item);
-        // 메일 전송(비동기)
         notificationService.noticeByEmailItemEnrollment(item);
         return "redirect:/product/" + item.getId();
+    }
+
+    private void saveOption(Item item, ItemForm itemForm) {
+        List<List<String>> optionsList = new ArrayList<>();
+        optionsList.add(itemForm.getOption1());
+        optionsList.add(itemForm.getOption2());
+        optionsList.add(itemForm.getOption3());
+
+        for (List<String> options : optionsList) {
+            if (!isEmpty(options.get(1))) {
+                String title = options.get(0);
+                List<String> contentList = new ArrayList<>();
+                // 빈칸 제외
+                for (int i = 1; i < options.size(); i++) {
+                    if (!isEmpty(options.get(i))) {
+                        contentList.add(options.get(i));
+                    }
+                }
+                if (contentList.size() > 1) {
+                    itemService.createItemOption(item, title, contentList);
+                }
+            }
+        }
+
+    }
+
+    private boolean isEmpty(String str) {
+        // 두글자 이하 -> True
+        return str.trim().length() < 2;
     }
 
     @GetMapping("/product/edit/{itemId}")
