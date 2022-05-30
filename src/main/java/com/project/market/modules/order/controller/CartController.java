@@ -4,7 +4,9 @@ import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.entity.option.OptionContent;
 import com.project.market.modules.item.repository.ItemRepository;
+import com.project.market.modules.item.repository.OptionContentRepository;
 import com.project.market.modules.order.converter.CartConverter;
 import com.project.market.modules.order.dto.AddCartDto;
 import com.project.market.modules.order.dto.CurrentCartData;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -29,6 +32,7 @@ public class CartController {
     private final CartRepository cartRepository;
     private final ItemRepository itemRepository;
     private final CartService cartService;
+    private final OptionContentRepository optionContentRepository;
     @Value("${shipping.fee}")
     private int shippingFee;
 
@@ -52,15 +56,24 @@ public class CartController {
     @ResponseBody
     public String addCart(@CurrentAccount Account account, @ModelAttribute AddCartDto cartDto) {
         Item item = itemRepository.getById(cartDto.getItemId());
+        Set<Long> optionContentIds = cartDto.getOptionContentIds();
+        List<OptionContent> optionContents = optionContentRepository.findAllById(optionContentIds);
+        StringBuilder sb = new StringBuilder();
+        for (OptionContent optionContent : optionContents) {
+            if (optionContent != null) {
+                sb.append(optionContent.getContent()).append(" ");
+            }
+        }
+
         Cart previousCart = cartRepository.findByItemAndAccount(item, account);
-        if (previousCart != null) {
+        if (previousCart != null && previousCart.getOptions().equals(sb.toString().trim())) {
             return "상품이 이미 장바구니에 있습니다.";
         }
         int quantity = cartDto.getQuantity();
         if (item.getQuantity() < quantity) {
             return "재고가 부족합니다.";
         }
-        Cart cart = new Cart(item, quantity, account);
+        Cart cart = new Cart(item, quantity, account, sb.toString());
         cartRepository.save(cart);
         return "장바구니에 저장되었습니다.";
     }

@@ -1,5 +1,6 @@
 package com.project.market.modules.item.entity.option;
 
+import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.superclass.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,6 @@ public class OptionContent extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "option_title_id")
     private OptionTitle optionTitle;
-
 
     public OptionContent(OptionTitle optionTitle, String content) {
         this.content = content;

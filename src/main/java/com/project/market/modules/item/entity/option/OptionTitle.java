@@ -21,6 +21,8 @@ public class OptionTitle extends BaseTimeEntity {
 
     private String title;
 
+    private Boolean required;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "item_id")
     private Item item;

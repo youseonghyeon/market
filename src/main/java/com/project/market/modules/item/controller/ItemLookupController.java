@@ -4,6 +4,7 @@ import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Comment;
+import com.project.market.modules.item.entity.option.OptionTitle;
 import com.project.market.modules.item.repository.CommentRepository;
 import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.repository.FavoriteRepository;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -46,6 +48,7 @@ public class ItemLookupController {
         if (item.isDeleted()) {
             throw new CustomNotFoundException("삭제된 상품입니다.");
         }
+        List<String> titleList = item.getOptionTitles().stream().map(OptionTitle::getTitle).collect(Collectors.toList());
 
         if (account != null && favoriteRepository.existsByAccountAndItem(account, item)) {
             model.addAttribute("favorite", true);
@@ -59,6 +62,8 @@ public class ItemLookupController {
         model.addAttribute("item", item);
         model.addAttribute("commentList", commentList);
         model.addAttribute("shippingFee", shippingFee);
+        model.addAttribute("titleList", titleList);
+
         return "products/product";
     }
 

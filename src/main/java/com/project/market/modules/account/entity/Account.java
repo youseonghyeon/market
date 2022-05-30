@@ -75,7 +75,7 @@ public class Account {
 
 
     @OneToMany(mappedBy = "account")
-    private Set<Cart> carts = new HashSet<>();
+    private List<Cart> carts = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();

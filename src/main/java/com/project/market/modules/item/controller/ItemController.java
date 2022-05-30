@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -76,7 +77,10 @@ public class ItemController {
         Item item = itemService.createNewItem(itemForm);
         itemForm.setId(item.getId());
 
-        saveOption(item, itemForm);
+        saveOption(item, itemForm.getOption1());
+        saveOption(item, itemForm.getOption2());
+        saveOption(item, itemForm.getOption3());
+
 
         String dir = "item/" + item.getId() + "/";
         String coverPhotoPath = awsS3Service.uploadFile(dir, itemForm.getCoverPhoto());
@@ -90,28 +94,18 @@ public class ItemController {
         return "redirect:/product/" + item.getId();
     }
 
-    private void saveOption(Item item, ItemForm itemForm) {
-        List<List<String>> optionsList = new ArrayList<>();
-        optionsList.add(itemForm.getOption1());
-        optionsList.add(itemForm.getOption2());
-        optionsList.add(itemForm.getOption3());
-
-        for (List<String> options : optionsList) {
-            if (!isEmpty(options.get(1))) {
-                String title = options.get(0);
-                List<String> contentList = new ArrayList<>();
-                // 빈칸 제외
-                for (int i = 1; i < options.size(); i++) {
-                    if (!isEmpty(options.get(i))) {
-                        contentList.add(options.get(i));
-                    }
-                }
-                if (contentList.size() > 1) {
-                    itemService.createItemOption(item, title, contentList);
-                }
+    private void saveOption(Item item, List<String> optionList) {
+        String title = optionList.get(0);
+        List<String> contentList = new ArrayList<>();
+        if (!StringUtils.hasText(title)) {
+            return;
+        }
+        for (int i = 1; i < optionList.size(); i++) {
+            if (StringUtils.hasText(optionList.get(i))) {
+                contentList.add(optionList.get(i));
             }
         }
-
+        itemService.createItemOption(item, title, contentList);
     }
 
     private boolean isEmpty(String str) {

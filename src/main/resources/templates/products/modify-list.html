@@ -16,7 +16,7 @@
                     </div>
                     <div>
                         <div class="fs-5" th:text="${item.getName()}">상품 이름</div>
-                        <div th:text="${#temporals.format(item.enrolledDate, 'yy. M. d')}">2022년 10월 1일</div>
+                        <div th:text="${#temporals.format(item.createdDate, 'yy. M. d')}">2022년 10월 1일</div>
                         <span class="fs-6" style="color: #434343;"
                               th:text="${#numbers.formatInteger(item.getPrice(), '0', 'COMMA')} + ' 원'">0000
                     </span>

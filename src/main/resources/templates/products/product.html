@@ -32,16 +32,26 @@
     const addCart = () => {
         const itemId = [[${item.getId()}]];
         const quantity = $('#quantity').val();
-        $.ajax({
-            url: "/cart/add",
-            method: "GET",
-            data: {
-                itemId,
-                quantity
-            }
-        }).done(function (res, status) {
-            alert(res);
-        })
+        const optionTitleList = [[${titleList}]]
+        let optionContentIds = optionTitleList.map(title => $("#" + title + " option:selected").val());
+        if (optionContentIds.includes("ex")) {
+
+            let idx = optionContentIds.findIndex(e => e === "ex");
+            alert(optionTitleList[idx] + "은 필수 항목입니다.");
+        } else {
+            $.ajax({
+                url: "/cart/add",
+                method: "GET",
+                data: {
+                    itemId,
+                    quantity,
+                    optionContentIds
+                }
+            }).done(function (res, status) {
+                alert(res);
+            })
+
+        }
     }
 
     const buy = () => {
@@ -133,12 +143,14 @@
 
 
             <div>
-                <select class="form-select" th:each="optionTitle : *{getOptionTitles()}">
-                    <option>
+                <select th:id="${optionTitle.getTitle()}" class="form-select"
+                        th:each="optionTitle : *{getOptionTitles()}">
+                    <option th:value="ex">
                         <span th:text="${optionTitle.getTitle()}"></span>
                     </option>
-                    <option th:each="optionContent : ${optionTitle.getOptionContents()}">
-                        <span th:text="${optionContent.getContent()}"></span>
+                    <option th:value="${optionContent.getId()}" name="optionContentIds"
+                            th:each="optionContent : ${optionTitle.getOptionContents()}">
+                        <span th:value="${optionContent.getId()}" th:text="${optionContent.getContent()}"></span>
                     </option>
                 </select>
             </div>

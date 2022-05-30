@@ -115,7 +115,7 @@
                 </tr>
                 <tr th:id="'cart' + ${cart.getId()}" class="eachCart" th:each="cart : ${cartList}">
                     <td><input class="check_buttons" th:value="${cart.getId()}" type="checkbox" checked></td>
-                    <td th:text="${cart.getItem().getName()}"></td>
+                    <td th:text="${cart.getItem().getName() + '(' + cart.getOptions() + ')'}"></td>
                     <td>
                         <input th:id="${'quantity' + cart.getId()}" th:onfocusout="|modifyQuantity(${cart.getId()})|"
                                style="width: 50px;" type="number" th:value="${cart.getQuantity()}">

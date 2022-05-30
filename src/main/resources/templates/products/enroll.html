@@ -23,6 +23,11 @@
         let tag = document.getElementById(elem.id);
         tag.remove();
     }
+
+    const addOptionContent = (optionNum) => {
+        $("#option-container" + optionNum)
+            .append('<input class="form-control" style="width:190px;" type="text" name="option' + optionNum + '" placeholder="content">')
+    }
 </script>
 <body>
 <nav th:replace="fragments/nav::admin-nav"></nav>
@@ -43,25 +48,66 @@
 
             <div>
                 <div>
-                    옵션
-                    <input type="text" name="option1">
-                    <input type="text" name="option1">
-                    <input type="text" name="option1">
-                    <input type="text" name="option1">
+                    <div>옵션 추가1</div>
+                    <div>
+                        <span>필수</span>
+                        <input type="checkbox" name="required1">
+                    </div>
+                </div>
+                <div class="d-flex aic">
+                    <div id="option-container1" class="d-flex aic">
+                        <input class="form-control" style="width:190px;" type="text" name="option1"
+                               placeholder="title.">
+                        <input class="form-control" style="width:190px;" type="text" name="option1"
+                               placeholder="content">
+                        <input class="form-control" style="width:190px;" type="text" name="option1"
+                               placeholder="content">
+                        <input class="form-control" style="width:190px;" type="text" name="option1"
+                               placeholder="content">
+                    </div>
+                    <button type="button" onclick="addOptionContent(1)">
+                        <div>+</div>
+                    </button>
                 </div>
                 <div>
-                    옵션
-                    <input type="text" name="option2">
-                    <input type="text" name="option2">
-                    <input type="text" name="option2">
-                    <input type="text" name="option2">
+                    <div>옵션 추가2</div>
+                    <span>필수</span>
+                    <input type="checkbox" name="required2">
+                </div>
+                <div class="d-flex aic">
+                    <div id="option-container2" class="d-flex aic">
+                        <input class="form-control" style="width:190px;" type="text" name="option2"
+                               placeholder="title.">
+                        <input class="form-control" style="width:190px;" type="text" name="option2"
+                               placeholder="content">
+                        <input class="form-control" style="width:190px;" type="text" name="option2"
+                               placeholder="content">
+                        <input class="form-control" style="width:190px;" type="text" name="option2"
+                               placeholder="content">
+                    </div>
+                    <button type="button" onclick="addOptionContent(2)">
+                        <div>+</div>
+                    </button>
                 </div>
                 <div>
-                    옵션
-                    <input type="text" name="option3">
-                    <input type="text" name="option3">
-                    <input type="text" name="option3">
-                    <input type="text" name="option3">
+                    <div>옵션 추가3</div>
+                    <span>필수</span>
+                    <input type="checkbox" name="required3">
+                </div>
+                <div class="d-flex aic">
+                    <div id="option-container3" class="d-flex aic">
+                        <input class="form-control" style="width:190px;" type="text" name="option3"
+                               placeholder="title.">
+                        <input class="form-control" style="width:190px;" type="text" name="option3"
+                               placeholder="content">
+                        <input class="form-control" style="width:190px;" type="text" name="option3"
+                               placeholder="content">
+                        <input class="form-control" style="width:190px;" type="text" name="option3"
+                               placeholder="content">
+                    </div>
+                    <button type="button" onclick="addOptionContent(3)">
+                        <div>+</div>
+                    </button>
                 </div>
             </div>
 
