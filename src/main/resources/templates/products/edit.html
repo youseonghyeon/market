@@ -29,7 +29,8 @@
 <div class="container" style="padding-right: 200px; padding-left: 200px;">
     <div th:object="${itemForm}" class=" mt-5">
         <h2 class="mt-0">상품 수정</h2>
-        <form th:action="@{/product/modify}" method="post" onkeydown="return event.key != 'Enter';"
+        <form th:action="@{/product/edit/{itemId}(itemId=*{getId()})}" th:method="put"
+              onkeydown="return event.key != 'Enter';"
               enctype="multipart/form-data">
 
             <input type="hidden" th:field="*{id}">
@@ -38,8 +39,11 @@
             <input type="text" class="form-control w-100" th:field="*{name}" placeholder="상품 이름" required>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}"
                    th:errors="*{name}"></small>
-            <input id="tag-input" type="text" onkeydown="if(event.keyCode === 13) log()" class="form-control w-100 mt-1"
+            <input id="tag-input" list="datalistOptions" type="text" onkeydown="if(event.keyCode === 13) log()" class="form-control w-100 mt-1"
                    placeholder="Tags.">
+            <datalist id="datalistOptions">
+                <option th:each="tag : ${whiteList}" th:value="${tag.getTitle()}"></option>
+            </datalist>
 
             <div id="tag-area" class="mt-2" style="min-height: 10px;">
                 <label th:each="tag : ${tagList}" th:id="${tag.title}"
@@ -57,16 +61,18 @@
             <small class="form-text text-danger" th:if="${#fields.hasErrors('quantity')}"
                    th:errors="*{quantity}"></small>
 
-            <div class="mt-3">상품 가격<span class="text-danger" style="font-size: 15px;">※변경시 대량의 연산이 수행될 수 있으므로 주의하세요.</span></div>
+            <div class="mt-3">상품 가격<span class="text-danger"
+                                         style="font-size: 15px;">※변경시 대량의 연산이 수행될 수 있으므로 주의하세요.</span></div>
             <input type="number" class="form-control w-100" th:field="*{price}" placeholder="가격" required>
             <small class="form-text text-danger" th:if="${#fields.hasErrors('price')}"
                    th:errors="*{price}"></small>
 
             <div class="mt-3">미리보기 이미지</div>
-            <input type="file" class="form-control w-100" th:field="*{coverPhoto}" placeholder="배경 이미지">
+            <input type="file" th:value="*{coverPhoto}" class="form-control w-100" th:field="*{coverPhoto}"
+                   placeholder="배경 이미지">
 
             <div class="mt-3">상세 이미지</div>
-            <input type="file" class="form-control w-100" th:field="*{photo}" placeholder="상세 이미지">
+            <input type="file" th:value="*{photo}" class="form-control w-100" th:field="*{photo}" placeholder="상세 이미지">
 
 
             <div class="mt-3">상품 설명</div>
@@ -79,7 +85,7 @@
                    th:errors="*{errorMessage}"></small>
 
             <div class="d-flex justify-content-end">
-<!--                <button type="submit" class="btn btn-custom" style="width: 100px;">미리보기</button>-->
+                <!--                <button type="submit" class="btn btn-custom" style="width: 100px;">미리보기</button>-->
                 <button type="submit" class="btn btn-custom" style="width: 100px;">등록</button>
             </div>
         </form>

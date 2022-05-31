@@ -20,6 +20,7 @@ public class Comment extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "item_id")
     private Item item;
 
     private String content;

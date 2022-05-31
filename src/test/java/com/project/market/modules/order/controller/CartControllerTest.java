@@ -27,8 +27,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -146,7 +145,7 @@ class CartControllerTest {
     void deleteCart() throws Exception {
         Long savedCartId = savedCartList.get(0).getId();
 
-        mockMvc.perform(get("/cart/delete")
+        mockMvc.perform(delete("/cart")
                         .param("cartId", String.valueOf(savedCartId)))
                 .andExpect(content().string("ok"))
                 .andExpect(status().isOk());
@@ -160,7 +159,7 @@ class CartControllerTest {
     @DisplayName("Cart 전체 삭제")
     void deleteAllOfCart() throws Exception {
         Account account = accountRepository.findByLoginId("testUser");
-        mockMvc.perform(get("/cart/delete/all"))
+        mockMvc.perform(delete("/cart/all"))
                 .andExpect(content().string("ok"))
                 .andExpect(status().isOk());
 

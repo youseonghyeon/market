@@ -76,7 +76,7 @@ class ItemLookupControllerTest {
     @Test
     @DisplayName("전체 상품 리스트 조회 폼(비회원)")
     void productList() throws Exception {
-        mockMvc.perform(get("/product/list"))
+        mockMvc.perform(get("/product"))
                 .andExpect(model().attributeExists("itemList"))
                 .andExpect(model().attributeExists("itemPage"))
                 .andExpect(model().attributeExists("tagList"))
@@ -100,7 +100,7 @@ class ItemLookupControllerTest {
     @WithAccount("testUser")
     @DisplayName("관심 상품 리스트 폼")
     void favoriteListForm() throws Exception {
-        mockMvc.perform(get("/favorite/list"))
+        mockMvc.perform(get("/favorite"))
                 .andExpect(model().attributeExists("favoriteList"))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(view().name("products/favorite-list"))

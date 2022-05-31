@@ -54,6 +54,9 @@ public class Item extends BaseAccountEntity {
     @OneToMany(mappedBy = "item")
     private List<OptionTitle> optionTitles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "item")
+    private List<Comment> commentList = new ArrayList<>();
+
     public static Item createNewItem(ItemForm itemForm) {
         Item item = new Item();
         item.name = itemForm.getName();

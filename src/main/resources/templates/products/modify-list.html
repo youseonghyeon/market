@@ -29,7 +29,7 @@
                 <button class="btn btn-outline-secondary mb-3 shadow-sm" style="width: 100px;"
                         th:onclick="|location.href='@{/product/edit/{itemId}(itemId = ${item.getId()})}'|">수정
                 </button>
-                <form th:action="@{/product/delete}" th:method="post">
+                <form th:action="@{/product/delete}" th:method="delete">
                     <input type="hidden" name="itemId" th:value="${item.getId()}">
                     <button class="btn btn-danger shadow-sm" style="width: 100px;" type="submit">삭제</button>
                 </form>

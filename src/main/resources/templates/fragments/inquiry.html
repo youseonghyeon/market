@@ -97,41 +97,40 @@
                 <img th:src="@{/img/close.svg}" style="width: 26px;" alt="close">
             </div>
         </div>
+        <div class="border border-gray" style=" width: 350px; height: 400px; overflow-y: scroll;">
+            <div id="chat-area">
+                <div>이전 채팅 내용</div>
+                <!-- 이전 데이터 출력 위치 -->
+                <!--                    <div class="d-flex mb-2"-->
+                <!--                         th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"-->
+                <!--                         th:each="chat : ${chatRecord}">-->
+                <!--                        <div>-->
+                <!--                            <div class="chat-box" style="background-color: #2cb5ff;"-->
+                <!--                                 th:if="${chat.getSender().getId() == account.getId()}">-->
+                <!--                                <div style="color: white;" th:text="${chat.content}">내용</div>-->
+                <!--                            </div>-->
+                <!--                            <div th:if="${chat.getSender().getId() != account.getId()}">-->
+                <!--                                <div th:text="${chat.getSender().getNickname()}">닉네임</div>-->
+                <!--                                <div class="chat-box" style="background-color: #e8e8e8;">-->
+                <!--                                    <div th:text="${chat.content}">내용</div>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                            <div class="chat-temporals" th:text="${#temporals.format(chat.getSendDate(), 'M월d일 H:m')}">-->
+                <!--                                보낸날짜-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+            </div>
+
+        </div>
         <div>
-            <div class="border border-gray p-2 bg-white w-100">
-                <div id="chat-area">
-                    <div style="height: 400px;">이전 채팅 내용</div>
-                    <!-- 이전 데이터 출력 위치 -->
-                    <!--                    <div class="d-flex mb-2"-->
-                    <!--                         th:classappend="${chat.getSender().getId() == account.getId() ? 'justify-content-end': 'justify-content-start'}"-->
-                    <!--                         th:each="chat : ${chatRecord}">-->
-                    <!--                        <div>-->
-                    <!--                            <div class="chat-box" style="background-color: #2cb5ff;"-->
-                    <!--                                 th:if="${chat.getSender().getId() == account.getId()}">-->
-                    <!--                                <div style="color: white;" th:text="${chat.content}">내용</div>-->
-                    <!--                            </div>-->
-                    <!--                            <div th:if="${chat.getSender().getId() != account.getId()}">-->
-                    <!--                                <div th:text="${chat.getSender().getNickname()}">닉네임</div>-->
-                    <!--                                <div class="chat-box" style="background-color: #e8e8e8;">-->
-                    <!--                                    <div th:text="${chat.content}">내용</div>-->
-                    <!--                                </div>-->
-                    <!--                            </div>-->
-                    <!--                            <div class="chat-temporals" th:text="${#temporals.format(chat.getSendDate(), 'M월d일 H:m')}">-->
-                    <!--                                보낸날짜-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                </div>
-                <div>
-                    <div id="msgArea"></div>
-                    <div>
-                        <div class="input-group mb-3">
-                            <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
-                                   aria-describedby="button-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
-                            </div>
-                        </div>
+            <div id="msgArea"></div>
+            <div>
+                <div class="input-group mb-3">
+                    <input type="text" id="msg" class="form-control" aria-label="Recipient's username"
+                           aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
                     </div>
                 </div>
             </div>

@@ -17,6 +17,7 @@ import java.util.Set;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
     Cart findByItemAndAccount(Item item, Account account);
+    boolean existsByItemAndAccountAndOptions(Item item, Account account, String options);
 
     Set<Cart> findCartsByAccount(Account account);
 
@@ -30,7 +31,9 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     void deleteCartsByAccount(Account account);
 
 
+    @EntityGraph(attributePaths = "item", type = EntityGraph.EntityGraphType.FETCH)
     Set<Cart> findByIdIn(List<Long> id);
+
     @EntityGraph(attributePaths = {"item"}, type = EntityGraph.EntityGraphType.FETCH)
     Set<Cart> findCartsWithItemByIdIn(List<Long> id);
 }

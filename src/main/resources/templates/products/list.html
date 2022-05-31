@@ -10,22 +10,22 @@
 <nav th:replace="fragments/nav::main-nav"></nav>
 <!--<div>-->
 <!--    <div th:if="${itemPage.hasPrevious()}">-->
-<!--        <a th:href="${itemPage.hasPrevious()} ? @{/product/list(page=${itemPage.number} - 1)} : '#'">이전 페이지</a>-->
+<!--        <a th:href="${itemPage.hasPrevious()} ? @{/product(page=${itemPage.number} - 1)} : '#'">이전 페이지</a>-->
 <!--    </div>-->
 <!--    <div th:if="${itemPage.hasNext()}">-->
-<!--        <a th:href="${itemPage.hasNext()} ? @{/product/list(page=${itemPage.number} + 1)} : '#'">다음 페이지</a>-->
+<!--        <a th:href="${itemPage.hasNext()} ? @{/product(page=${itemPage.number} + 1)} : '#'">다음 페이지</a>-->
 <!--    </div>-->
-<!--    <a th:href="@{/product/list(order='recent')}">최신순</a>-->
-<!--    <a th:href="@{/product/list(order='popular')}">평점순</a>-->
+<!--    <a th:href="@{/product(order='recent')}">최신순</a>-->
+<!--    <a th:href="@{/product(order='popular')}">평점순</a>-->
 <!--    <button onclick="show()">페이징 로그</button>-->
 <!--</div>-->
 <div class="container" style="margin-top: 30px;">
     <div style="justify-content: space-between; height: 130px;" class="d-flex align-items-center">
-        <a th:href="@{/product/list}" class="font-title">
+        <a th:href="@{/product}" class="font-title">
             <img th:src="@{/img/banner2.jpeg}" alt="삼색냥스토어" style="width: 300px;">
         </a>
         <div class="w-100 d-flex jcc">
-            <form th:action="@{/product/list}" th:method="GET">
+            <form th:action="@{/product}" th:method="GET">
                 <div class="d-flex position-relative">
                     <input type="text" name="search" class="form-control rounded-pill shadow-sm"
                            th:value="${param.search != null ? param.search : ''}"
@@ -45,7 +45,7 @@
             <span>태그 목록</span>
             <div th:each="tag : ${tagList}">
                 <button class="badge bg-secondary"
-                        th:onclick="|location.href='@{/product/list(tag=${tag.getTitle()})}'|"
+                        th:onclick="|location.href='@{/product(tag=${tag.getTitle()})}'|"
                         th:text="${tag.getTitle()}">태그
                 </button>
             </div>
@@ -53,16 +53,32 @@
 
 
         <ul th:if="${!itemList.isEmpty()}" class="col-10 row row-cols-4" style="min-height: 600px;">
-            <li class="col-3 border border-gray d-flex jcc aic pt-2 pb-4"
+            <li class="col-3 border border-gray d-flex jcc pt-2 pb-4"
                 style="height: 400px;"
                 th:each="item : ${itemList}">
                 <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                     <div class="border border-gray" style="height: 240px; width: 240px;">
                         <img class="w-100" th:src="${item.getCoverPhotoPath()}" alt="미리보기">
                     </div>
-                    <h5 class="m-0" th:text="${item.getName()}"></h5>
-                    <div>
-                        <span class="fs-6" th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></span>
+                    <div class="fs-5" th:text="${item.getName()}">상품명</div>
+                    <div class="d-flex">
+                        <div th:each="tag : ${item.getTags()}" style="margin-right: 4px;">
+                            <!-- 태그 목록-->
+                            <div class="badge main-color-bg rounded-pill" style="font-size: 11px;"
+                                 th:text="'# ' + ${tag.getTitle()}">
+                                tag
+                            </div>
+                        </div>
+                    </div>
+                    <div style="color: #E04449; font-family: Tahoma;">
+                        <strong class="fw-bold"
+                              th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></strong>
+                        원
+                    </div>
+                    <div th:if="${!item.commentList.isEmpty()}">
+                        <span th:text="${item.getStar()}">1.1</span>
+                        <span>/ 5.0점</span>
+                        <span th:text="${'(' + #numbers.formatInteger(item.getCommentList().size(), 0, 'COMMA') + ')'}">1000</span>
                     </div>
 
                     <div class="d-flex align-items-center">

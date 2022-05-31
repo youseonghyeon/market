@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
     const deleteFavorite = (itemId) => {
-        let token = $("meta[name='_csrf']").attr("content");
-        let header = $("meta[name='_csrf_header']").attr("content");
         $.ajax({
             url: "/favorite/toggle",
             method: "POST",
@@ -11,7 +9,7 @@
                 itemId: itemId
             },
             beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token)
+                xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
             }
         }).done(function (result, status, responseObj) {
             if (result === "delete") {
@@ -22,16 +20,20 @@
     }
 
     const addCart = (itemId) => {
-        $.ajax({
-            url: "/cart/add",
-            method: "GET",
-            data: {
-                itemId,
-                quantity: 1
-            }
-        }).done(function (res, status) {
-            alert(res);
-        })
+        // $.ajax({
+        //     url: "/cart",
+        //     method: "POST",
+        //     data: {
+        //         itemId,
+        //         quantity: 1
+        //     },
+        //     beforeSend: function (xhr) {
+        //         xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
+        //     }
+        // }).done(function (res, status) {
+        //     alert(res);
+        // })
+        location.href = "/product/" + itemId;
     }
 </script>
 <head th:replace="fragments/header::header"></head>
@@ -41,20 +43,32 @@
 
     <div class="fs-4">찜 리스트 <span th:text="${favoriteList.size()}">00</span></div>
 
-    <div th:id="'item' + ${item.getId()}" th:each="item : ${favoriteList}" class="border border-gray p-3 mt-4">
+    <div th:id="'item' + ${item.getId()}" th:each="item : ${favoriteList}" class="border border-gray mt-4 bg-white"
+    style="padding: 10px 35px;">
         <div class="d-flex justify-content-between aic">
             <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                 <div class="d-flex">
-                    <div class="border border-gray" style="width: 100px; height: 100px;">사진</div>
-                    <div>
-                        <div th:text="${item.getName()}">상품 이름</div>
-                        <div th:text="${item.getPrice()}">20,000원</div>
+                    <div style="width: 120px; height: 120px;">
+                        <img class="w-100 h-100" th:src="${item.getCoverPhotoPath()}" alt="">
+                    </div>
+                    <div style="margin: 20px 15px;">
+                        <div class="fw-bold" th:text="${item.getName()}">상품 이름</div>
+                        <div class="price-font">
+                            <span class="fw-bold" th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}">
+                                20,000원
+                            </span>
+                            원
+                        </div>
                     </div>
                 </div>
             </a>
             <div class="d-flex flex-column">
-                <div th:onclick="addCart([[${item.getId()}]])" class="btn btn-custom" style="height: 30px;">장바구니 담기</div>
-                <button th:onclick="deleteFavorite([[${item.getId()}]])" class="btn btn-custom mt-3" style="height: 30px;">삭제</button>
+                <div th:onclick="addCart([[${item.getId()}]])" class="btn btn-custom d-flex jcc aic" style="height: 30px;">
+                    <span>구매하기</span>
+                </div>
+                <button th:onclick="deleteFavorite([[${item.getId()}]])" class="btn btn-custom mt-3 d-flex jcc aic"
+                        style="height: 30px;">삭제
+                </button>
             </div>
         </div>
 

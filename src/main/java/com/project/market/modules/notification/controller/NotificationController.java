@@ -2,15 +2,14 @@ package com.project.market.modules.notification.controller;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
-import com.project.market.modules.notification.repository.NotificationRepository;
-import com.project.market.modules.notification.service.NotificationService;
 import com.project.market.modules.notification.dto.NotificationResponseDto;
 import com.project.market.modules.notification.entity.Notification;
+import com.project.market.modules.notification.repository.NotificationRepository;
+import com.project.market.modules.notification.service.NotificationService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +23,6 @@ public class NotificationController {
 
     private final NotificationRepository notificationRepository;
     private final NotificationService notificationService;
-    private final ModelMapper modelMapper;
 
     @GetMapping("/notification")
     public Result notificationListForm(@CurrentAccount Account account) {
@@ -32,9 +30,9 @@ public class NotificationController {
         int unconfirmedTotal = 0;
 
         List<Notification> notifications = notificationRepository.findByRecipientOrderByCreatedAtDesc(account);
-        for (Notification n : notifications) {
-            dtoList.add(new NotificationResponseDto(n.getItemId(), n.getSubject(), n.getContent(), n.getCreatedAt(), n.isConfirmed()));
-            if (!n.isConfirmed()) unconfirmedTotal++;
+        for (Notification notify : notifications) {
+            dtoList.add(new NotificationResponseDto(notify));
+            if (!notify.isConfirmed()) unconfirmedTotal++;
         }
         return new Result(unconfirmedTotal, dtoList);
     }

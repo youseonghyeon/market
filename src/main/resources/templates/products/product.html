@@ -4,8 +4,6 @@
 <link rel="stylesheet" th:href="@{/css/starpoint.css}">
 <script th:inline="javascript">
     const favoriteToggle = () => {
-        let token = $("meta[name='_csrf']").attr("content");
-        let header = $("meta[name='_csrf_header']").attr("content");
         const itemId = [[${item.getId()}]]
         $.ajax({
             url: "/favorite/toggle",
@@ -14,7 +12,7 @@
                 itemId: itemId
             },
             beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token)
+                xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
             }
         }).done(function (result, status, responseObj) {
             let btn = document.getElementById("favorite-btn")
@@ -40,12 +38,15 @@
             alert(optionTitleList[idx] + "은 필수 항목입니다.");
         } else {
             $.ajax({
-                url: "/cart/add",
-                method: "GET",
+                url: "/cart",
+                method: "POST",
                 data: {
                     itemId,
                     quantity,
                     optionContentIds
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
                 }
             }).done(function (res, status) {
                 alert(res);
@@ -60,10 +61,6 @@
     }
 
     const addComment = () => {
-        let token = $("meta[name='_csrf']").attr("content");
-        let header = $("meta[name='_csrf_header']").attr("content");
-
-
         const body = {
             itemId: [[${item.getId()}]],
             content: $("#content-input").val(),
@@ -71,11 +68,11 @@
         }
 
         $.ajax({
-            url: "/comment/add",
+            url: "/comment",
             method: "POST",
             data: body,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader(header, token)
+                xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
             },
         }).done(function (res) {
             console.log(res)
@@ -90,6 +87,7 @@
             }
         }
     }
+
 
 </script>
 <body>
@@ -109,7 +107,11 @@
                 <!--                상품 이름-->
                 <div>
                     <div class="fs-4" th:text="*{name}">상품명</div>
-                    <div>★★★★★4.8점 1,809개 상품평</div>
+                    <div th:if="${!commentList.isEmpty()}">
+                        <span>★★★★★</span>
+                        <span th:text="${#numbers.formatDecimal(item.getStar(),0,1)}"></span>점
+                        <span th:text="${commentList.size()}"></span>개 상품평
+                    </div>
 
                 </div>
 
@@ -131,20 +133,21 @@
             </div>
 
 
-            <div class="mt-4">
-                <span class="fs-4 fw-bold" th:text="*{#numbers.formatInteger(price, 0, 'COMMA')}"></span>
-                <span class="fs-5">원</span>
+            <div class="mt-2 price-font-dark">
+                <span class="fw-bold" style="font-size: 21px;"
+                      th:text="*{#numbers.formatInteger(price, 0, 'COMMA')}"></span>
+                <span style="font-size: 18px;">원</span>
             </div>
             <div>
-                <span>배송료</span>
-                <span th:text="${shippingFee}"></span>
+                <span>배송비</span>
+                <span class="fw-bold" th:text="${shippingFee}"></span>
                 <span>원</span>
             </div>
 
 
-            <div>
-                <select th:id="${optionTitle.getTitle()}" class="form-select"
-                        th:each="optionTitle : *{getOptionTitles()}">
+            <div style="margin-top: 50px;">
+                <select th:id="${optionTitle.getTitle()}" class="form-select mb-2"
+                        th:each="optionTitle : ${optionTitleList}">
                     <option th:value="ex">
                         <span th:text="${optionTitle.getTitle()}"></span>
                     </option>

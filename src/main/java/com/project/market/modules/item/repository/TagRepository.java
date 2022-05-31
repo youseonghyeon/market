@@ -18,5 +18,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     List<Tag> findTop100ByOrderByCountDesc();
     List<Tag> findTop20ByOrderByCountDesc();
 
+
     boolean existsByTitle(String tag);
 }

@@ -36,14 +36,14 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/product/list}">전체 상품</a>
+                    <a class="nav-link" th:href="@{/product}">전체 상품</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{/order/list}">주문목록</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/favorite/list}">찜목록</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/favorite}">찜목록</a>
                 </li>
 
 
@@ -153,7 +153,7 @@
                     <a class="nav-link" th:href="@{/product/enroll}">상품 등록</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/product/modify-list}">상품 관리</a>
+                    <a class="nav-link" th:href="@{/product/modify}">상품 관리</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/admin/chat-list}">문의</a>

@@ -23,20 +23,29 @@
 
     const deleteCart = (cartId) => {
         $.ajax({
-            url: "/cart/delete",
-            method: "GET",
+            url: "/cart",
+            method: "DELETE",
             data: {
                 cartId
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
             }
         }).done(function (result, status) {
+            $("#cart" + cartId).remove();
             getCurrentData();
         })
     }
 
     const deleteAll = () => {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
         $.ajax({
-            url: "/cart/delete/all",
-            method: "GET"
+            url: "/cart/all",
+            method: "DELETE",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token)
+            }
         }).done(function (result, status) {
             $('.eachCart').remove()
             getCurrentData();
@@ -49,7 +58,7 @@
         let header = $("meta[name='_csrf_header']").attr("content");
 
         $.ajax({
-            url: "/quantity/modify",
+            url: "/cart/quantity",
             method: "POST",
             data: {
                 cartId,
@@ -73,7 +82,7 @@
             }
         }
         $.ajax({
-            url: "/cart/data",
+            url: "/cart/refetch",
             method: "GET",
             data: {
                 cartIdList: data,
@@ -99,7 +108,7 @@
             <div class="d-flex flex-column aic">
                 <span class="material-icons-outlined md-48">info</span>
                 <div class="fs-5 mt-3">장바구니에 상품이 없어요 ㅠㅠ</div>
-                <a th:href="@{/product/list}" class="btn btn-custom">상품 보러가기</a>
+                <a th:href="@{/product}" class="btn btn-custom">상품 보러가기</a>
             </div>
         </div>
 
@@ -119,15 +128,6 @@
                     <td>
                         <input th:id="${'quantity' + cart.getId()}" th:onfocusout="|modifyQuantity(${cart.getId()})|"
                                style="width: 50px;" type="number" th:value="${cart.getQuantity()}">
-                        <!--                        <select th:if="${cart.getQuantity() <=5}" class="select" style="width: 50px;" type="number"-->
-                        <!--                                th:value="${cart.getQuantity()}">-->
-                        <!--                            <option value="1" th:selected="${cart.getQuantity() == 1}">1</option>-->
-                        <!--                            <option value="2" th:selected="${cart.getQuantity() == 2}">2</option>-->
-                        <!--                            <option value="3" th:selected="${cart.getQuantity() == 3}">3</option>-->
-                        <!--                            <option value="4" th:selected="${cart.getQuantity() == 4}">4</option>-->
-                        <!--                            <option value="5" th:selected="${cart.getQuantity() == 5}">5</option>-->
-                        <!--                            <option value="직접입력">직접입력</option>-->
-                        <!--                        </select>-->
                     </td>
                     <td>
                         <span th:id="'price' + ${cart.getId()}" th:text="${cart.getPrice()}"></span>

@@ -2,6 +2,7 @@ package com.project.market.modules.item.repository;
 
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.entity.Item;
+import com.project.market.modules.item.entity.QComment;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.project.market.modules.item.entity.QComment.comment;
 import static com.project.market.modules.item.entity.QFavorite.favorite;
 import static com.project.market.modules.item.entity.QItem.item;
 import static com.project.market.modules.item.entity.QTag.tag;
@@ -35,7 +37,8 @@ public class ItemRepositoryImpl implements CustomItemRepository {
 
     private List<Item> getItems(String search, String order, Pageable pageable, String tagName) {
         return queryFactory.selectFrom(item).distinct()
-                .leftJoin(item.tags, tag)
+                .leftJoin(item.tags, tag).fetchJoin()
+                .leftJoin(item.commentList, comment).fetchJoin()
                 .where(
                         item.deleted.isFalse(),
                         tagNameEq(tagName),

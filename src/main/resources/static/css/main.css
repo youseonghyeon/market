@@ -90,3 +90,13 @@ body {
   min-height: 100%;
   padding-bottom: 240px;
 }
+
+.price-font {
+  color: #E04449;
+  font-family: Tahoma;
+}
+
+.price-font-dark {
+  color: #a10002;
+  font-family: Tahoma;
+}

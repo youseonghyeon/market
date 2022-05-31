@@ -29,9 +29,10 @@ public class CommentController {
     private final ItemService itemService;
 
     // 등록
-    @PostMapping("/comment/add")
+    @PostMapping("/comment")
     @ResponseBody
     public CommentRes createComment(@CurrentAccount Account account, @ModelAttribute CommentDto commentDto) {
+
         Item item = itemRepository.findById(commentDto.getItemId()).orElseThrow();
         Comment comment = commentService.createComment(account, item, commentDto);
 
@@ -52,7 +53,7 @@ public class CommentController {
     }
 
     // 삭제
-    @PostMapping("/comment/delete")
+    @DeleteMapping("/comment")
     @ResponseBody
     public void deleteComment(@CurrentAccount Account account, @RequestParam("commentId") Comment comment) {
         checkCommentAccess(account, comment);

@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="header">
+    <script th:inline="javascript">
+        const getCsrfToken = () => {
+            return $("meta[name='_csrf']").attr("content");
+        }
+
+        const getCsrfHeader = () => {
+            return $("meta[name='_csrf_header']").attr("content");
+        }
+    </script>
     <meta charset="UTF-8">
     <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>

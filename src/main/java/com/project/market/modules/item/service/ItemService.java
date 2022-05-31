@@ -42,9 +42,7 @@ public class ItemService {
     public Item createNewItem(ItemForm itemForm) {
         Item item = Item.createNewItem(itemForm);
         editTags(item, itemForm);
-        itemRepository.save(item);
-
-        return item;
+        return itemRepository.save(item);
     }
 
     private void editTags(Item item, ItemForm itemForm) {

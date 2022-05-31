@@ -4,14 +4,11 @@ import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Comment;
-import com.project.market.modules.item.entity.option.OptionTitle;
-import com.project.market.modules.item.repository.CommentRepository;
-import com.project.market.modules.item.service.ItemService;
-import com.project.market.modules.item.repository.FavoriteRepository;
-import com.project.market.modules.item.repository.ItemRepository;
-import com.project.market.modules.item.repository.TagRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
+import com.project.market.modules.item.entity.option.OptionTitle;
+import com.project.market.modules.item.repository.*;
+import com.project.market.modules.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,41 +30,15 @@ public class ItemLookupController {
 
 
     private final ItemRepository itemRepository;
-    private final TagRepository tagRepository;
-    private final ItemService itemService;
     private final FavoriteRepository favoriteRepository;
-
+    private final TagRepository tagRepository;
+    private final OptionTitleRepository optionTitleRepository;
     private final CommentRepository commentRepository;
 
     @Value("${shipping.fee}")
     private int shippingFee;
 
-    @GetMapping("/product/{itemId}")
-    public String productForm(@CurrentAccount Account account, @PathVariable("itemId") Long itemId, Model model) {
-        Item item = itemRepository.findItemWithTagsById(itemId);
-        if (item.isDeleted()) {
-            throw new CustomNotFoundException("삭제된 상품입니다.");
-        }
-        List<String> titleList = item.getOptionTitles().stream().map(OptionTitle::getTitle).collect(Collectors.toList());
-
-        if (account != null && favoriteRepository.existsByAccountAndItem(account, item)) {
-            model.addAttribute("favorite", true);
-        } else {
-            model.addAttribute("favorite", false);
-        }
-
-        // COMMENT
-        List<Comment> commentList = commentRepository.findCommentsByItemIdOrderByCreatedDateDesc(itemId);
-
-        model.addAttribute("item", item);
-        model.addAttribute("commentList", commentList);
-        model.addAttribute("shippingFee", shippingFee);
-        model.addAttribute("titleList", titleList);
-
-        return "products/product";
-    }
-
-    @GetMapping("/product/list")
+    @GetMapping("/product")
     public String productListForm(Pageable pageable,
                                   @RequestParam(value = "search", required = false) String search,
                                   @RequestParam(value = "tag", required = false) String tag,
@@ -82,14 +53,35 @@ public class ItemLookupController {
         return "products/list";
     }
 
-    @GetMapping("/product/modify-list")
-    public String myProductList(@CurrentAccount Account account, Model model) {
+    @GetMapping("/product/{itemId}")
+    public String productForm(@CurrentAccount Account account, @PathVariable("itemId") Long itemId, Model model) {
+        Item item = itemRepository.findItemWithTagsById(itemId);
+        if (item.isDeleted()) {
+            throw new CustomNotFoundException("삭제된 상품입니다.");
+        }
+        List<OptionTitle> optionTitleList = optionTitleRepository.findAllByItemId(itemId);
+        List<Comment> comments = commentRepository.findCommentsByItemIdOrderByCreatedDateDesc(itemId);
+
+        model.addAttribute("item", item);
+        model.addAttribute("favorite", account != null && favoriteRepository.existsByAccountAndItem(account, item));
+        model.addAttribute("optionTitleList", optionTitleList);
+        model.addAttribute("shippingFee", shippingFee);
+
+        model.addAttribute("commentList", comments);
+        model.addAttribute("titleList", optionTitleList.stream().map(OptionTitle::getTitle).collect(Collectors.toList()));
+
+        return "products/product";
+    }
+
+
+    @GetMapping("/product/modify")
+    public String myProductListForm(@CurrentAccount Account account, Model model) {
         List<Item> itemList = itemRepository.findAllByDeletedFalseOrderByCreatedDateDesc();
         model.addAttribute("itemList", itemList);
         return "products/modify-list";
     }
 
-    @GetMapping("/favorite/list")
+    @GetMapping("/favorite")
     public String favoriteListForm(@CurrentAccount Account account, Model model) {
         List<Item> favoriteItems = itemRepository.findFavoriteItems(account);
         model.addAttribute("favoriteList", favoriteItems);

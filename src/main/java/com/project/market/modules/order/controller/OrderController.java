@@ -5,6 +5,7 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.delivery.entity.Delivery;
 import com.project.market.modules.delivery.service.DeliveryService;
+import com.project.market.modules.item.form.PurchaseForm;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.order.converter.CartConverter;
 import com.project.market.modules.order.dto.PurchaseRes;
@@ -48,8 +49,8 @@ public class OrderController {
     private int shippingFee;
 
     @GetMapping("/purchase")
-    public String purchaseForm(@CurrentAccount Account account, @RequestParam("items") String param, Model model) {
-        Set<Cart> cartList = cartConverter.cartParameterConvert(param);
+    public String purchaseForm(@CurrentAccount Account account, PurchaseForm purchaseForm, Model model) {
+        Set<Cart> cartList = purchaseForm.getCartList(cartConverter);
         int totalPrice = 0;
 
         for (Cart cart : cartList) {
@@ -62,7 +63,7 @@ public class OrderController {
         model.addAttribute("deliveryFee", shippingFee);
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("account", account);
-        model.addAttribute("items", param);
+        model.addAttribute("items", purchaseForm.getItems());
         return "order/purchase";
     }
 
