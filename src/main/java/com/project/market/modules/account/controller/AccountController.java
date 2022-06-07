@@ -42,16 +42,6 @@ public class AccountController {
         return "account/login";
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated()) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-//            SecurityContextHolder.getContext().setAuthentication(null);
-            // TODO remember-me 사용 시 logout 불가능
-        }
-        return "redirect:/";
-    }
 
     @GetMapping("/sign-up")
     public String signupForm(Model model) {

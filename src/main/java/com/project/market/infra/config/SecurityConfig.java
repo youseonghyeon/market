@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
-                .deleteCookies(" JESSIONID", "remember-me");
+                .invalidateHttpSession(true);
 
         http.rememberMe()
                 .rememberMeParameter("remember");

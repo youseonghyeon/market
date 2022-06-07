@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header::header"></head>
+<script th:inline="javascript">
+
+    function signup() {
+        const pw = $("#password").val();
+        const ch = $("#password-check").val();
+        if (pw === ch) {
+            $('#signup-form').submit();
+        } else {
+            $("#password-check-danger").text("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+</script>
 <body>
 <nav th:replace="fragments/nav::main-nav"></nav>
 <div class="container d-flex justify-content-center">
@@ -9,7 +22,7 @@
 
         <span class="m-5 font-title">sign up</span>
 
-        <form th:action="@{/sign-up}" th:object="${signupForm}" method="post">
+        <form id="signup-form" th:action="@{/sign-up}" th:object="${signupForm}" method="post">
             <div class="">
                 <div class="font-sub-title">ID</div>
                 <input type="text" class="form-control w-450" th:field="*{loginId}" placeholder="아이디" required>
@@ -20,10 +33,17 @@
 
             <div class="mt-4">
                 <div class="font-sub-title">PW</div>
-                <input type="password" class="form-control w-450" th:field="*{password}"
+                <input id="password" type="password" class="form-control w-450" th:field="*{password}"
                        placeholder="비밀번호" data-minlength="6" required>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}"
                        th:errors="*{password}"></small>
+            </div>
+
+            <div class="mt-4">
+                <div class="font-sub-title">PW - 확인</div>
+                <input id="password-check" type="password" class="form-control w-450"
+                       placeholder="비밀번호 확인" data-minlength="6" required>
+                <small id="password-check-danger" class="form-text text-danger"></small>
             </div>
 
 
@@ -52,7 +72,7 @@
 
 
             <div style="margin-top: 60px;">
-                <button type="submit" class="btn btn-custom w-450">가입하기</button>
+                <button type="button" class="btn btn-custom w-450" onclick="signup()">가입하기</button>
             </div>
         </form>
     </div>
