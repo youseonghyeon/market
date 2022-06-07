@@ -29,7 +29,7 @@
 <div class="container" style="padding-right: 200px; padding-left: 200px;">
     <div th:object="${itemForm}" class=" mt-5">
         <h2 class="mt-0">상품 수정</h2>
-        <form th:action="@{/product/edit/{itemId}(itemId=*{getId()})}" th:method="put"
+        <form th:action="@{/product/modify/{itemId}(itemId=*{getId()})}" th:method="put"
               onkeydown="return event.key != 'Enter';"
               enctype="multipart/form-data">
 

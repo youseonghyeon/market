@@ -68,7 +68,7 @@ public class ItemLookupController {
         model.addAttribute("shippingFee", shippingFee);
 
         model.addAttribute("commentList", comments);
-        model.addAttribute("titleList", optionTitleList.stream().map(OptionTitle::getTitle).collect(Collectors.toList()));
+        model.addAttribute("optionTitleIds", optionTitleList.stream().map(OptionTitle::getId).collect(Collectors.toList()));
 
         return "products/product";
     }

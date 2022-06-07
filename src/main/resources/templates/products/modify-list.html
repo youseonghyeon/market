@@ -12,7 +12,7 @@
             <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
                 <div class="d-flex">
                     <div class="border border-dark" style="width: 150px; height:150px; margin-right: 20px;">
-
+                        <img class="w-100 h-100" th:src="${item.getCoverPhotoPath()}">
                     </div>
                     <div>
                         <div class="fs-5" th:text="${item.getName()}">상품 이름</div>
@@ -27,7 +27,7 @@
 
             <div class="d-flex flex-column" style="margin-right: 20px;">
                 <button class="btn btn-outline-secondary mb-3 shadow-sm" style="width: 100px;"
-                        th:onclick="|location.href='@{/product/edit/{itemId}(itemId = ${item.getId()})}'|">수정
+                        th:onclick="|location.href='@{/product/modify/{itemId}(itemId = ${item.getId()})}'|">수정
                 </button>
                 <form th:action="@{/product/delete}" th:method="delete">
                     <input type="hidden" name="itemId" th:value="${item.getId()}">

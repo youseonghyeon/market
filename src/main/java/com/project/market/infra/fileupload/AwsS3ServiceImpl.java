@@ -32,20 +32,23 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
+    @Value("${cloud.aws.s3.root-dir}")
+    private String rootDir;
+
     public String uploadFile(String dir, MultipartFile multipartFile) {
-        String fileName = dir + multipartFile.getOriginalFilename();
+        String fullPath = rootDir + "/" + dir + multipartFile.getOriginalFilename();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
+            client.putObject(new PutObjectRequest(bucketName, fullPath, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
 //            throw new FileUploadFailedException();
             throw new RuntimeException();
         }
 
-        return client.getUrl(bucketName, fileName).toString();
+        return client.getUrl(bucketName, fullPath).toString();
     }
 }

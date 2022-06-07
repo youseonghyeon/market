@@ -99,8 +99,8 @@ public class ItemService {
     }
 
 
-    public void createItemOption(Item item, String title, List<String> contentList) {
-        OptionTitle optionTitle = OptionTitle.createOptionTitle(title, item);
+    public void createItemOption(Item item, String title, List<String> contentList, Boolean required) {
+        OptionTitle optionTitle = OptionTitle.createOptionTitle(title, item, required);
         OptionContent.createOptionContent(optionTitle, contentList);
 
         optionTitleRepository.save(optionTitle); // cascade.ALL

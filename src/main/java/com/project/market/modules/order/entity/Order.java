@@ -43,6 +43,9 @@ public class Order extends BaseAccountEntity {
 
     private int totalPrice;
 
+    //대표 이미지
+    private String thumbnailPath;
+
     private int shippingFee;
 
     private LocalDateTime arrivalDate;

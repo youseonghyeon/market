@@ -44,6 +44,13 @@ public class Cart {
         this.quantity = quantity;
         this.price = item.getPrice() * quantity;
     }
+    public Cart(Item item, int quantity, String options) {
+        this.item = item;
+        this.quantity = quantity;
+        this.price = item.getPrice() * quantity;
+        this.options = options;
+    }
+
 
     public Cart(Item item, int quantity, Account account) {
         this.item = item;
@@ -57,7 +64,7 @@ public class Cart {
         this.quantity = quantity;
         this.account = account;
         this.price = item.getPrice() * quantity;
-        this.options = options.trim();
+        this.options = options;
     }
 
     public Cart(Item item, int quantity, Order order) {

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
@@ -38,9 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin", "/admin/**", "/product/modify", "/product/enroll", "/chat/list").hasRole("ADMIN")
-                .antMatchers("/", "/login", "/sign-up", "/login*", "/product/*", "/product/{itemId}", "/help/**").permitAll()
-                .antMatchers("/product/**").hasRole("USER")
+                .antMatchers("/admin", "/admin/**",
+                        "/product/enroll",
+                        "/product/modify", "/product/modify/{itemId}",
+                        "/settlement"
+                        ).hasRole("ADMIN")
+                .antMatchers("/", "/login", "/sign-up", "/login*",
+                        "/product*", "/product/{itemId}", "/help/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/cart").permitAll()
                 .antMatchers("/delivery/**").hasRole("COURIER")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated();

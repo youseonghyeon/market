@@ -90,7 +90,7 @@ class ItemControllerTest {
     @DisplayName("내 상품 수정 폼")
     void editMyProductForm() throws Exception {
         Item item = itemRepository.findByName("test상품");
-        mockMvc.perform(get("/product/edit/" + item.getId()))
+        mockMvc.perform(get("/product/modify/" + item.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("itemForm"))
                 .andExpect(view().name("products/edit"));

@@ -25,7 +25,9 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <div class="d-flex">
-                        <div class="border border-dark" style="width: 110px; height:110px; margin-right: 20px;"></div>
+                        <div class="border border-dark" style="width: 110px; height:110px; margin-right: 20px;">
+                            <img th:src="${order.getThumbnailPath()}" alt="">
+                        </div>
 
                         <div>
                             <div th:if="${order.getCarts().size() == 1}">

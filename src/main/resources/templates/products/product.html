@@ -19,8 +19,7 @@
             if (result === "add") {
                 btn.style.borderColor = '#DB0A1F'
                 btn.style.color = '#DB0A1F'
-            }
-            if (result === "delete") {
+            } else if (result === "delete") {
                 btn.style.borderColor = '#2d2d2d'
                 btn.style.color = '#2d2d2d'
             }
@@ -30,12 +29,10 @@
     const addCart = () => {
         const itemId = [[${item.getId()}]];
         const quantity = $('#quantity').val();
-        const optionTitleList = [[${titleList}]]
-        let optionContentIds = optionTitleList.map(title => $("#" + title + " option:selected").val());
-        if (optionContentIds.includes("ex")) {
-
-            let idx = optionContentIds.findIndex(e => e === "ex");
-            alert(optionTitleList[idx] + "은 필수 항목입니다.");
+        const optionTitleIds = [[${optionTitleIds}]];
+        const optionContentIds = optionTitleIds.map(title => $("#optionTitle" + title + " option:selected").val());
+        if (optionContentIds.includes("required")) {
+            alert("필수 옵션을 선택해주세요.")
         } else {
             $.ajax({
                 url: "/cart",
@@ -48,15 +45,27 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader(getCsrfHeader(), getCsrfToken())
                 }
+
             }).done(function (res, status) {
                 alert(res);
+            }).fail(function (res) {
+                alert("fail");
             })
-
         }
     }
 
     const buy = () => {
-        $('#items').val([[${item.getId()}]] + ":" + $('#quantity').val())
+        let str = [[${item.getId()}]] + ":" + $('#quantity').val();
+        // $('#items').val([[${item.getId()}]] + ":" + $('#quantity').val())
+        const optionTitleIds = [[${optionTitleIds}]];
+        optionTitleIds.map(title => {
+             let id = $("#optionTitle" + title + " option:selected").val();
+             str += "~" + id;
+        });
+        console.log(str)
+        $("#items").val(str);
+
+        // 옵션 => ~
         $('#buy_submit').submit();
     }
 
@@ -146,11 +155,11 @@
 
 
             <div style="margin-top: 50px;">
-                <select th:id="${optionTitle.getTitle()}" class="form-select mb-2"
+                <select th:id="${'optionTitle' + optionTitle.getId()}" class="form-select mb-2"
                         th:each="optionTitle : ${optionTitleList}">
-                    <option th:value="ex">
-                        <span th:text="${optionTitle.getTitle()}"></span>
-                    </option>
+<!--                    <option th:value="${optionTitle.getRequired() ? 'required' : ''}">-->
+<!--                        <span th:text="${optionTitle.getTitle()}"></span>-->
+<!--                    </option>-->
                     <option th:value="${optionContent.getId()}" name="optionContentIds"
                             th:each="optionContent : ${optionTitle.getOptionContents()}">
                         <span th:value="${optionContent.getId()}" th:text="${optionContent.getContent()}"></span>
@@ -174,11 +183,7 @@
                     </button>
                 </div>
             </form>
-            <div th:text="*{'재고 ' + getQuantity() + '개 남음'}"></div>
-            <!--        <div th:if="*{sold()}">-->
-            <!--            <div href="#" class="btn btn-dark" disabled>판매완료</div>-->
-            <!--        </div>-->
-
+<!--            <div th:text="*{'재고 ' + getQuantity() + '개 남음'}"></div>-->
         </div>
     </div>
 

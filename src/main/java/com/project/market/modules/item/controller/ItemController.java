@@ -67,9 +67,9 @@ public class ItemController {
         Item item = itemService.createNewItem(itemForm);
 
         // 옵션 설정
-        saveOption(item, itemForm.getOption1());
-        saveOption(item, itemForm.getOption2());
-        saveOption(item, itemForm.getOption3());
+        saveOption(item, itemForm.getOption1(), itemForm.getRequired1());
+        saveOption(item, itemForm.getOption2(), itemForm.getRequired2());
+        saveOption(item, itemForm.getOption3(), itemForm.getRequired3());
 
         // S3 이미지 저장 & 이미지 경로 저장
         savePhotoAndPath(item, itemForm);
@@ -96,7 +96,7 @@ public class ItemController {
         itemService.savePhotoPath(item, coverPhotoPath, photoPath);
     }
 
-    private void saveOption(Item item, List<String> optionList) {
+    private void saveOption(Item item, List<String> optionList, Boolean required) {
         String title = optionList.get(0);
         List<String> contentList = new ArrayList<>();
         if (!StringUtils.hasText(title)) {
@@ -107,11 +107,11 @@ public class ItemController {
                 contentList.add(optionList.get(i));
             }
         }
-        itemService.createItemOption(item, title, contentList);
+        itemService.createItemOption(item, title, contentList, required);
     }
 
 
-    @GetMapping("/product/edit/{itemId}")
+    @GetMapping("/product/modify/{itemId}")
     public String editMyProduct(@PathVariable("itemId") Item item, Model model) {
         // 어드민만 진입 가능
         // TODO 가격 수정 시 Cart 리포지토리에 있는 totalPrice의 대규모 연산(수정)이 필요함 (Sync 작업을 해주어야 함)
@@ -122,7 +122,7 @@ public class ItemController {
         return "products/edit";
     }
 
-    @PutMapping("/product/edit/{itemId}")
+    @PutMapping("/product/modify/{itemId}")
     public String modifyProduct(@PathVariable("itemId") Long itemId, @ModelAttribute ItemForm itemForm, Errors errors) {
         if (errors.hasErrors()) {
             return "products/edit";
@@ -147,6 +147,9 @@ public class ItemController {
     @PostMapping("/favorite/toggle")
     @ResponseBody
     public String toggleFavorite(@CurrentAccount Account account, @RequestParam("itemId") Item item) {
+        if (account == null) {
+            return "fail";
+        }
         Favorite favorite = favoriteRepository.findByAccountAndItem(account, item);
         if (favorite != null) {
             itemService.deleteFavorite(favorite);

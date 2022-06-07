@@ -121,10 +121,13 @@
             <div class="col-4 border-dark border bg-white">
                 <div class="fw-bold" style="font-size: 22px;">주문상품</div>
                 <div class="d-flex justify-content-between p-2" th:each="cart : ${cartItems}">
-                    <div class="border border-dark" style="width: 100px; height: 100px; margin-right: 10px;">상품 이미지
+                    <div class="border border-dark" style="width: 100px; height: 100px; margin-right: 10px;">
+                        <img class="w-100 h-100" th:src="${cart.getItem().getCoverPhotoPath()}">
+
                     </div>
                     <div>
                         <div style="font-size: 20px;" th:text="${cart.getItem().getName()}">상품명</div>
+                        <div th:text="${cart.getOptions()}">옵션</div>
                         <div th:text="${cart.getQuantity() + '개'}">수량</div>
                         <div th:text="${cart.getPrice()} + '원'">00000원</div>
                     </div>

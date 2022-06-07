@@ -5,8 +5,10 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.option.OptionContent;
+import com.project.market.modules.item.entity.option.OptionTitle;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.repository.OptionContentRepository;
+import com.project.market.modules.item.repository.OptionTitleRepository;
 import com.project.market.modules.order.converter.CartConverter;
 import com.project.market.modules.order.dto.AddCartDto;
 import com.project.market.modules.order.dto.CurrentCartData;
@@ -14,9 +16,11 @@ import com.project.market.modules.order.dto.QuantityModifyReq;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.repository.CartRepository;
 import com.project.market.modules.order.service.CartService;
+import com.project.market.modules.security.AccountContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,6 +42,7 @@ public class CartController {
     private int shippingFee;
 
     private final CartConverter cartConverter;
+    private final OptionTitleRepository optionTitleRepository;
 
 
     @GetMapping("/cart")
@@ -57,11 +62,20 @@ public class CartController {
     @PostMapping("/cart")
     @ResponseBody
     public String addCart(@CurrentAccount Account account, @ModelAttribute AddCartDto cartDto) {
+        if (account == null) {
+            return "로그인을 해주세요.";
+        }
+//        Item item = itemRepository.findWithOptionTitleById(cartDto.getItemId());
         Item item = itemRepository.getById(cartDto.getItemId());
+//        List<OptionTitle> optionTitles = item.getOptionTitles();
+
         // 옵션 내용
-        List<OptionContent> optionContents = optionContentRepository.findAllById(cartDto.getOptionContentIds());
-        // 옵션 내용을 저장하기위해 String 으로 변환(띄어쓰기로 분리) -> "검은색 플라스틱 가죽"
-        String contents = getTitlesToString(optionContents);
+        String contents = null;
+        if (cartDto.getOptionContentIds() != null) {
+            List<OptionContent> optionContents = optionContentRepository.findAllById(cartDto.getOptionContentIds());
+            // 옵션 내용을 저장하기위해 String 으로 변환(띄어쓰기로 분리) -> "검은색 플라스틱 가죽"
+            contents = getTitlesToString(optionContents);
+        }
 
         // 동일한 상품 + 동일한 옵션이 카트에 있는지 확인
         if (cartRepository.existsByItemAndAccountAndOptions(item, account, contents)) {

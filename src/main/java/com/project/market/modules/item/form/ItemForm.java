@@ -43,4 +43,8 @@ public class ItemForm {
     private List<String> option2 = new ArrayList<>();
     private List<String> option3 = new ArrayList<>();
 
+    private Boolean required1;
+    private Boolean required2;
+    private Boolean required3;
+
 }

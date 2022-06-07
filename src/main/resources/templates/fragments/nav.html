@@ -31,7 +31,8 @@
             }
         </script>
         <a class="navbar-brand" href="/" th:href="@{/}">
-            <img th:src="@{/img/sign2.jpeg}" alt="삼색냥스토어" style="width: 50px;">
+<!--            <img th:src="@{/img/sign2.jpeg}" alt="삼색냥스토어" style="width: 50px;">-->
+            <div class="fs-4">Market</div>
         </a>
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav justify-content-end">
@@ -39,7 +40,7 @@
                     <a class="nav-link" th:href="@{/product}">전체 상품</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/order/list}">주문목록</a>
+                    <a class="nav-link" th:href="@{/order/history}">주문목록</a>
                 </li>
 
                 <li class="nav-item">
@@ -63,7 +64,7 @@
 <!--                    </a>-->
 <!--                </li>-->
                 <li>
-                    <a class="nav-link position-relative" sec:authorize="hasRole('ROLE_COURIER')" th:href="@{/cart}">
+                    <a class="nav-link position-relative" sec:authorize="isAuthenticated()" th:href="@{/cart}">
                         <span class="material-icons-outlined">shopping_cart</span>
                     </a>
                 </li>

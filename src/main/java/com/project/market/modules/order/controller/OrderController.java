@@ -129,7 +129,7 @@ public class OrderController {
     public String orderListForm(Pageable pageable, @CurrentAccount Account account, @RequestParam(name = "orderType", required = false) String orderType, Model model) {
         List<Order> orderList = orderRepository.findOrdersWithCartAndItemAndDeliveryByAccount(account, pageable);
         model.addAttribute("orderList", orderList);
-        return "order/list";
+        return "order/history";
     }
 
     @PostMapping("/order/cancel")
