@@ -19,8 +19,9 @@
                     roomId = res;
                     getPreviousData()
                     connectStomp();
+                    ssrFlag = true;
                 })
-                ssrFlag = true;
+
             }
         }
 
@@ -40,6 +41,7 @@
                     roomId: roomId,
                     content: msg
                 }
+                console.log(messageObj)
                 if (roomId != null) {
                     socket.send('/inquiry/' + roomId, {}, JSON.stringify(messageObj));
                     document.getElementById("msg").value = '';
@@ -49,6 +51,7 @@
 
         function getPreviousData() {
             console.log("데이터를 불러옵니다.")
+            console.log(roomId)
             $.ajax({
                 url: "/chat/record/" + roomId,
                 method: "GET"

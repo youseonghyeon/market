@@ -32,13 +32,12 @@ public class ChatController {
     private final ChatService chatService;
     private final ChatRepository chatRepository;
     private final OrderRepository orderRepository;
-
     private final SimpMessagingTemplate template;
 
     @GetMapping("/chat")
     @ResponseBody
     public Long chatLink(@CurrentAccount Account account) {
-        // roomId = accountId 이기 때문에 그대로 사용
+        // 채팅 방Id를 받는 Controller -> /chat/record/{accountId} 로 연결되어 채팅 기록을 반환
         return account.getId();
     }
 
@@ -48,8 +47,8 @@ public class ChatController {
         if (!account.getId().equals(roomId)) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
+        // Dto로 채팅방 기록 전송
         return chatRepository.getChatDtoContentsByRoomId(roomId);
-
 
     }
 
@@ -61,6 +60,7 @@ public class ChatController {
     }
 
 
+    // 어드민을 위한 채팅목록/채팅방
     @GetMapping("/admin/chat-list")
     public String chatList(Model model) {
         List<Chat> chatList = chatRepository.findRecentChat();

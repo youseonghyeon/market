@@ -27,12 +27,6 @@ public class ChatRepositoryImpl implements CustomChatRepository {
     private final JPAQueryFactory queryFactory;
 
     public List<Chat> findRecentChat() {
-        // TODO JPQL을 써서 코드를 정리해야함 & querydsl로 풀이 가능한지 찾아봐야 함
-//        List<Long> roomIdList = queryFactory.select(chat.roomId)
-//                .from(chat)
-//                .orderBy(chat.sendDate.desc())
-//                .groupBy(chat.roomId).fetch();
-
         String rowNumBySendDateQuery = "select row_number() over (partition by room_id order by send_date desc) as row, * from chat";
         List<Chat> result = em.createNativeQuery("select *  from (" +
                         rowNumBySendDateQuery + ") as c where c.row = 1 order by send_date desc",
@@ -56,6 +50,7 @@ public class ChatRepositoryImpl implements CustomChatRepository {
                 .where(chat.roomId.eq(roomId))
                 .orderBy(chat.sendDate.asc())
                 .fetch();
+
         return dto;
     }
 }

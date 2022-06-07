@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class MessageDto {
 
-    private String senderId;
+    private Long senderId;
 
     private Long roomId;
 
