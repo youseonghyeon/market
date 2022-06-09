@@ -43,6 +43,14 @@ public class OrderService {
             // 상품 수량 삭감
             Item item = cart.getItem();
             item.minusQuantity(cart.getQuantity());
+
+            // TODO 주문 이름 저장 위치
+            // 이름 예시 => "item.name()외 2개"
+
+            // 상품 썸네일 저장
+            if (order.getThumbnailPath() == null) {
+                 order.saveThumbnail(item.getCoverPhotoPath());
+            }
         }
         cartRepository.saveAll(cartSet);
         // totalPrice/ShippingFee 설정

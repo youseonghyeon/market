@@ -1,31 +1,29 @@
-# market
-중고장터 및 배송 사이트
+# 삼색냥 스토어
+커머스 웹 애플리케이
+
+[삼색냥 스토어](http://ec2-52-78-33-172.ap-northeast-2.compute.amazonaws.com:8080/) 보러가기
+
+테스트 계정 ID: admin PW: qwerqwer
 
 
-### application.yml
-```yaml
-spring:
-  profiles:
-    active: dev
+## 프로젝트 일정
 
-  datasource:
-    url: jdbc:postgresql://localhost: #port/databaseName
-    username: postgres
-    password: pass
-  jpa:
-    hibernate:
-      ddl-auto: update
-    
-  mail:
-    host: # hostAddress
-    port: # portNumber
-    username: # mail
-    password: # password
-    properties:
-      mail:
-        smtp:
-          auto: true
-          timeout: 5000
-          starttls.enable: true
+## 기획 의도
+졸업작품 "중고 거래 플랫폼" 을 제작하던 중 판매업을 하는 친구와 함께 홈페이지를
+만들어보고자 시되었다.
 
-```
+## 시스템 설계도
+파워 포인트에 있음
+
+## 기능
+- 로그인
+  - ㅇㄴㅇㄹ
+  - ㄴㅇㄹ
+- 상품
+- 
+
+
+## 기술 스택
+
+## 구조도
+

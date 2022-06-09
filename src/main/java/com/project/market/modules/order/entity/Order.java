@@ -116,4 +116,8 @@ public class Order extends BaseAccountEntity {
     public void cancelOrderWithRefund() {
         orderStatus = OrderStatus.REFUND;
     }
+
+    public void saveThumbnail(String coverPhotoPath) {
+        this.thumbnailPath = coverPhotoPath;
+    }
 }

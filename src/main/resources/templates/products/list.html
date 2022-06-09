@@ -22,8 +22,7 @@
 <div class="container" style="margin-top: 30px;">
     <div style="justify-content: space-between; height: 130px;" class="d-flex align-items-center">
         <a th:href="@{/product}" class="font-title">
-<!--            <img th:src="@{/img/banner2.jpeg}" alt="삼색냥스토어" style="width: 300px;">-->
-            <div class="fs-2">Market</div>
+            <img th:src="@{/img/banner2.jpeg}" alt="삼색냥스토어" style="width: 300px;">
         </a>
         <div class="w-100 d-flex jcc">
             <form th:action="@{/product}" th:method="GET">
@@ -73,7 +72,7 @@
                     </div>
                     <div style="color: #E04449; font-family: Tahoma;">
                         <strong class="fw-bold"
-                              th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></strong>
+                                th:text="${#numbers.formatInteger(item.getPrice(), 0, 'COMMA')}"></strong>
                         원
                     </div>
                     <div th:if="${!item.commentList.isEmpty()}">

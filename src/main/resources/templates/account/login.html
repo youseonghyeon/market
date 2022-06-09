@@ -32,9 +32,11 @@
             </div>
 
             <div class="mt-1">
-                <a th:href="@{/help/find-id}">아이디 찾기</a>
-                <span>|</span>
-                <a th:href="@{/help/find-password}">비밀번호 찾기</a>
+                    <a th:href="@{/help/find-id}">아이디 찾기</a>
+                    <span>|</span>
+                    <a th:href="@{/help/find-password}">비밀번호 찾기</a>
+                    <span>|</span>
+                    <a th:href="@{/sign-up}">회원가입</a>
             </div>
 
             <div th:if="${param.error}" class="alert alert-danger mt-2" role="alert">
