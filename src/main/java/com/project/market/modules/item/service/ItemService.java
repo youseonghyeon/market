@@ -99,10 +99,13 @@ public class ItemService {
     }
 
 
-    public void createItemOption(Item item, String title, List<String> contentList, Boolean required) {
-        OptionTitle optionTitle = OptionTitle.createOptionTitle(title, item, required);
+    public void createItemOption(Item item, List<String> contentList) {
+        // 타이틀을 생성하고
+        OptionTitle optionTitle = OptionTitle.createOptionTitle(item);
+        // Content를 생성한다.
         OptionContent.createOptionContent(optionTitle, contentList);
 
+        // 저장한다.
         optionTitleRepository.save(optionTitle); // cascade.ALL
     }
 }

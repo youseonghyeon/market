@@ -39,7 +39,6 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-mail'
   implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.1'
 
-//  aws 테스트용 RDB
   implementation 'mysql:mysql-connector-java'
 
 

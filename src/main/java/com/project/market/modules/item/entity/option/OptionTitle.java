@@ -31,11 +31,9 @@ public class OptionTitle extends BaseTimeEntity {
     private List<OptionContent> optionContents = new ArrayList<>();
 
 
-    public static OptionTitle createOptionTitle(String title, Item item, Boolean required) {
+    public static OptionTitle createOptionTitle(Item item) {
         OptionTitle optionTitle = new OptionTitle();
-        optionTitle.title = title;
         optionTitle.item = item;
-        optionTitle.required = required;
         return optionTitle;
     }
 }

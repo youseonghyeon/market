@@ -67,9 +67,9 @@ public class ItemController {
         Item item = itemService.createNewItem(itemForm);
 
         // 옵션 설정
-        saveOption(item, itemForm.getOption1(), itemForm.getRequired1());
-        saveOption(item, itemForm.getOption2(), itemForm.getRequired2());
-        saveOption(item, itemForm.getOption3(), itemForm.getRequired3());
+        saveOption(item, itemForm.getOption1());
+        saveOption(item, itemForm.getOption2());
+        saveOption(item, itemForm.getOption3());
 
         // S3 이미지 저장 & 이미지 경로 저장
         savePhotoAndPath(item, itemForm);
@@ -96,18 +96,18 @@ public class ItemController {
         itemService.savePhotoPath(item, coverPhotoPath, photoPath);
     }
 
-    private void saveOption(Item item, List<String> optionList, Boolean required) {
-        String title = optionList.get(0);
+    private void saveOption(Item item, List<String> optionList) {
         List<String> contentList = new ArrayList<>();
-        if (!StringUtils.hasText(title)) {
+        if (!StringUtils.hasText(optionList.get(0))) {
             return;
         }
-        for (int i = 1; i < optionList.size(); i++) {
-            if (StringUtils.hasText(optionList.get(i))) {
-                contentList.add(optionList.get(i));
+        for (String s : optionList) {
+            if (StringUtils.hasText(s)) {
+                contentList.add(s);
             }
         }
-        itemService.createItemOption(item, title, contentList, required);
+        // 옵션 저장
+        itemService.createItemOption(item, contentList);
     }
 
 

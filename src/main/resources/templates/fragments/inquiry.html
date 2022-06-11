@@ -77,12 +77,12 @@
             let str = "";
             str += '<div class="d-flex ' + position + '">' +
                 '<div class="position-relative">' +
-                    '<div class="position-absolute">accountId->' + chat.senderId + '</div>'+
-                    '<div class="rounded d-flex aic" style="padding: 10px 15px; margin: 15px 15px; background-color: lightskyblue">' +
-                        '<span>' + chat.content + '</span>' +
-                    '</div>' +
-                    '<div class="position-absolute" style="bottom: -3px; font-size: 14px; margin-left: 18px">5.8 11시</div>' +
-                    '</div>' +
+                '<div class="position-absolute">accountId->' + chat.senderId + '</div>' +
+                '<div class="rounded-pill d-flex aic" style="padding: 6px 16px; margin: 15px 15px; background-color: lightskyblue">' +
+                '<span>' + chat.content + '</span>' +
+                '</div>' +
+                '<div class="position-absolute" style="bottom: -3px; font-size: 14px; margin-left: 18px">5.8 11시</div>' +
+                '</div>' +
                 '</div>'
             $("#chat-area").append(str)
         }
@@ -103,17 +103,19 @@
         }
 
     </script>
-    <div id="chattingModalButton" onclick="chattingModalOpen()"
-         class="fw-bold border border-gray position-fixed bg-white p-3 rounded-pill shadow-sm"
-         style="bottom: 40px; right: 30px; font-size: 23px;">
-        <span style="margin-right: 20px;">문의하기</span>
-        <img class="position-absolute" style="width: 30px; height: 30px; right: 11px; top: 15px;"
-             th:src="@{/img/inquiry.png}" alt="문의하기">
+    <div class="position-fixed" style="bottom: 40px; right: 30px;">
+        <div id="chattingModalButton" onclick="chattingModalOpen()"
+             class="rounded-pill d-flex jcc aic"
+             style="width: 130px; height: 60px; box-shadow: 1px 1px 5px #a2a2a2; background-color: rgba(255,255,255,0.97)">
+            <span style="font-size: 18px;">문의하기</span>
+            <img class="" style="width: 30px; height: 30px;"
+                 th:src="@{/img/chat.png}" alt="문의하기">
+        </div>
     </div>
 
 
-    <div id="chattingModal" class="position-fixed bg-white border border-2 p-3"
-         style="display: none; bottom: 50px; right: 50px; width: 400px; height: 550px; z-index: 10;">
+    <div id="chattingModal" class="position-fixed p-3 rounded-3 shadow"
+         style="display: none; bottom: 35px; right: 30px; width: 400px; height: 550px; z-index: 10; background-color: rgba(255,255,255,0.97);">
         <div class="d-flex justify-content-between">
             <div>채팅창</div>
             <div onclick="chattingModalClose()">
@@ -126,14 +128,15 @@
                 <div class="d-flex">
                     <div class="position-relative">
                         <div class="position-absolute">mockUser</div>
-                        <div class="rounded d-flex aic"
-                             style="padding: 10px 15px; margin: 15px 15px; background-color: lightskyblue">
+                        <div class="rounded-pill d-flex aic"
+                             style="padding: 10px 15px; margin: 15px 15px; background-color: #72c8ff">
                             <span>MOCK Content.</span>
                         </div>
-                        <div class="position-absolute" style="bottom: -3px; font-size: 14px; margin-left: 18px">0.0 00시 00분</div>
+                        <div class="position-absolute" style="bottom: -3px; font-size: 14px; margin-left: 18px">0.0 00시
+                            00분
+                        </div>
                     </div>
                 </div>
-
 
 
             </div>
