@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Tag> findTags(Account account) {
+    public List<Tag> findTags(Account account) {
         Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
         return findAccount.getTags();
     }

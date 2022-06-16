@@ -97,21 +97,14 @@ public class SettingController {
         return "redirect:/login";
     }
 
-    @GetMapping("/profile/tag")
-    public String tagSettingForm(@CurrentAccount Account account, Model model) {
-        Set<Tag> tagList = accountService.findTags(account);
-        List<Tag> whiteList = tagRepository.findTop20ByOrderByCountDesc();
-        model.addAttribute("tagList", tagList);
-        model.addAttribute("whiteList", whiteList);
-        return "account/settings/tag";
-    }
-
     @PostMapping("/profile/tag/add")
     @ResponseBody
     public void tagSetting(@CurrentAccount Account account, @RequestBody TagDto tagDto) {
-        Tag findTag = tagService.createOrFindTag(tagDto.getTag());
-
         Account findAccount = accountRepository.findAccountWithTagsById(account.getId());
+        if (findAccount.getTags().size() > 10) {
+            return;
+        }
+        Tag findTag = tagService.createOrFindTag(tagDto.getTag());
         accountService.saveNewTag(findAccount, findTag);
     }
 

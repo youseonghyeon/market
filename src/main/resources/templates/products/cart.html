@@ -10,12 +10,18 @@
     })
 
     const purchase = () => {
+
         let str = "";
-        let elems = document.getElementsByClassName("check_buttons");
+        // let elems = document.getElementsByClassName("check_buttons");
+        let elems = $(".check_buttons");
         for (const elem of elems) {
             if (elem.checked) {
                 str += elem.value + ",";
             }
+        }
+        if (str === "") {
+            alert("장바구니에 상품이 없습니다.")
+            return;
         }
         $('#input_items').val(str);
         $('#form_submit').submit();
@@ -101,7 +107,7 @@
     <div class="bg-white shadow" style="padding-right: 30px; padding-left: 30px; padding-top: 20px; margin-top: 40px;">
         <div class="d-flex justify-content-between align-items-end">
             <div class="fs-3 mt-4 fw-bold">장바구니</div>
-            <button class="btn btn-danger" onclick="deleteAll()">전체삭제</button>
+            <button class="btn btn-danger" onclick="deleteAll()" th:unless="${cartList.isEmpty()}">전체삭제</button>
         </div>
         <div class="d-flex justify-content-center align-items-center" th:if="${cartList.isEmpty()}"
              style="min-height: 500px;">
@@ -124,7 +130,7 @@
                 </tr>
                 <tr th:id="'cart' + ${cart.getId()}" class="eachCart" th:each="cart : ${cartList}">
                     <td><input class="check_buttons" th:value="${cart.getId()}" type="checkbox" checked></td>
-                    <td >
+                    <td>
                         <span th:text="${cart.getItem().getName()}"></span>
                         <span th:if="${cart.getOptions()}" th:text="${'(' + cart.getOptions() + ')'}"></span>
                     </td>

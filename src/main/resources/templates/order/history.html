@@ -23,28 +23,30 @@
 
 
             <div class="justify-content-between">
-                <div th:each="cart : ${order.getCarts()}" class="mt-3 d-flex">
-                    <div class="" style="width: 90px; height:90px; margin-right: 20px;">
-                        <img class="w-100 h-100" th:src="${cart.getItem().getCoverPhotoPath()}" alt="">
-                    </div>
+                <div th:each="cart : ${order.getCarts()}" class="mt-3">
+                    <a th:href="@{/product/{itemId}(itemId=${cart.getItem().getId()})}" class="d-flex">
+                        <div class="" style="width: 90px; height:90px; margin-right: 20px;">
+                            <img class="w-100 h-100" th:src="${cart.getItem().getCoverPhotoPath()}" alt="">
+                        </div>
 
-                    <div>
-                        <div class="fs-6" th:text="${cart.getItem().getName()}"></div>
-                        <span class="fs-6" style="color: #434343;"
-                              th:text="${#numbers.formatInteger(cart.getPrice(), '0', 'COMMA')}">0000</span>원
-                    </div>
+                        <div>
+                            <div class="fs-6" th:text="${cart.getItem().getName()}"></div>
+                            <span class="fs-6" style="color: #434343;"
+                                  th:text="${#numbers.formatInteger(cart.getPrice(), '0', 'COMMA')}">0000</span>원
+                        </div>
+                    </a>
                 </div>
-                <div class="d-flex flex-column justify-content-around" style="margin-right: 20px;">
-                    <div>
-                        <a th:if="${order.getOrderDelivery() != null}" class="btn btn-outline-primary">배송 조회</a>
-                    </div>
-                    <div>
-                        <form th:action="@{/order/cancel}" th:method="post">
-                            <input type="hidden" name="orderId" th:value="${order.getId()}">
-                            <button class="btn btn-outline-secondary">주문 취소</button>
-                        </form>
-                    </div>
-                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end" style="margin-right: 20px;">
+            <div>
+                <a th:if="${order.getOrderDelivery() != null}" class="btn btn-outline-primary">배송 조회</a>
+            </div>
+            <div>
+                <form th:action="@{/order/cancel}" th:method="post">
+                    <input type="hidden" name="orderId" th:value="${order.getId()}">
+                    <button class="btn btn-outline-secondary">주문 취소</button>
+                </form>
             </div>
         </div>
 

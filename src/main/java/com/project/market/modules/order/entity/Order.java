@@ -9,7 +9,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NamedEntityGraph(name = "withItemAndDelivery", attributeNodes = {
@@ -59,7 +61,7 @@ public class Order extends BaseAccountEntity {
     private Account customer;
 
     @OneToMany(mappedBy = "order")
-    private Set<Cart> carts = new HashSet<>();
+    private List<Cart> carts = new ArrayList<>();
 
 
     public static Order createNewOrder(Account customer, LastOrderForm orderForm) {

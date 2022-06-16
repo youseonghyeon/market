@@ -131,7 +131,7 @@ class AccountServiceTest {
         accountService.saveNewTag(account, tag2);
         accountService.saveNewTag(account, tag3);
         //when
-        Set<Tag> tags = accountService.findTags(account);
+        List<Tag> tags = accountService.findTags(account);
         //then
         List<Tag> collection = new ArrayList<>();
         collection.add(tag1);

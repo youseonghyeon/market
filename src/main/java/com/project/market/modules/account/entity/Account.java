@@ -71,7 +71,7 @@ public class Account {
     private boolean deleted = false;
 
     @ManyToMany(cascade = PERSIST)
-    private Set<Tag> tags = new HashSet<>();
+    private List<Tag> tags = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "account")
@@ -81,7 +81,7 @@ public class Account {
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "account")
-    private Set<Favorite> favorites = new HashSet<>();
+    private List<Favorite> favorites = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipient")
     private List<Notification> notifications = new ArrayList<>();

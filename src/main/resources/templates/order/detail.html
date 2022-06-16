@@ -7,16 +7,29 @@
     <div th:if="${message}">
         <p th:text="${message}">redirectflashattributes</p>
     </div>
-    <h3>주문 상세</h3>
+    <h4>주문 상세</h4>
     <div>
-        <span th:text="*{getOrderDate()}">2022.2.2</span>
-        <span th:text="*{'주문번호' + getId()}">000</span>
+        <span th:text="*{#temporals.format(getOrderDate(), 'yyyy. M. d')}">2022.2.2</span>
+        <span>주문</span>
+        <span>주문번호</span>
+        <span th:text="*{getId()}">000</span>
     </div>
 
 
     <div>
-        <span>주문 상태 :</span>
-        <span th:text="*{getOrderStatusKo()}">000</span>
+        <span>주문 상태</span>
+        <span th:text="*{getOrderStatusKo()}">입금대기중</span>
+    </div>
+
+    <div th:each="cart: *{getCarts()}" class="d-flex">
+        <img style="width: 80px; height: 80px;" th:src="${cart.getItem().getCoverPhotoPath()}" alt="">
+        <div>
+            <div th:text="${cart.getItem().getName()}">상품이름</div>
+            <div th:text="${cart.getPrice()}">가격</div>
+            <div>원</div>
+            <div th:text="${cart.getQuantity()}">수량</div>
+            <div>개</div>
+        </div>
     </div>
 
     <!--    <div>-->
@@ -26,10 +39,10 @@
 
 
     <div class="mt-4">
-        <div>정보</div>
+        <div>받는사람 정보</div>
         <table>
             <tr>
-                <td>받는사람</td>
+                <td style="width: 140px;">받는사람</td>
                 <td th:text="*{getBuyerName()}"></td>
             </tr>
             <tr>
@@ -43,6 +56,20 @@
             <tr>
                 <td>배송 요청사항</td>
                 <td th:text="*{getShippingRequests()}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="mt-4">
+        <div>결제 정보</div>
+        <table>
+            <tr>
+                <td>결제수단</td>
+                <td th:text="*{getBuyerName()}"></td>
+            </tr>
+            <tr>
+                <td>-------</td>
+                <td></td>
             </tr>
         </table>
     </div>

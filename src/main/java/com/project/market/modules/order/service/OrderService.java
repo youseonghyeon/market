@@ -86,7 +86,7 @@ public class OrderService {
     }
 
     public void cancelOrder(Order order) {
-        Set<Cart> carts = order.getCarts();
+        List<Cart> carts = order.getCarts();
         // Item 재고 롤백
         for (Cart cart : carts) {
             Item item = cart.getItem();

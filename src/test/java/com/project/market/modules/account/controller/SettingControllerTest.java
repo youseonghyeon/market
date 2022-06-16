@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -135,7 +136,7 @@ class SettingControllerTest {
                 .andExpect(status().isOk());
         Tag tag = tagRepository.findByTitle("홈런볼");
         Account account = accountRepository.findByLoginId("testUser");
-        Set<Tag> tagContainer = account.getTags();
+        List<Tag> tagContainer = account.getTags();
         assertTrue(tagContainer.contains(tag));
     }
 
