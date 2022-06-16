@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 
 @Slf4j
@@ -36,7 +37,14 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     private String rootDir;
 
     public String uploadFile(String dir, MultipartFile multipartFile) {
-        String fullPath = rootDir + "/" + dir + multipartFile.getOriginalFilename();
+        UUID uuid = UUID.randomUUID();
+
+        String filename = multipartFile.getOriginalFilename();
+        String fullPath = rootDir + "/" + dir + uuid;
+        if (filename != null && filename.contains(".")) {
+            String extension = filename.substring(filename.lastIndexOf("."));
+            fullPath += extension;
+        }
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());

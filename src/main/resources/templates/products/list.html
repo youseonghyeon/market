@@ -40,8 +40,8 @@
     </div>
 
 
-    <div class="row border border-dark mt-3 bg-white shadow-sm">
-        <div class="col-lg-2" style="border-right: black 1px solid">
+    <div class="row border border-gray mt-3 bg-white shadow-sm">
+        <div class="col-lg-2" style="border-right: gray 1px solid">
             <span>태그 목록</span>
             <div th:each="tag : ${tagList}">
                 <button class="badge bg-secondary"
@@ -53,11 +53,11 @@
 
 
         <ul th:if="${!itemList.isEmpty()}" class="col-10 row row-cols-4" style="min-height: 600px;">
-            <li class="col-3 border border-gray d-flex jcc pt-2 pb-4"
+            <li class="product col-3 border-bottom d-flex jcc pt-2 pb-4 rounded"
                 style="height: 400px;"
                 th:each="item : ${itemList}">
                 <a th:href="@{/product/{itemId}(itemId = ${item.getId()})}">
-                    <div class="border border-gray mt-2" style="height: 240px; width: 240px;">
+                    <div class=" mt-2" style="height: 240px; width: 240px;">
                         <img class="w-100" th:src="${item.getCoverPhotoPath()}" alt="미리보기">
                     </div>
                     <div class="fs-5" th:text="${item.getName()}">상품명</div>

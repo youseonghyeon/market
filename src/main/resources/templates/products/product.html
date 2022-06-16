@@ -104,8 +104,8 @@
 <div class="container bg-white" style="width: 1000px;">
     <div class=" d-flex justify-content-between pt-4" th:object="${item}">
 
-        <div style="width: 400px; height: 400px;"
-             class="justify-content-center d-flex align-items-center border border-gray">
+        <div style="width: 360px; height: 360px;"
+             class="justify-content-center d-flex align-items-center">
             <img class="w-100" th:src="${item.getCoverPhotoPath()}" alt="미리보기">
 
         </div>
@@ -188,7 +188,7 @@
     </div>
 
 
-    <div class="border-gray border p-5 mt-3" style="min-height: 500px;">
+    <div class="border-top border-bottom border-gray p-5 mt-3" style="min-height: 500px;">
         <!--        상품 설명-->
         <!--        <span th:text="${item.getDescription()}"></span>-->
         <img class="w-100" th:src="${item.getPhotoPath()}" alt="상품 사진">
