@@ -1,12 +1,10 @@
 package com.project.market.modules.chat.repository;
 
-import com.project.market.modules.account.entity.Account;
-import com.project.market.modules.account.entity.QAccount;
+import com.project.market.modules.chat.dto.ChattingRoomDto;
 import com.project.market.modules.chat.dto.RecordDto;
 import com.project.market.modules.chat.entity.Chat;
-import com.querydsl.core.Tuple;
+import com.querydsl.core.QueryFactory;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,12 +24,14 @@ public class ChatRepositoryImpl implements CustomChatRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    public List<Chat> findRecentChat() {
-        String rowNumBySendDateQuery = "select row_number() over (partition by room_id order by send_date desc) as row, * from chat";
-        List<Chat> result = em.createNativeQuery("select *  from (" +
-                        rowNumBySendDateQuery + ") as c where c.row = 1 order by send_date desc",
-                Chat.class).getResultList();
-        return result;
+    public List<ChattingRoomDto> findRecentChat() {
+        List<ChattingRoomDto> dto = queryFactory.select(Projections.constructor(ChattingRoomDto.class, chat.roomId, chat.sendDate.max(), account))
+                .from(chat)
+                .leftJoin(account)
+                .on(chat.roomId.eq(account.id))
+                .groupBy(chat.roomId)
+                .fetch();
+        return dto;
     }
 
     public List<Chat> getChatContentsByRoomId(Long roomId) {
@@ -46,11 +46,13 @@ public class ChatRepositoryImpl implements CustomChatRepository {
                         chat.content, chat.sendDate, account.id,
                         account.nickname, chat.confirmed))
                 .from(chat)
-                .join(chat.sender, account)
+                .innerJoin(chat.sender, account)
                 .where(chat.roomId.eq(roomId))
                 .orderBy(chat.sendDate.asc())
                 .fetch();
 
         return dto;
     }
+
+
 }

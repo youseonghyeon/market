@@ -74,7 +74,7 @@ public class OrderController {
         Set<Cart> cartList = cartConverter.cartParameterConvert(orderForm.getItems());
         Order order = orderService.createOrder(account, orderForm, cartList);
 
-        // PG사 결제 모듈 실행
+        // TODO 전자 결제 모듈 추가
         return new PurchaseRes(orderForm.getPaymentMethod(), order.getId());
 
     }

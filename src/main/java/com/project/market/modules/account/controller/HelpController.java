@@ -24,29 +24,29 @@ public class HelpController {
     private final AccountRepository accountRepository;
     private final MailSender mailSender;
 
-    @GetMapping("/help/find-id")
+    @GetMapping("/help/id")
     public String findLonginIdForm() {
         return "account/help/find-id";
     }
 
-    @PostMapping("/help/find-id")
+    @PostMapping("/help/id")
     public String findLoginId(@RequestParam("email") String email, RedirectAttributes attributes, Model model) {
         Account account = accountRepository.findByEmail(email);
         if (account == null) {
             attributes.addFlashAttribute("message", "등록된 회원이 존재하지 않습니다.");
-            return "redirect:/help/find-id";
+            return "redirect:/help/id";
         }
         model.addAttribute("id", account.getLoginId());
         return "account/help/login-id";
     }
 
 
-    @GetMapping("/help/find-password")
+    @GetMapping("/help/password")
     public String findPasswordForm() {
         return "account/help/find-password";
     }
 
-    @PostMapping("/help/find-password") // 비밀번호 찾기 -> 이메일 인증 -> 토큰 메일 전송
+    @PostMapping("/help/password") // 비밀번호 찾기 -> 이메일 인증 -> 토큰 메일 전송
     public String sendMail(@RequestParam("loginId") String loginId, Model model) {
         Account account = accountRepository.findByLoginId(loginId);
         if (account == null) {

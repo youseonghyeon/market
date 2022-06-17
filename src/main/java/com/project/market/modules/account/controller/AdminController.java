@@ -31,7 +31,7 @@ public class AdminController {
         return "admin/dashboard";
     }
     @GetMapping("/manage")
-    public String roleManagement(@CurrentAccount Account account, Model model) {
+    public String roleManagement(Model model) {
         List<Account> accounts = accountRepository.findAll();
         // TODO 페이징
         model.addAttribute("accountList", accounts);
@@ -45,7 +45,8 @@ public class AdminController {
     }
 
     @PostMapping("/manage/edit")
-    public String editRole(@CurrentAccount Account account, @RequestParam("targetId") Long targetId,
+    public String editRole(@CurrentAccount Account account,
+                           @RequestParam("targetId") Long targetId,
                            @RequestParam("role") String role) {
         if (!account.getRole().equals("ROLE_ADMIN")) {
             throw new UnAuthorizedException();
@@ -55,15 +56,16 @@ public class AdminController {
         return "redirect:/admin/manage/" + targetId;
     }
 
-    @GetMapping("/role")
-    public String currierManagement(@RequestParam(value = "role", required = false) String role, Model model) {
-        if (role == null) {
-            role = "ROLE_USER";
-        }
-        List<Account> accountList = accountRepository.findByRoleIs(role);
-        model.addAttribute(accountList);
-        return null;
-    }
+    // 메서드 삭제 예정
+//    @GetMapping("/role")
+//    public String currierManagement(@RequestParam(value = "role", required = false) String role, Model model) {
+//        if (role == null) {
+//            role = "ROLE_USER";
+//        }
+//        List<Account> accountList = accountRepository.findByRoleIs(role);
+//        model.addAttribute(accountList);
+//        return null;
+//    }
 
     @GetMapping("/delivery/manage")
     public String deliveryManagement(Model model) {

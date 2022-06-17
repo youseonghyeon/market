@@ -3,6 +3,7 @@ package com.project.market.modules.chat.controller;
 import com.project.market.infra.exception.UnAuthorizedException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.chat.dto.ChattingRoomDto;
 import com.project.market.modules.chat.dto.MessageDto;
 import com.project.market.modules.chat.dto.RecordDto;
 import com.project.market.modules.chat.entity.Chat;
@@ -63,7 +64,7 @@ public class ChatController {
     // 어드민을 위한 채팅목록/채팅방
     @GetMapping("/admin/chat-list")
     public String chatList(Model model) {
-        List<Chat> chatList = chatRepository.findRecentChat();
+        List<ChattingRoomDto> chatList = chatRepository.findRecentChat();
         model.addAttribute("chatList", chatList);
         return "chat/chat-list";
     }

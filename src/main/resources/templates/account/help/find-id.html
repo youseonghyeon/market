@@ -10,7 +10,7 @@
         <h4 class="w-100 text-center">아이디 찾기</h4>
         <div th:text="${message}">메시지</div>
 
-        <form th:action="@{/help/find-id}" th:method="post">
+        <form th:action="@{/help/id}" th:method="post">
             <div class="font-sub-title">Email</div>
             <input class="form-control" style="width: 350px;" type="text" id="email" name="email" placeholder="이메일">
             <button type="submit" class="btn btn-custom w-100 mt-4">아이디 확인</button>

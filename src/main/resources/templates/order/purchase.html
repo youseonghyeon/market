@@ -47,6 +47,8 @@
             if (res.paymentMethod === "nobank") {
                 // 무통장 결제(계좌번호) 페이지로 이동
                 location.href = "/nobank/" + res.orderId
+            } else {
+                alert("##TEST## : 주문이 완료되었습니다.")
             }
         })
     }
@@ -60,41 +62,40 @@
             <div class="col-8">
                 <div class="row container pt-4 pb-4 border-dark border bg-white">
 
-                    <div>
-                        <h3>배송지 정보</h3>
+                    <div class="mb-4">
+                        <h3>배송 정보</h3>
                     </div>
 
-                    <div>이름</div>
+                    <div class="mt-3">받으시는분</div>
                     <div class="input-group ">
                         <input id="recipient" class="form-control col-5" type="text" name="recipient"
                                th:value="${account.getUsername()}">
                     </div>
 
-                    <div>연락처</div>
+                    <div class="mt-2">연락처</div>
                     <div class="input-group ">
                         <input id="recipientPhone" class="form-control col-5" type="text" name="recipientPhone">
                     </div>
 
-                    <div>주소</div>
-                    <div class="input-group ">
-                        <input id="zonecode" class="form-control col-5 bg-white" type="text"
-                               th:field="*{destinationZoneCode}"
+                    <div class="mt-2">배송지주소</div>
+                    <div class="d-flex justify-content-between">
+                        <input id="zonecode" class="form-control bg-white" type="text"
+                               style="width: 100px;" th:field="*{destinationZoneCode}"
                                readonly>
-                        <div class="col-4"></div>
                         <button type="button" onclick="openPopup()" id="modify" class="btn btn-outline-info col-3 ">배송지
                             변경
                         </button>
                     </div>
 
 
-                    <div class="input-group ">
+                    <div class="input-group mt-2">
                         <input id="roadAddress" class="form-control col-5 bg-white" type="text"
                                th:field="*{destinationAddress}"
                                placeholder="주소검색결과" readonly>
                     </div>
 
 
-                    <div class="input-group ">
+                    <div class="input-group mt-1">
                         <input id="addressDetail" class="form-control col-5" type="text"
                                th:name="*{destinationAddressDetail}"
                                placeholder="상세주소">
@@ -110,9 +111,9 @@
                 </div>
 
                 <div class="row container border-dark border pt-4 mt-4 pb-4 bg-white">
-                    결제 방식
+                    결제 방법
                     <input type="radio" name="paymentMethod" value="card" checked>
-                    <label>카드</label>
+                    <label>카드(PG연동 후 구현예정)</label>
                     <input type="radio" name="paymentMethod" value="nobank">
                     <label>무통장</label>
                 </div>
@@ -129,19 +130,32 @@
                         <div style="font-size: 20px;" th:text="${cart.getItem().getName()}">상품명</div>
                         <div th:text="${cart.getOptions()}">옵션</div>
                         <div th:text="${cart.getQuantity() + '개'}">수량</div>
-                        <div th:text="${cart.getPrice()} + '원'">00000원</div>
+                        <div th:text="${#numbers.formatInteger(cart.getPrice(), '0', 'COMMA')} + '원'">00000원</div>
                     </div>
                 </div>
 
+
+                <h4>결제 예정금액</h4>
                 <div class="border-bottom border-gray d-flex justify-content-between p-2">
                     <div class="">배송비</div>
-                    <div class="" th:text="${deliveryFee}">000</div>
+                    <div class="d-flex">
+                        <div class="" th:text="${#numbers.formatInteger(deliveryFee, '0', 'COMMA')}">000</div>
+                        <div>원</div>
+                    </div>
                 </div>
                 <div class="border-bottom border-gray d-flex justify-content-between p-2">
-                    <div class="">총 결제금액</div>
-                    <div class="" th:text="${totalPrice}">000</div>
+                    <div class="">합계</div>
+                    <div class="d-flex">
+                        <div class="" th:text="${#numbers.formatInteger(totalPrice, '0', 'COMMA')}">000</div>
+                        <div>원</div>
+                    </div>
                 </div>
-                <button type="button" onclick="purchase()" class="btn btn-primary">결제하기</button>
+                <button type="button" onclick="purchase()" class="w-100 btn btn-custom d-flex jcc aic mt-3"
+                        style="height: 80px; font-size: 20px; font-weight: bold;">
+                    <div th:text="${totalPrice}">00000</div>
+                    <div>원 결제하기</div>
+                </button>
+                <div class="mt-3 w-100 border border-gray" style="height: 300px;">결제 약관 위치</div>
             </div>
         </div>
 

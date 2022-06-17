@@ -47,7 +47,7 @@ class HelpControllerTest {
     @WithAccount("testUser")
     @DisplayName("비밀번호 찾기 폼")
     void findPasswordForm() throws Exception {
-        mockMvc.perform(get("/help/find-password"))
+        mockMvc.perform(get("/help/password"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/help/find-password"));
     }
@@ -56,7 +56,7 @@ class HelpControllerTest {
     @WithAccount("testUser")
     @DisplayName("토큰 메일 전송 성공")
     void sendTokenMail() throws Exception {
-        mockMvc.perform(post("/help/find-password")
+        mockMvc.perform(post("/help/password")
                         .param("loginId", "admin")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -67,7 +67,7 @@ class HelpControllerTest {
     @WithAccount("testUser")
     @DisplayName("토큰 메일 전송 실패(유효하지 않은 아이디)")
     void sendTokenMailFail() throws Exception {
-        mockMvc.perform(post("/help/find-password")
+        mockMvc.perform(post("/help/password")
                         .param("loginId", "aaaaaa")
                         .with(csrf()))
                 .andExpect(status().isOk())

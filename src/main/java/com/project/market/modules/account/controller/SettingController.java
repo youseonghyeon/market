@@ -62,7 +62,8 @@ public class SettingController {
     }
 
     @PostMapping("/profile/edit")
-    public String profileEdit(@CurrentAccount Account account, @Valid ProfileForm profileForm,
+    public String profileEdit(@CurrentAccount Account account,
+                              @Valid ProfileForm profileForm,
                               Errors errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             return "account/settings/profile-edit";
@@ -125,7 +126,9 @@ public class SettingController {
     }
 
     @PostMapping("/profile/address")
-    public String addressSetting(@CurrentAccount Account account, @Valid AddressForm addressForm, RedirectAttributes attributes) {
+    public String addressSetting(@CurrentAccount Account account,
+                                 @Valid AddressForm addressForm,
+                                 RedirectAttributes attributes) {
         accountService.modifyAddress(account, addressForm);
         attributes.addFlashAttribute("message", "주소 변경 완료!");
         return "redirect:/profile";
@@ -137,7 +140,8 @@ public class SettingController {
     }
 
     @PostMapping("/account/withdrawal")
-    public String accountWithdrawal(@CurrentAccount Account account, @RequestParam("pw-check") String password) {
+    public String accountWithdrawal(@CurrentAccount Account account,
+                                    @RequestParam("pw-check") String password) {
         if (!passwordEncoder.matches(password, account.getPassword())) {
             throw new IllegalStateException("비밀번호가 맞지 않습니다.");
         }
@@ -147,7 +151,8 @@ public class SettingController {
 
     @PostMapping("/profile/image")
     @ResponseBody
-    public ModifyImageRes modifyProfileImage(@CurrentAccount Account account, @ModelAttribute ModifyImageReq req) {
+    public ModifyImageRes modifyProfileImage(@CurrentAccount Account account,
+                                             @ModelAttribute ModifyImageReq req) {
         Account findAccount = accountRepository.findById(account.getId()).orElseThrow();
         accountService.modifyProfileImageAndNickName(findAccount, req.getNickname(), req.getProfileImage());
 

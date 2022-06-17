@@ -5,7 +5,6 @@ import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.option.OptionContent;
-import com.project.market.modules.item.entity.option.OptionTitle;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.repository.OptionContentRepository;
 import com.project.market.modules.item.repository.OptionTitleRepository;
@@ -16,11 +15,9 @@ import com.project.market.modules.order.dto.QuantityModifyReq;
 import com.project.market.modules.order.entity.Cart;
 import com.project.market.modules.order.repository.CartRepository;
 import com.project.market.modules.order.service.CartService;
-import com.project.market.modules.security.AccountContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -65,15 +62,14 @@ public class CartController {
         if (account == null) {
             return "로그인을 해주세요.";
         }
-//        Item item = itemRepository.findWithOptionTitleById(cartDto.getItemId());
         Item item = itemRepository.getById(cartDto.getItemId());
-//        List<OptionTitle> optionTitles = item.getOptionTitles();
 
         // 옵션 내용
         String contents = null;
         if (cartDto.getOptionContentIds() != null) {
             List<OptionContent> optionContents = optionContentRepository.findAllById(cartDto.getOptionContentIds());
-            // 옵션 내용을 저장하기위해 String 으로 변환(띄어쓰기로 분리) -> "검은색 플라스틱 가죽"
+            //** 임시 ** 옵션 내용을 저장하기위해 String 으로 변환(띄어쓰기로 분리) -> "검은색 플라스틱 가죽"
+            // TODO 추후 OptionContent와 Cart를 연결시켜서 사용할 예정.
             contents = getTitlesToString(optionContents);
         }
 
@@ -103,7 +99,8 @@ public class CartController {
 
     @DeleteMapping("/cart")
     @ResponseBody
-    public String deleteCart(@CurrentAccount Account account, @RequestParam("cartId") Cart cart) {
+    public String deleteCart(@CurrentAccount Account account,
+                             @RequestParam("cartId") Cart cart) {
         verifyCartAccess(account, cart);
         cartRepository.delete(cart);
         return "ok";
@@ -118,19 +115,25 @@ public class CartController {
 
     @PostMapping("/cart/quantity")
     @ResponseBody
-    public int modifyQuantityInCart(@CurrentAccount Account account, @ModelAttribute QuantityModifyReq req) {
+    public int modifyQuantityInCart(@CurrentAccount Account account,
+                                    @ModelAttribute QuantityModifyReq req) {
         Cart cart = cartRepository.findCartWithItemById(req.getCartId());
         verifyCartAccess(account, cart);
+
+        if (cart.getItem().getQuantity() < req.getQuantity()) {
+            // 재고 부족 코드 (임시)
+            return -22;
+        }
         cartService.modifyQuantity(cart, req.getQuantity());
 
         return cart.getPrice();
     }
 
+
     @GetMapping("/cart/refetch")
     @ResponseBody
-    public CurrentCartData findCurrentData(
-            @CurrentAccount Account account,
-            @RequestParam(name = "cartIdList", required = false) String idList) {
+    public CurrentCartData findCurrentData(@CurrentAccount Account account,
+                                           @RequestParam(name = "cartIdList", required = false) String idList) {
         if (!StringUtils.hasText(idList)) {
             return new CurrentCartData(0, 0);
         }

@@ -27,6 +27,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected void handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.info("handleMaxUploadSizeExceededException S3bucket 용량을 초과했습니다.", e);
+        // TODO 이메일 또는 카카오톡으로 관리자에게 전송
     }
 
     private final AmazonS3Client client;

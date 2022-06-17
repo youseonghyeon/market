@@ -4,16 +4,12 @@
 <body>
 <nav th:replace="fragments/nav::admin-nav"></nav>
 <div class="container" style="padding-right: 200px; padding-left: 200px;">
-    <div class="border border-gray p-3 bg-white position-relative" th:each="chat : ${chatList}">
-        <a th:href="@{/admin/chat/{roomId}(roomId=${chat.getRoomId()})}">
-            <div th:if="${chat.getConfirmed() == false}">
-                <div class="rounded-circle bg-danger position-absolute"
-                     style="width: 14px; height: 14px; top: 10px; left: 1px;"></div>
-            </div>
+    <div class="border border-gray p-3 bg-white position-relative" th:each="dto : ${chatList}">
+        <a th:href="@{/admin/chat/{roomId}(roomId=${dto.getRoomId()})}">
             <div>
 <!--                <div th:text="${chat.getSender().getNickname()} + ': ' + ${chat.getContent()}">유저1: 안녕하세요</div>-->
-
-                <div th:text="${chat.getSendDate()}">0000년00월00일 00:00</div>
+                <div th:text="${dto.getClient().getNickname()}">고객 닉네임</div>
+                <div th:text="${dto.getSendDate()}">0000년00월00일 00:00</div>
             </div>
         </a>
     </div>

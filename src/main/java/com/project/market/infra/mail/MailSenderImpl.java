@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Profile({"local", "dev"})
+@Profile({"local", "dev", "deploy"})
 @Component
 @RequiredArgsConstructor
 public class MailSenderImpl implements MailSender {

@@ -74,8 +74,12 @@
                 xhr.setRequestHeader(header, token)
             }
         }).done(function (res) {
-            $("#price" + cartId).text(res);
-            getCurrentData()
+            if (res === -22) {
+                alert("재고가 부족합니다. 수량을 확인해주세요.");
+            } else {
+                $("#price" + cartId).text(res);
+                getCurrentData()
+            }
         })
     }
 

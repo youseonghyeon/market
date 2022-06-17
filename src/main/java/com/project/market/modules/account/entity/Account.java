@@ -73,7 +73,6 @@ public class Account {
     @ManyToMany(cascade = PERSIST)
     private List<Tag> tags = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "account")
     private List<Cart> carts = new ArrayList<>();
 

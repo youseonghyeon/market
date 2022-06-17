@@ -1,5 +1,8 @@
 package com.project.market.infra.exception;
 
+/**
+ * Custom 404 에러
+ */
 public class CustomNotFoundException extends RuntimeException {
 
     public CustomNotFoundException() {

@@ -23,12 +23,17 @@
 
     <div th:each="cart: *{getCarts()}" class="d-flex">
         <img style="width: 80px; height: 80px;" th:src="${cart.getItem().getCoverPhotoPath()}" alt="">
-        <div>
-            <div th:text="${cart.getItem().getName()}">상품이름</div>
-            <div th:text="${cart.getPrice()}">가격</div>
-            <div>원</div>
-            <div th:text="${cart.getQuantity()}">수량</div>
-            <div>개</div>
+        <div style="margin-left: 10px;">
+            <div class="d-flex">
+                <div th:text="${cart.getItem().getName()}">상품이름</div>
+            </div>
+            <div class="d-flex">
+                <div th:text="${cart.getPrice()}">가격</div>
+                <div>원</div>
+
+                <div style="margin-left: 10px;" th:text="${cart.getQuantity()}">수량</div>
+                <div>개</div>
+            </div>
         </div>
     </div>
 
