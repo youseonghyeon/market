@@ -110,17 +110,6 @@ class SettingControllerTest {
         assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("태그 추가 폼")
-    void tagSettingForm() throws Exception {
-        mockMvc.perform(get("/profile/tag"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("tagList"))
-                .andExpect(model().attributeExists("whiteList"))
-                .andExpect(view().name("account/settings/tag"));
-    }
-
 
     @Test
     @WithAccount("testUser")
@@ -128,7 +117,7 @@ class SettingControllerTest {
     void tagSetting() throws Exception {
         TagDto tagDto = new TagDto();
         tagDto.setTag("홈런볼");
-        mockMvc.perform(post("/profile/tag")
+        mockMvc.perform(post("/profile/tag/add")
                         .param("newTag", "홈런볼")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(tagDto))
@@ -140,16 +129,6 @@ class SettingControllerTest {
         assertTrue(tagContainer.contains(tag));
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("지역 추가 폼")
-    void zoneSettingFrom() throws Exception {
-        mockMvc.perform(get("/profile/zone"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("zoneList"))
-                .andExpect(model().attributeExists("whiteList"))
-                .andExpect(view().name("account/settings/zone"));
-    }
 
 
     @Test

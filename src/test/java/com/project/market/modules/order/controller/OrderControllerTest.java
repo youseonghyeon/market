@@ -195,7 +195,7 @@ class OrderControllerTest {
         mockMvc.perform(get("/order/list"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("orderList"))
-                .andExpect(view().name("order/list"));
+                .andExpect(view().name("order/history"));
     }
 
 }

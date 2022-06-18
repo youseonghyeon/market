@@ -58,9 +58,9 @@ class DeliveryControllerTest {
                 .andExpect(view().name("delivery/list"));
     }
 
-    @Test
-    @WithAccount("testCourier")
-    @DisplayName("배송 완료")
+//    @Test
+//    @WithAccount("testCourier")
+//    @DisplayName("배송 완료")
     void completeDelivery() throws Exception {
         CompleteDto completeDto = new CompleteDto();
         completeDto.setDeliveryId(TEST_DELIVERY_ID);
@@ -75,9 +75,9 @@ class DeliveryControllerTest {
         assertTrue(delivery.isShipped());
     }
 
-    @Test
-    @WithAccount("testCourier")
-    @DisplayName("배송 취소")
+//    @Test
+//    @WithAccount("testCourier")
+//    @DisplayName("배송 취소")
     void cancelDeliverySuccess() throws Exception {
         CompleteDto completeDto = new CompleteDto();
         completeDto.setDeliveryId(TEST_DELIVERY_ID);

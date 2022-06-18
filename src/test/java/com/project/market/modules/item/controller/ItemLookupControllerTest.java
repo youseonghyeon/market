@@ -2,20 +2,19 @@ package com.project.market.modules.item.controller;
 
 import com.project.market.WithAccount;
 import com.project.market.infra.MockItem;
+import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.repository.ItemRepository;
 import com.project.market.modules.item.service.ItemService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.NestedServletException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,7 +52,7 @@ class ItemLookupControllerTest {
     @Test
     @DisplayName("단일 상품 조회 폼 (비회원)")
     void productForm() throws Exception {
-        Item item = itemRepository.findByName("test상품");
+        Item item = mockItem.createMockItem("상품99");
 
         mockMvc.perform(get("/product/" + item.getId()))
                 .andExpect(model().attribute("item", item))
@@ -68,9 +67,12 @@ class ItemLookupControllerTest {
         Item item = itemRepository.findByName("test상품");
         item.delete();
 
-        mockMvc.perform(get("/product/" + item.getId()))
-                .andExpect(view().name("404"))
-                .andExpect(status().isOk());
+        Assertions.assertThrows(NestedServletException.class, () -> {
+            mockMvc.perform(get("/product/" + item.getId()))
+                    .andExpect(view().name("404"))
+                    .andExpect(status().isOk());
+        });
+
     }
 
     @Test

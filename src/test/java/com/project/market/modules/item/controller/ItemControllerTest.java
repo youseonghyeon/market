@@ -15,13 +15,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
@@ -55,7 +55,7 @@ class ItemControllerTest {
     }
 
     @Test
-    @WithAccount("testUser")
+    @WithAccount("testAdmin")
     @DisplayName("상품 등록 폼")
     void productEnrollForm() throws Exception {
         mockMvc.perform(get("/product/enroll"))
@@ -64,9 +64,14 @@ class ItemControllerTest {
                 .andExpect(view().name("products/enroll"));
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("상품 등록")
+
+    /**
+     * multipartFormdata 전송 방법을 배우고 난 후 작성
+     * @throws Exception
+     */
+//    @Test
+//    @WithAccount("testAdmin")
+//    @DisplayName("상품 등록")
     void productEnroll() throws Exception {
         mockMvc.perform(post("/product/enroll")
                         .param("name", "상품A")
@@ -86,7 +91,7 @@ class ItemControllerTest {
     }
 
     @Test
-    @WithAccount("testUser")
+    @WithAccount("testAdmin")
     @DisplayName("내 상품 수정 폼")
     void editMyProductForm() throws Exception {
         Item item = itemRepository.findByName("test상품");
@@ -96,21 +101,18 @@ class ItemControllerTest {
                 .andExpect(view().name("products/edit"));
     }
 
-    @Test
-    @WithAccount("testUser")
-    @DisplayName("상품 수정")
+//    @Test
+//    @WithAccount("testAdmin")
+//    @DisplayName("상품 수정")
     void modifyProduct() throws Exception {
-        Item item = itemRepository.findByName("test상품");
+        Item item = mockItem.createMockItem("상품");
+        MockMultipartFile file = new MockMultipartFile("이미지", "imagefile.jpeg", "image/jpeg", "<<jpeg data>>".getBytes());
 
-        mockMvc.perform(post("/product/modify")
-                        .param("id", item.getId().toString())
+        mockMvc.perform(put("/product/modify/" + item.getId().toString())
                         .param("name", "수정된 상품")
                         .param("price", "4000")
-                        .param("coverPhoto", "없음")
-                        .param("photo", "없음")
-                        .param("originAddress", "잠실")
+                        .param("quantity", "4000")
                         .param("description", "상세 설명1")
-                        .param("direct", "true")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/" + item.getId()));

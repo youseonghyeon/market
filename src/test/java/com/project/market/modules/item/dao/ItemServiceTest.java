@@ -1,6 +1,7 @@
 package com.project.market.modules.item.dao;
 
 import com.project.market.WithAccount;
+import com.project.market.infra.MockItem;
 import com.project.market.modules.account.repository.AccountRepository;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.item.repository.ItemRepository;
@@ -10,6 +11,7 @@ import com.project.market.modules.item.entity.Tag;
 import com.project.market.modules.item.form.ItemForm;
 import com.project.market.modules.item.service.ItemService;
 import com.project.market.modules.item.service.TagService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,61 +36,52 @@ class ItemServiceTest {
     TagRepository tagRepository;
     @Autowired
     TagService tagService;
+    @Autowired
+    MockItem mockItem;
+
+    private String ITEM_NAME = "테스트 상품";
+    private int PRICE = 41000;
+    private int QUANTITY = 1200;
 
     @Test
-    @WithAccount("testUser")
+    @DisplayName("상품 등록")
+    @WithAccount("testAdmin")
     void createNewItem() {
         // given
-        Account account = accountRepository.findByLoginId("testUser");
         ItemForm itemForm = createItemForm();
-        Set<String> tagList = new HashSet<>();
-        tagList.add("태그1");
-        tagList.add("태그2");
-        itemForm.getTags().add("태그1");
-        itemForm.getTags().add("태그2");
-        tagService.createOrCountingTag(tagList);
         //when
         itemService.createNewItem(itemForm);
         //then
-        Item item = itemRepository.findByName("상품");
-        assertEquals(item.getPrice(), 1000);
-//        assertEquals(item.getCoverPhoto(), "test.jpg");
-//        assertEquals(item.getPhoto(), "test.jpg");
-        Set<Tag> tags = item.getTags();
-        assertEquals(tags.size(), 2);
-        Tag tag1 = tagRepository.findByTitle("태그1");
-        Tag tag2 = tagRepository.findByTitle("태그2");
-        assertTrue(tags.contains(tag1));
-        assertTrue(tags.contains(tag2));
+        Item item = itemRepository.findByName(ITEM_NAME);
+        assertEquals(item.getPrice(), PRICE);
+        assertEquals(item.getQuantity(), QUANTITY);
     }
 
     @Test
-    @WithAccount("testUser")
+    @DisplayName("상품 수정")
+    @WithAccount("testAdmin")
     void modifyItem() {
         //given
-        Account account = accountRepository.findByLoginId("testUser");
-        ItemForm itemForm1 = createItemForm();
-        Item item = itemService.createNewItem(itemForm1);
+        Item item = mockItem.createMockItem(ITEM_NAME);
         //when
-        ItemForm itemForm2 = new ItemForm();
-        itemForm2.setName("상품2");
-        itemForm2.setPrice(2000);
-//        itemForm2.setCoverPhoto("없음");
-//        itemForm2.setPhoto("없음");
-        itemService.modifyItem(item, itemForm2);
+        ItemForm newForm = new ItemForm();
+        newForm.setName("상품2");
+        newForm.setPrice(2000);
+        newForm.setQuantity(2000);
+        newForm.setDescription("상품 설명");
+        itemService.modifyItem(item, newForm);
         //then
         assertEquals(item.getName(), "상품2");
         assertEquals(item.getPrice(), 2000);
-//        assertEquals(item.getCoverPhoto(), "없음");
-//        assertEquals(item.getPhoto(), "없음");
+        assertEquals(item.getQuantity(), 2000);
+        assertEquals(item.getDescription(), "상품 설명");
     }
 
     private ItemForm createItemForm() {
         ItemForm itemForm = new ItemForm();
-        itemForm.setName("상품");
-        itemForm.setPrice(1000);
-//        itemForm.setCoverPhoto("test.jpg");
-//        itemForm.setPhoto("test.jpg");
+        itemForm.setName(ITEM_NAME);
+        itemForm.setPrice(PRICE);
+        itemForm.setQuantity(QUANTITY);
         return itemForm;
     }
 }

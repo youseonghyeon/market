@@ -90,9 +90,10 @@ class CartControllerTest {
     @DisplayName("Cart 추가")
     void addCart() throws Exception {
         Item item = mockItem.createMockItem("item0099");
-        mockMvc.perform(get("/cart/add")
+        mockMvc.perform(post("/cart")
                         .param("itemId", String.valueOf(item.getId()))
-                        .param("quantity", "3"))
+                        .param("quantity", "3")
+                        .with(csrf()))
                 .andExpect(content().string("장바구니에 저장되었습니다."))
                 .andExpect(status().isOk());
 
@@ -146,7 +147,8 @@ class CartControllerTest {
         Long savedCartId = savedCartList.get(0).getId();
 
         mockMvc.perform(delete("/cart")
-                        .param("cartId", String.valueOf(savedCartId)))
+                        .param("cartId", String.valueOf(savedCartId))
+                        .with(csrf()))
                 .andExpect(content().string("ok"))
                 .andExpect(status().isOk());
 
@@ -159,7 +161,7 @@ class CartControllerTest {
     @DisplayName("Cart 전체 삭제")
     void deleteAllOfCart() throws Exception {
         Account account = accountRepository.findByLoginId("testUser");
-        mockMvc.perform(delete("/cart/all"))
+        mockMvc.perform(delete("/cart/all").with(csrf()))
                 .andExpect(content().string("ok"))
                 .andExpect(status().isOk());
 
@@ -176,7 +178,7 @@ class CartControllerTest {
         int previousQuantity = cart.getQuantity();
         int expectedTotalPrice = cart.getItem().getPrice() * (previousQuantity + 5);
 
-        mockMvc.perform(post("/quantity/modify")
+        mockMvc.perform(post("/cart/quantity")
                         .param("cartId", String.valueOf(cartId))
                         .param("quantity", String.valueOf(previousQuantity + 5))
                         .with(csrf()))

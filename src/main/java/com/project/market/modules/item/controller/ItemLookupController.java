@@ -54,7 +54,9 @@ public class ItemLookupController {
     }
 
     @GetMapping("/product/{itemId}")
-    public String productForm(@CurrentAccount Account account, @PathVariable("itemId") Long itemId, Model model) {
+    public String productForm(@CurrentAccount Account account,
+                              @PathVariable("itemId") Long itemId,
+                              Model model) {
         Item item = itemRepository.findItemWithTagsById(itemId);
         if (item.isDeleted()) {
             throw new CustomNotFoundException("삭제된 상품입니다.");

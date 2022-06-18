@@ -79,7 +79,7 @@ class AccountControllerTest {
     @WithAccount("testUser")
     @DisplayName("로그아웃")
     void logout() throws Exception {
-        mockMvc.perform(get("/logout"))
+        mockMvc.perform(post("/logout").with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
