@@ -33,7 +33,6 @@ public class ItemRepositoryImpl implements CustomItemRepository {
     public Page<ItemLookupDto> findItemList(String search, String tagName, String order, Pageable pageable) {
         List<ItemLookupDto> content = getItems(pageable, search, order, tagName);
         Long total = getItemsTotal(search, tagName);
-        System.out.println("ItemRepositoryImpl.findItemList");
         return new PageImpl<>(content, pageable, total);
     }
 
@@ -56,7 +55,7 @@ public class ItemRepositoryImpl implements CustomItemRepository {
     }
 
     private Long getItemsTotal(String search, String tagName) {
-        return queryFactory.select(item.id.count()).distinct()
+        return queryFactory.select(item.id.count())
                 .from(item)
                 .leftJoin(item.tags, tag)
                 .where(
