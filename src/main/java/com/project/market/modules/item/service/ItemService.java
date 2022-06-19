@@ -46,7 +46,7 @@ public class ItemService {
     }
 
     private void editTags(Item item, ItemForm itemForm) {
-        Set<Tag> tagsInItem = item.getTags();
+        List<Tag> tagsInItem = item.getTags();
         tagsInItem.clear();
 
         Set<String> newTags = itemForm.getTags();

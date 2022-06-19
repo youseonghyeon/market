@@ -57,7 +57,7 @@ public class NotificationService {
     }
 
     private Set<Account> getAccountsHasTags(Item item, BooleanExpression condition) {
-        Set<Tag> tags = item.getTags();
+        List<Tag> tags = item.getTags();
         List<Account> accounts = queryFactory.select(account)
                 .from(account)
                 .join(account.tags, tag)

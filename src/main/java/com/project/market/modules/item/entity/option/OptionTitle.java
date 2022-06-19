@@ -24,7 +24,7 @@ public class OptionTitle extends BaseTimeEntity {
     private Boolean required;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "item_id")
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @OneToMany(mappedBy = "optionTitle", cascade = CascadeType.ALL)

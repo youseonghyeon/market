@@ -1,10 +1,12 @@
 package com.project.market.modules.item.repository;
 
 import com.project.market.modules.account.entity.Account;
+import com.project.market.modules.item.dto.ItemLookupDto;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.QComment;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,17 +30,20 @@ public class ItemRepositoryImpl implements CustomItemRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public Page<Item> findItemList(String search, String tagName, String order, Pageable pageable) {
-        List<Item> content = getItems(search, order, pageable, tagName);
-        int total = getItemsTotal(search, tagName);
-
+    public Page<ItemLookupDto> findItemList(String search, String tagName, String order, Pageable pageable) {
+        List<ItemLookupDto> content = getItems(pageable, search, order, tagName);
+        Long total = getItemsTotal(search, tagName);
+        System.out.println("ItemRepositoryImpl.findItemList");
         return new PageImpl<>(content, pageable, total);
     }
 
-    private List<Item> getItems(String search, String order, Pageable pageable, String tagName) {
-        return queryFactory.selectFrom(item).distinct()
-                .leftJoin(item.tags, tag).fetchJoin()
-                .leftJoin(item.commentList, comment).fetchJoin()
+    private List<ItemLookupDto> getItems(Pageable pageable, String search, String order, String tagName) {
+        return queryFactory.select(Projections.constructor(ItemLookupDto.class, item.id, item.name, item.price,
+                        item.quantity, item.star, item.ratingCount, item.coverPhotoPath, item.photoPath,
+                        item.favoriteCount, Projections.list(tag.title), comment.count()))
+                .from(item)
+                .leftJoin(item.tags, tag)
+                .leftJoin(item.commentList, comment)
                 .where(
                         item.deleted.isFalse(),
                         tagNameEq(tagName),
@@ -50,23 +55,25 @@ public class ItemRepositoryImpl implements CustomItemRepository {
                 .fetch();
     }
 
-    private Predicate searchEq(String search) {
-        return search != null ? item.name.contains(search) : null;
-    }
-
-    private int getItemsTotal(String search, String tagName) {
-        return queryFactory.selectFrom(item)
+    private Long getItemsTotal(String search, String tagName) {
+        return queryFactory.select(item.id.count()).distinct()
+                .from(item)
                 .leftJoin(item.tags, tag)
                 .where(
                         item.deleted.isFalse(),
                         tagNameEq(tagName),
                         searchEq(search)
                 )
-                .fetch().size();
+                .fetchOne();
     }
+
 
     private Predicate tagNameEq(String tagName) {
         return StringUtils.hasText(tagName) ? tag.title.eq(tagName) : null;
+    }
+
+    private Predicate searchEq(String search) {
+        return StringUtils.hasText(search) ? item.name.contains(search) : null;
     }
 
     private OrderSpecifier<?> itemSort(String criteria) {

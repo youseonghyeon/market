@@ -21,7 +21,7 @@ public class OptionContent extends BaseTimeEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "option_title_id")
+    @JoinColumn(name = "option_title_id")
     private OptionTitle optionTitle;
 
     public OptionContent(OptionTitle optionTitle, String content) {

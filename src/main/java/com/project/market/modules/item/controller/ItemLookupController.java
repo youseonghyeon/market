@@ -1,8 +1,10 @@
 package com.project.market.modules.item.controller;
 
+import com.project.market.infra.aop.Trace;
 import com.project.market.infra.exception.CustomNotFoundException;
 import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.account.util.CurrentAccount;
+import com.project.market.modules.item.dto.ItemLookupDto;
 import com.project.market.modules.item.entity.Comment;
 import com.project.market.modules.item.entity.Item;
 import com.project.market.modules.item.entity.Tag;
@@ -38,13 +40,15 @@ public class ItemLookupController {
     @Value("${shipping.fee}")
     private int shippingFee;
 
+    @Trace
     @GetMapping("/product")
     public String productListForm(Pageable pageable,
                                   @RequestParam(value = "search", required = false) String search,
                                   @RequestParam(value = "tag", required = false) String tag,
-                                  @RequestParam(value = "order", required = false) String orderBy, Model model) {
+                                  @RequestParam(value = "order", required = false) String orderBy,
+                                  Model model) {
 
-        Page<Item> itemPage = itemRepository.findItemList(search, tag, orderBy, pageable);
+        Page<ItemLookupDto> itemPage = itemRepository.findItemList(search, tag, orderBy, pageable);
         List<Tag> tagList = tagRepository.findTop20ByOrderByCountDesc();
 
         model.addAttribute("itemPage", itemPage);

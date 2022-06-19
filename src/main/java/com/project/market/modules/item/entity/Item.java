@@ -49,7 +49,7 @@ public class Item extends BaseAccountEntity {
     private int favoriteCount = 0;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    private Set<Tag> tags = new HashSet<>();
+    private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "item")
     private List<OptionTitle> optionTitles = new ArrayList<>();
