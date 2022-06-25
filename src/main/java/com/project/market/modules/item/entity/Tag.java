@@ -1,5 +1,6 @@
 package com.project.market.modules.item.entity;
 
+import com.project.market.modules.account.entity.Account;
 import com.project.market.modules.superclass.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +27,7 @@ public class Tag extends BaseTimeEntity {
 
     @ColumnDefault("1")
     private long count;
+
 
     public Tag(String title, long count) {
         this.title = title;
