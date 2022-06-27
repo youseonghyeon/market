@@ -1,0 +1,11 @@
+
+#cloud:
+#  aws:
+#    credentials:
+#      access-key: AKIA6NEFQK4JIIKZ4IXQ
+#      secret-key: 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
+#    s3.bucket: tricolorcatstore-bucket
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
